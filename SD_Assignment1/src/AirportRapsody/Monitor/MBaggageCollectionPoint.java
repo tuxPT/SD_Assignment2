@@ -1,18 +1,17 @@
-package Simulator.SharedRegions;
+package AirportRapsody.Monitor;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
-interface BaggageCollectionPointInterface {
-    static void addBag() {};
-    static void RemoveBag() {};    
-}
+import AirportRapsody.Interface.IBaggageCollectionPointPorter;
 
-public class BaggageCollectionPoint implements BaggageCollectionPointInterface
-{
+public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter {
+    ReentrantLock lock = new ReentrantLock();
+
     List<Integer> ListOfBags;
 
-    public BaggageCollectionPoint() 
+    public MBaggageCollectionPoint()
     {
         ListOfBags = new ArrayList<>(); 
     }
@@ -34,4 +33,14 @@ public class BaggageCollectionPoint implements BaggageCollectionPointInterface
              }
          }
      }
+
+    @Override
+    public void carryItToAppropriateStore() {
+
+    }
+
+    @Override
+    public void tryToCollectABag() {
+
+    }
 }
