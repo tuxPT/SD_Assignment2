@@ -5,12 +5,15 @@ import AirportRapsody.Interface.IArrivalTerminalTransferQuayPassenger;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQuayBusDriver, IArrivalTerminalTransferQuayPassenger {
     Queue<Integer> BOARDING_QUEUE;
 
     ReentrantLock lock = new ReentrantLock();
+    Condition busFull = lock.newCondition();
+
 
     public MArrivalTerminalTransferQuay() {
         BOARDING_QUEUE = new LinkedList<Integer>();

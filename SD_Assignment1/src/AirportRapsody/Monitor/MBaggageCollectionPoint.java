@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
+import AirportRapsody.Interface.IBaggageCollectionPointPassenger;
 import AirportRapsody.Interface.IBaggageCollectionPointPorter;
 
-public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter {
+public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, IBaggageCollectionPointPassenger {
     ReentrantLock lock = new ReentrantLock();
 
     List<Integer> ListOfBags;
@@ -41,6 +42,11 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter {
 
     @Override
     public void tryToCollectABag() {
+
+    }
+
+    @Override
+    public void addBag() {
 
     }
 }
