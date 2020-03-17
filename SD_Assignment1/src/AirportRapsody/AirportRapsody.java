@@ -6,8 +6,6 @@ import AirportRapsody.Thread.TBusDriver;
 import AirportRapsody.Thread.TPassenger;
 import AirportRapsody.Thread.TPorter;
 
-import java.util.Random;
-
 public class AirportRapsody {
     public static void main(String[] args) throws Exception {
         Integer PLANE_PASSENGERS, MAX_PORTER, MAX_BUSDRIVER, PLANES_PER_DAY, MAX_BAGS_NUMBER;
@@ -18,13 +16,13 @@ public class AirportRapsody {
         Boolean END_OF_DAY = false;
         MAX_BAGS_NUMBER = 2;
 
-
         // Arrays de threads
         TPorter[] TPorter = new TPorter[MAX_PORTER];
         TBusDriver[] TBusDriver = new TBusDriver[MAX_BUSDRIVER];
         TPassenger[] TPassenger = new TPassenger[PLANE_PASSENGERS];
 
         // INSTANCIAR MONITORES
+        MLogger MLogger = new MLogger();
         MArrivalLounge MArrivalLounge = new MArrivalLounge(PLANE_PASSENGERS);
         MArrivalTerminalExit MArrivalTerminalExit = new MArrivalTerminalExit();
         MArrivalTerminalTransferQuay MArrivalTerminalTransferQuay = new MArrivalTerminalTransferQuay();
@@ -67,6 +65,24 @@ public class AirportRapsody {
             //executa o run
             TPassenger[i].start();
         }
+
+        //Wait for joins
+        for(int i=0;i<TPassenger.length; i++){
+            try{
+                TPassenger[i].join();
+            } catch(InterruptedException e){}
+        }
+        for(int i=0;i<TPorter.length;i++){
+            try{
+                TPorter[i].join();
+            } catch(InterruptedException e){}
+        }
+        for(int i=0;i<TBusDriver.length;i++){
+            try{
+                TBusDriver[i].join();
+            } catch(InterruptedException e){}
+        }
+        //MLogger.close();
     }
 
 }

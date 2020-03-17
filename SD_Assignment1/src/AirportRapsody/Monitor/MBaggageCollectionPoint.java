@@ -10,43 +10,24 @@ import AirportRapsody.Interface.IBaggageCollectionPointPorter;
 public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, IBaggageCollectionPointPassenger {
     ReentrantLock lock = new ReentrantLock();
 
-    List<Integer> ListOfBags;
+    List<Bag> ListOfBags;
 
     public MBaggageCollectionPoint()
     {
         ListOfBags = new ArrayList<>(); 
     }
 
-    // PORTER
-    public void AddBag(int BagID)
-    {
-        ListOfBags.add(BagID);
-    }
-
      // PASSENGER
      public void RemoveBag(int BagID)
      {
-         for (int i = 0; i < ListOfBags.size(); i++)
-         {
-             if (ListOfBags.get(i) == BagID)
-             {
-                ListOfBags.remove(i);
-             }
-         }
+
      }
 
     @Override
-    public void carryItToAppropriateStore() {
-
-    }
-
-    @Override
-    public void tryToCollectABag() {
-
-    }
-
-    @Override
-    public void addBag() {
+    public void addBag(Bag bag) {
+        lock.lock();
+        ListOfBags.add(bag);
+        lock.unlock();
 
     }
 }

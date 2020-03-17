@@ -1,7 +1,7 @@
 package AirportRapsody.Interface;
 
+import AirportRapsody.Monitor.Bag;
+
 public interface IBaggageCollectionPointPorter {
-    void carryItToAppropriateStore();
-    void tryToCollectABag();
-    void addBag();
+    void addBag(Bag bag);
 }

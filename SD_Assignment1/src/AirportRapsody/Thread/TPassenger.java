@@ -6,23 +6,51 @@ import AirportRapsody.State.SPassenger;
 import java.util.*;
 
 public class TPassenger extends Thread {
+    private Random random = new Random();
 
-    SPassenger curState;
-    int NUMBER_OF_BAGS_RETRIEVED;
-    List<Integer> bags;
-
-    public TPassenger(int pthread_number, int MAX_BAGS_NUMBER,
-                      IArrivalLoungePorter MArrivalLounge,
-                      IArrivalTerminalExitPassenger MArrivalTerminalExit,
-                      IArrivalTerminalTransferQuayPassenger MArrivalTerminalTransferQuay,
-                      IBaggageCollectionPointPassenger MBaggageCollectionPoint,
-                      IBaggageReclaimOfficePassenger MBaggageReclaimOffice,
-                      IDepartureTerminalTransferQuayPassenger MDepartureTerminalTransferQuay)
-    {
-       curState = curState.AT_THE_DISEMBARKING_ZONE;
-       NUMBER_OF_BAGS_RETRIEVED = 0;
-       bags = generateBags(pthread_number, MAX_BAGS_NUMBER);
+    public void setCurState(SPassenger curState) {
+        this.curState = curState;
     }
+
+    private SPassenger curState;
+    private int NUMBER_OF_BAGS_RETRIEVED;
+
+    private Boolean TRANSIT;
+
+    public List<Integer> getBags() {
+        return bags;
+    }
+
+    public void setBags(List<Integer> bags) {
+        this.bags = bags;
+    }
+
+    private List<Integer> bags;
+
+    private Integer pthread_number;
+    private IArrivalLoungePorter MArrivalLounge;
+    private IArrivalTerminalExitPassenger MArrivalTerminalExit;
+    private IArrivalTerminalTransferQuayPassenger MArrivalTerminalTransferQuay;
+    private IBaggageCollectionPointPassenger MBaggageCollectionPoint;
+    private IBaggageReclaimOfficePassenger MBaggageReclaimOffice;
+    private IDepartureTerminalTransferQuayPassenger MDepartureTerminalTransferQuay;
+
+
+    public TPassenger(Integer pthread_number, Integer MAX_BAGS_NUMBER, IArrivalLoungePorter MArrivalLounge, IArrivalTerminalExitPassenger MArrivalTerminalExit, IArrivalTerminalTransferQuayPassenger MArrivalTerminalTransferQuay, IBaggageCollectionPointPassenger MBaggageCollectionPoint, IBaggageReclaimOfficePassenger MBaggageReclaimOffice, IDepartureTerminalTransferQuayPassenger MDepartureTerminalTransferQuay) {
+        this.pthread_number = pthread_number;
+        this.TRANSIT = random.nextBoolean();
+        this.curState = curState.AT_THE_DISEMBARKING_ZONE;
+        this.NUMBER_OF_BAGS_RETRIEVED = NUMBER_OF_BAGS_RETRIEVED;
+        NUMBER_OF_BAGS_RETRIEVED = 0;
+        bags = generateBags(pthread_number, MAX_BAGS_NUMBER);
+        this.MArrivalLounge = MArrivalLounge;
+        this.MArrivalTerminalExit = MArrivalTerminalExit;
+        this.MArrivalTerminalTransferQuay = MArrivalTerminalTransferQuay;
+        this.MBaggageCollectionPoint = MBaggageCollectionPoint;
+        this.MBaggageReclaimOffice = MBaggageReclaimOffice;
+        this.MDepartureTerminalTransferQuay = MDepartureTerminalTransferQuay;
+    }
+
 
     @Override
     public void run() {
@@ -46,9 +74,10 @@ public class TPassenger extends Thread {
         }
     }
 
+
+
     private List<Integer> generateBags(int pthread_number, int MAX_BAGS_NUMBER){
         //gerar numero de malas para o passageiro
-        Random random = new Random();
         Integer size = random.nextInt(MAX_BAGS_NUMBER+1);
 
         List<Integer> bags = new ArrayList<Integer>();
@@ -58,6 +87,10 @@ public class TPassenger extends Thread {
             bags.add(pthread_number * MAX_BAGS_NUMBER + nbag);
         }
         return bags;
+    }
+
+    public Boolean getTRANSIT() {
+        return TRANSIT;
     }
 }
 

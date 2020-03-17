@@ -8,12 +8,17 @@ import java.util.Random;
 public class TBusDriver extends Thread {
 
     
-    SBusDriver curState;
+    private SBusDriver curState;
 
-    public TBusDriver(Integer thread_number,
-                      IArrivalTerminalTransferQuayBusDriver MArrivalTerminalTransferQuayBusDriver,
-                      IDepartureTerminalTransferQuayBusDriver MDepartureTerminalTransferQuayBusDriver) {
-        curState = curState.PARKING_AT_THE_ARRIVAL_TERMINAL;
+    private Integer pthread_number;
+    private IArrivalTerminalTransferQuayBusDriver MArrivalTerminalTransferQuayBusDriver;
+    private IDepartureTerminalTransferQuayBusDriver MDepartureTerminalTransferQuayBusDriver;
+
+    public TBusDriver(Integer pthread_number, IArrivalTerminalTransferQuayBusDriver MArrivalTerminalTransferQuayBusDriver, IDepartureTerminalTransferQuayBusDriver MDepartureTerminalTransferQuayBusDriver) {
+        this.curState = curState.PARKING_AT_THE_ARRIVAL_TERMINAL;
+        this.pthread_number = pthread_number;
+        this.MArrivalTerminalTransferQuayBusDriver = MArrivalTerminalTransferQuayBusDriver;
+        this.MDepartureTerminalTransferQuayBusDriver = MDepartureTerminalTransferQuayBusDriver;
     }
 
     @Override
@@ -21,6 +26,7 @@ public class TBusDriver extends Thread {
         while(true) {
             switch(curState) {
                 case PARKING_AT_THE_ARRIVAL_TERMINAL:
+
                 case DRIVING_FORWARD:
                 case PARKING_AT_THE_DEPARTURE_TERMINAL:
                 case DRIVING_BACKWARD:
