@@ -25,7 +25,9 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
             NUMBER_OF_LOST_BAGS += number_of_bags;
             return goHome();
         }
-        catch(Exception e){}
+        catch(Exception e){
+            e.printStackTrace();
+        }
         finally{
             lock.unlock();           
         }

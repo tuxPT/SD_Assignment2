@@ -3,7 +3,9 @@ package AirportRapsody.Monitor;
 import AirportRapsody.Interface.IDepartureTerminalTransferQuayBusDriver;
 import AirportRapsody.Interface.IDepartureTerminalTransferQuayPassenger;
 import AirportRapsody.State.SBusDriver;
+import AirportRapsody.State.SPassenger;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -31,46 +33,50 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
 
     @Override
     public SBusDriver parkTheBusAndLetPassOff(Integer NUMBER_OF_PASSENGERS) {
+        
         lock.lock();
         try{
             this.NUMBER_OF_PASSENGERS = NUMBER_OF_PASSENGERS;
+            parkTheBus.signalAll();              
+            lastPassenger.await();    
         }
-        catch (Exception e){}
+        catch (Exception e){
+            e.printStackTrace();
+        }
         finally {
             lock.unlock();
-        }
-        parkTheBus.signalAll();
+        }            
+       
         return SBusDriver.DRIVING_BACKWARD;
     }
 
     @Override
     public SBusDriver goToArrivalTerminal() {
-        lock.lock();
+        // SLEEP
         try{
-            lastPassenger.await();
-            return SBusDriver.DRIVING_FORWARD;
+            TimeUnit.SECONDS.sleep(5);
         }
-        catch (Exception e){
-            return SBusDriver.PARKING_AT_THE_DEPARTURE_TERMINAL;
-        }
-        finally {
-            lock.unlock();
-        }
-
+        catch(Exception e){
+            e.printStackTrace();
+        }        
+        return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
     }
 
     @Override
-    public void leaveTheBus() {
+    public SPassenger leaveTheBus() {
         lock.lock();
         try {
             parkTheBus.await();
+            //
             if(DISEMBARKED_PASSENGERS == NUMBER_OF_PASSENGERS){
                 lastPassenger.signalAll();
             }
-        }catch (Exception e){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         finally {
             lock.unlock();
         }
-        //retornar estado
+        return SPassenger.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
     }
 }

@@ -3,6 +3,7 @@ package AirportRapsody.Monitor;
 import AirportRapsody.Interface.IArrivalTerminalTransferQuayBusDriver;
 import AirportRapsody.Interface.IArrivalTerminalTransferQuayPassenger;
 import AirportRapsody.State.SBusDriver;
+import AirportRapsody.State.SPassenger;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -34,7 +35,7 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
             do{
                 waitingQueue.await(20, TimeUnit.SECONDS);
                 //WAITING_QUEUE se WAITING_QUEUE menor ou igual a BUS_CAPACITY senão BUS_CAPACITY
-                busQueueSize  = WAITING_QUEUE.size() <= BUS_CAPACITY ? WAITING_QUEUE.size(): BUS_CAPACITY ;
+                busQueueSize  = WAITING_QUEUE.size() <= BUS_CAPACITY ? WAITING_QUEUE.size(): BUS_CAPACITY;
             }
             while(busQueueSize == 0);
             //inicia o boarding
@@ -42,16 +43,18 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
                 boarding.signal();
             }
             //espera que entrem os passageiros sinalizados
-            busFull.await();
+            busFull.await();            
         }
-        catch(Exception e) {}
-        finally {
-            lock.unlock();
-            return SBusDriver.DRIVING_FORWARD;
+        catch(Exception e) {
+            e.printStackTrace();
         }
+        finally {            
+            lock.unlock();            
+        }
+        return SBusDriver.DRIVING_FORWARD;
     }    
 
-    public void enterTheBus(Integer passengerID) {
+    public SPassenger enterTheBus(Integer passengerID) {
         lock.lock();
         busQueueSize = 0;
         try{
@@ -59,31 +62,36 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
            if (WAITING_QUEUE.size() == 3)
            {
                 waitingQueue.signalAll();
-           }
+           }           
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         finally
         {
             lock.unlock();
         }            
-        waitToEnterToBus(passengerID);
+        return waitToEnterToBus(passengerID);
     }   
 
-    public void waitToEnterToBus(Integer passengerID){
+    public SPassenger waitToEnterToBus(Integer passengerID){
         lock.lock();
         try{
             boarding.await();
             WAITING_QUEUE.remove();
             BUS_QUEUE.add(passengerID);
 
-            if(BUS_QUEUE.size() == busQueueSize)
+            if(BUS_QUEUE.size() == busQueueSize){
                 busFull.signalAll();
+            }            
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         finally {
             lock.unlock();
         }
-
+        return SPassenger.TERMINAL_TRANSFER;
     }      
        
         
@@ -91,6 +99,12 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
 
     public Integer goToDepartureTerminal() {
         //sleep
+        try{
+            TimeUnit.SECONDS.sleep(5);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }        
         return BUS_QUEUE.size();
     }
 }

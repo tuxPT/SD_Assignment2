@@ -6,8 +6,6 @@ import AirportRapsody.Interface.ITemporaryStorageAreaPorter;
 import AirportRapsody.Monitor.Bag;
 import AirportRapsody.State.SPorter;
 
-import java.util.Random;
-
 public class TPorter extends Thread {    
 
     public Bag getBag() {
@@ -46,7 +44,7 @@ public class TPorter extends Thread {
 
     @Override
     public void run() {
-        while (PLANES_TO_LAND > 0) {
+        while (PLANES_TO_LAND >= 0) {
             switch (curState) {
                 case WAITING_FOR_A_PLANE_TO_LAND:
                     curState = MArrivalLounge.takeARest();

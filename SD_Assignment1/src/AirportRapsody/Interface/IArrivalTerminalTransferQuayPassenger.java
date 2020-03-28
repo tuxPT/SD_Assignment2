@@ -1,5 +1,7 @@
 package AirportRapsody.Interface;
 
+import AirportRapsody.State.SPassenger;
+
 public interface IArrivalTerminalTransferQuayPassenger {   
-    void enterTheBus(Integer Passenger_ID);
+    SPassenger enterTheBus(Integer Passenger_ID);
 }

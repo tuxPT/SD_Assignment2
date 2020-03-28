@@ -18,7 +18,13 @@ public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
 
     // only porter can add
     public SPorter addBag() {
-        NUMBER_OF_BAGS++; 
+        lock.lock();
+        try{
+            NUMBER_OF_BAGS++; 
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         return SPorter.AT_THE_PLANES_HOLD;      
     }
 }

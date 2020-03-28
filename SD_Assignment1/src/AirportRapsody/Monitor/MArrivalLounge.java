@@ -41,7 +41,9 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
                 NUMBER_OF_PASSENGERS = 0;   
                 }            
         }
-        catch(Exception e){}
+        catch(Exception e){
+            e.printStackTrace();
+        }
         finally{
         lock.unlock();
         }
@@ -59,7 +61,9 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
                 tmp = plane_hold.remove(0);
             }                    
         }catch (Exception e){
-        } finally {
+            e.printStackTrace();
+        } 
+        finally {
             lock.unlock();
         }
         return tmp;
@@ -71,7 +75,7 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
             lock.lock();
             try {
                 lastPassenger.await();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             finally{

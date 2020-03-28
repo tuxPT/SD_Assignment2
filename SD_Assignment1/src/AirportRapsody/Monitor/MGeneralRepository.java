@@ -54,6 +54,7 @@ public class MGeneralRepository {
             this.porterStat = Stat != null ? Stat : this.porterStat;
 
         }catch (Exception e){
+            e.printStackTrace();
         }
         finally {
             //print
@@ -66,6 +67,7 @@ public class MGeneralRepository {
         try{
             this.busDriverStat = Stat != null ? Stat : this.busDriverStat;
         }catch (Exception e){
+            e.printStackTrace();
         }
         finally {
             //print
@@ -104,7 +106,7 @@ public class MGeneralRepository {
             this.passengerCollectedBags[id] = (collectedBags != null) ? collectedBags : this.passengerCollectedBags[id];
             this.transit[id] = (transit != null) ? transit : this.transit[id];
         }catch (Exception e){
-
+            e.printStackTrace();
         }
         finally {
             print();
@@ -137,7 +139,9 @@ public class MGeneralRepository {
             Arrays.fill(transit, null);
             Arrays.fill(startTotalBags, null);
             Arrays.fill(passengerCollectedBags, null);
-        }catch (Exception e){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         finally {
             print();
             lock.unlock();

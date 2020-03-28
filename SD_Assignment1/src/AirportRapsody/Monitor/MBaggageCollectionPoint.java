@@ -49,6 +49,7 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
             while(moreBags);                                         
         }
         catch(Exception e){
+            e.printStackTrace();
         }
         finally{
             lock.unlock();
@@ -66,6 +67,7 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
             porterArrival.signalAll();           
         }
         catch (Exception e){
+            e.printStackTrace();
         }
         finally{
             lock.unlock();

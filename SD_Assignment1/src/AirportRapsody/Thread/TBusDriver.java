@@ -3,8 +3,6 @@ package AirportRapsody.Thread;
 import AirportRapsody.Interface.*;
 import AirportRapsody.State.SBusDriver;
 
-import java.util.Random;
-
 public class TBusDriver extends Thread {
 
     
@@ -41,7 +39,7 @@ public class TBusDriver extends Thread {
                     curState = MDepartureTerminalTransferQuayBusDriver.goToArrivalTerminal();
                 break;
             }
-            //sleep
+            // SLEEP            
         }
     }
 }

@@ -64,7 +64,7 @@ public class TPassenger extends Thread {
     private IDepartureTerminalTransferQuayPassenger MDepartureTerminalTransferQuay;
     private IDepartureTerminalPassenger MDepartureTerminal;
 
-    public TPassenger(Integer pthread_number, Integer MAX_BAGS_NUMBER, Integer PASSENGERS_PER_PLANE,
+    public TPassenger(Integer pthread_number, boolean TRANSIT,
             IArrivalLoungePassenger MArrivalLounge, IArrivalTerminalExitPassenger MArrivalTerminalExit,
             IArrivalTerminalTransferQuayPassenger MArrivalTerminalTransferQuay,
             IBaggageCollectionPointPassenger MBaggageCollectionPoint,
@@ -77,8 +77,6 @@ public class TPassenger extends Thread {
         this.TRANSIT = random.nextBoolean();
         this.curState = SPassenger.AT_THE_DISEMBARKING_ZONE;
         this.NUMBER_OF_BAGS_RETRIEVED = 0;
-        this.PASSENGERS_PER_PLANE = PASSENGERS_PER_PLANE;
-        bags = generateBags(pthread_number, MAX_BAGS_NUMBER);
         this.MArrivalLounge = MArrivalLounge;
         this.MArrivalTerminalExit = MArrivalTerminalExit;
         this.MArrivalTerminalTransferQuay = MArrivalTerminalTransferQuay;
@@ -86,6 +84,7 @@ public class TPassenger extends Thread {
         this.MBaggageReclaimOffice = MBaggageReclaimOffice;
         this.MDepartureTerminalTransferQuay = MDepartureTerminalTransferQuay;
         this.MDepartureTerminal = MDepartureTerminal;
+        this.TRANSIT = TRANSIT;
     }
 
     @Override
@@ -120,10 +119,10 @@ public class TPassenger extends Thread {
                     break;
 
                 case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-                    MArrivalTerminalTransferQuay.enterTheBus(pthread_number);
+                    curState = MArrivalTerminalTransferQuay.enterTheBus(pthread_number);
                     break;
                 case TERMINAL_TRANSFER:
-                    MDepartureTerminalTransferQuay.leaveTheBus();
+                    curState = MDepartureTerminalTransferQuay.leaveTheBus();
                     break;
                 case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
                     curState = prepareNextLeg();
@@ -139,8 +138,7 @@ public class TPassenger extends Thread {
                     }
                     endOfLife = true;
                     break;
-            }
-            //sleep
+            }           
         }
     }
 

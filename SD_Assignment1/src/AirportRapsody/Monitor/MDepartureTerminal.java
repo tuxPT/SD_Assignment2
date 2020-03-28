@@ -30,7 +30,9 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
         try{
             lastPassenger.await();            
         }
-        catch(Exception e) {}   
+        catch(Exception e) {
+            e.printStackTrace();
+        }   
     }
 
     public Integer getCURRENT_NUMBER_OF_PASSENGERS() {
@@ -43,7 +45,9 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
         try{
             CURRENT_NUMBER_OF_PASSENGERS = 0;
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         finally{
             lock.unlock();
         }
