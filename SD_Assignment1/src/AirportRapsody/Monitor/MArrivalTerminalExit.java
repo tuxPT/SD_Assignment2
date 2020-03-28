@@ -2,37 +2,51 @@ package AirportRapsody.Monitor;
 
 import AirportRapsody.Interface.IArrivalTerminalExitPassenger;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
-    Integer NUMBER_OF_PASSENGERS;
+    private MGeneralRepository MGeneralRepository;
+    Integer CURRENT_NUMBER_OF_PASSENGERS;
 
-    ReentrantLock lock = new ReentrantLock();
+    ReentrantLock lock = new ReentrantLock(true);
+    Condition lastPassenger = lock.newCondition();
 
-    public MArrivalTerminalExit()
-    {
-        NUMBER_OF_PASSENGERS = 0;
+    public MArrivalTerminalExit(MGeneralRepository MGeneralRepository)
+    {        
+        CURRENT_NUMBER_OF_PASSENGERS = 0;
+        this.MGeneralRepository = MGeneralRepository;
     }
 
     // PASSENGER
     public void addPassenger()
     {
-        NUMBER_OF_PASSENGERS++;
+        CURRENT_NUMBER_OF_PASSENGERS++;       
     }
 
     // PASSENGER
-    public void RemovePassenger()
-    {
-        NUMBER_OF_PASSENGERS--;
+    public void waitingForLastPassenger()
+    {           
+        try{
+            lastPassenger.await();            
+        }
+        catch(Exception e) {}       
     }
 
-    @Override
-    public void goHome() {
+    public Integer getCURRENT_NUMBER_OF_PASSENGERS() {
+        return CURRENT_NUMBER_OF_PASSENGERS;
+    }        
 
-    }
-
-    @Override
-    public void prepareNextLeg() {
-
+    public void lastPassenger(){        
+        lastPassenger.signalAll();
+        lock.lock();
+        try{
+            // SLEEP
+            CURRENT_NUMBER_OF_PASSENGERS = 0;
+        }
+        catch(Exception e) {}
+        finally{
+            lock.unlock();
+        }
     }
 }

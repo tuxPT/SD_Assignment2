@@ -1,10 +1,11 @@
 package AirportRapsody.Interface;
 
 import AirportRapsody.Monitor.Bag;
+import AirportRapsody.State.SPorter;
 
 public interface IArrivalLoungePorter {
-    void tryToCollectABag();
-    void takeARest();
-    void noMoreBagsToCollect();
-    void carryItToAppropriateStore(Bag bag);
+    Bag tryToCollectABag();
+    SPorter takeARest();
+    SPorter noMoreBagsToCollect();
+    SPorter carryItToAppropriateStore(Bag bag);
 }

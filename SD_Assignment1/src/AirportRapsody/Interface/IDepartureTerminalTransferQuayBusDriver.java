@@ -1,6 +1,8 @@
 package AirportRapsody.Interface;
 
+import AirportRapsody.State.SBusDriver;
+
 public interface IDepartureTerminalTransferQuayBusDriver {
-    void parkTheBusAndLetPassOff();
-    void goToArrivalTerminal();
+    SBusDriver parkTheBusAndLetPassOff(Integer n);
+    SBusDriver goToArrivalTerminal();
 }

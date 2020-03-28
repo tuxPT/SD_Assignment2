@@ -1,5 +1,8 @@
 package AirportRapsody.Interface;
 
+import AirportRapsody.State.SPassenger;
+
 public interface IBaggageReclaimOfficePassenger {
-    void addBag();
+    SPassenger addBag(int i);
+    SPassenger goHome();
 }

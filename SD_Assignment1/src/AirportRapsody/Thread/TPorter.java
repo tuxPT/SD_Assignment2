@@ -8,10 +8,7 @@ import AirportRapsody.State.SPorter;
 
 import java.util.Random;
 
-public class TPorter extends Thread {
-    public void setCurState(SPorter curState) {
-        this.curState = curState;
-    }
+public class TPorter extends Thread {    
 
     public Bag getBag() {
         return bag;
@@ -21,6 +18,15 @@ public class TPorter extends Thread {
         this.bag = bag;
     }
 
+    public Integer getPLANES_TO_LAND() {
+        return PLANES_TO_LAND;
+    }
+
+    public void decrementPLANES_TO_LAND() {
+        PLANES_TO_LAND--;
+    }      
+
+    private Integer PLANES_TO_LAND;
     private Bag bag;
     private SPorter curState;
     private Integer pthread_number;
@@ -28,46 +34,42 @@ public class TPorter extends Thread {
     private IBaggageCollectionPointPorter MBaggageCollectionPoint;
     private ITemporaryStorageAreaPorter MTemporaryStorageArea;
 
-    public TPorter(Integer pthread_number,
-                   IArrivalLoungePorter MArrivalLounge,
-                   IBaggageCollectionPointPorter MBaggageCollectionPoint,
-                   ITemporaryStorageAreaPorter MTemporaryStorageArea
-    ) {
+    public TPorter(Integer pthread_number, Integer PLANES_TO_LAND, IArrivalLoungePorter MArrivalLounge,
+            IBaggageCollectionPointPorter MBaggageCollectionPoint, ITemporaryStorageAreaPorter MTemporaryStorageArea) {
+        this.PLANES_TO_LAND = PLANES_TO_LAND;
         this.pthread_number = pthread_number;
         this.MArrivalLounge = MArrivalLounge;
         this.MBaggageCollectionPoint = MBaggageCollectionPoint;
         this.MTemporaryStorageArea = MTemporaryStorageArea;
-        this.curState = curState.WAITING_FOR_A_PLANE_TO_LAND;
+        this.curState = SPorter.WAITING_FOR_A_PLANE_TO_LAND;
     }
 
     @Override
     public void run() {
-        while(true) {
-            switch(curState) {
+        while (PLANES_TO_LAND > 0) {
+            switch (curState) {
                 case WAITING_FOR_A_PLANE_TO_LAND:
-                    MArrivalLounge.takeARest();
+                    curState = MArrivalLounge.takeARest();
+                    PLANES_TO_LAND--;                    
+                    break;
                 case AT_THE_PLANES_HOLD:
-                    MArrivalLounge.tryToCollectABag();
-                    if(bag == null){
-                        MArrivalLounge.noMoreBagsToCollect();
+                    // TRY TO GET BAG
+                    bag = MArrivalLounge.tryToCollectABag();
+                    if (bag == null) {
+                        MBaggageCollectionPoint.warnPassengers();
+                        curState = MArrivalLounge.noMoreBagsToCollect();
+                    } else {
+                       curState = MArrivalLounge.carryItToAppropriateStore(bag);
                     }
-                    else{
-                        MArrivalLounge.carryItToAppropriateStore(bag);
-                    }
+                    break;
                 case AT_THE_LUGGAGE_BELT_CONVEYOR:
-                    MBaggageCollectionPoint.addBag(bag);
+                    curState = MBaggageCollectionPoint.addBag(bag);                   
+                    break;
                 case AT_THE_STOREROOM:
-                    MTemporaryStorageArea.addBag();
-
+                    curState = MTemporaryStorageArea.addBag();                    
+                    break;
             }
-            Random random = new Random(10);
-            try {
-                sleep(random.nextInt());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            //sleep
         }
     }
-
 }
-

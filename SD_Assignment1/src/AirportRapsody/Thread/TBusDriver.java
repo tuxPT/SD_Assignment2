@@ -10,15 +10,17 @@ public class TBusDriver extends Thread {
     
     private SBusDriver curState;
 
+    private Integer numberPassengersOnBus;
     private Integer pthread_number;
     private IArrivalTerminalTransferQuayBusDriver MArrivalTerminalTransferQuayBusDriver;
     private IDepartureTerminalTransferQuayBusDriver MDepartureTerminalTransferQuayBusDriver;
 
     public TBusDriver(Integer pthread_number, IArrivalTerminalTransferQuayBusDriver MArrivalTerminalTransferQuayBusDriver, IDepartureTerminalTransferQuayBusDriver MDepartureTerminalTransferQuayBusDriver) {
-        this.curState = curState.PARKING_AT_THE_ARRIVAL_TERMINAL;
+        this.curState = SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
         this.pthread_number = pthread_number;
         this.MArrivalTerminalTransferQuayBusDriver = MArrivalTerminalTransferQuayBusDriver;
         this.MDepartureTerminalTransferQuayBusDriver = MDepartureTerminalTransferQuayBusDriver;
+        this.numberPassengersOnBus = 0;
     }
 
     @Override
@@ -26,17 +28,20 @@ public class TBusDriver extends Thread {
         while(true) {
             switch(curState) {
                 case PARKING_AT_THE_ARRIVAL_TERMINAL:
-
+                    curState = MArrivalTerminalTransferQuayBusDriver.announcingBusBoarding();
+                break;
                 case DRIVING_FORWARD:
+                    numberPassengersOnBus = MArrivalTerminalTransferQuayBusDriver.goToDepartureTerminal();
+                    curState = SBusDriver.PARKING_AT_THE_DEPARTURE_TERMINAL;
+                break;
                 case PARKING_AT_THE_DEPARTURE_TERMINAL:
+                    curState = MDepartureTerminalTransferQuayBusDriver.parkTheBusAndLetPassOff(numberPassengersOnBus);
+                break;
                 case DRIVING_BACKWARD:
+                    curState = MDepartureTerminalTransferQuayBusDriver.goToArrivalTerminal();
+                break;
             }
-            Random random = new Random(10);
-            try {
-                sleep(random.nextInt());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            //sleep
         }
     }
 }

@@ -1,5 +1,7 @@
 package AirportRapsody.Interface;
 
+import java.util.List;
+
 public interface IBaggageCollectionPointPassenger {
-    static void RemoveBag() {};
+    Integer goCollectABag(List<Integer> t);
 }
