@@ -7,6 +7,7 @@ public class TBusDriver extends Thread {
 
     
     private SBusDriver curState;
+    private boolean endOfDay;
 
     private Integer numberPassengersOnBus;
     private Integer pthread_number;
@@ -19,11 +20,12 @@ public class TBusDriver extends Thread {
         this.MArrivalTerminalTransferQuayBusDriver = MArrivalTerminalTransferQuayBusDriver;
         this.MDepartureTerminalTransferQuayBusDriver = MDepartureTerminalTransferQuayBusDriver;
         this.numberPassengersOnBus = 0;
+        this.endOfDay = false;
     }
 
     @Override
     public void run() {
-        while(true) {
+        while(!endOfDay) {
             switch(curState) {
                 case PARKING_AT_THE_ARRIVAL_TERMINAL:
                     curState = MArrivalTerminalTransferQuayBusDriver.announcingBusBoarding();
@@ -41,6 +43,9 @@ public class TBusDriver extends Thread {
             }
             // SLEEP            
         }
+    }
+    public void setEndOfDay(){
+        endOfDay = true;
     }
 }
 

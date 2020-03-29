@@ -5,5 +5,5 @@ import java.util.List;
 import AirportRapsody.State.SPassenger;
 
 public interface IArrivalLoungePassenger {
-    SPassenger whatShouldIDo(List<Integer> t_bags, boolean t_TRANSIT);
+    SPassenger whatShouldIDo(Integer id, Integer t_bags, boolean t_TRANSIT);
 }

@@ -2,6 +2,7 @@ package AirportRapsody.Monitor;
 
 import AirportRapsody.Interface.IDepartureTerminalTransferQuayBusDriver;
 import AirportRapsody.Interface.IDepartureTerminalTransferQuayPassenger;
+import AirportRapsody.Interface.IGeneralRepository;
 import AirportRapsody.State.SBusDriver;
 import AirportRapsody.State.SPassenger;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransferQuayBusDriver, IDepartureTerminalTransferQuayPassenger {
-    private MGeneralRepository MGeneralRepository;
+    private IGeneralRepository MGeneralRepository;
     Integer NUMBER_OF_PASSENGERS;
     ReentrantLock lock = new ReentrantLock(true);
     Condition parkTheBus = lock.newCondition();
@@ -76,7 +77,9 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
         }
         finally {
             lock.unlock();
+
         }
         return SPassenger.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
+
     }
 }

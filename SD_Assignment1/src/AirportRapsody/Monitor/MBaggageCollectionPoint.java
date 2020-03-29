@@ -7,10 +7,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import AirportRapsody.Interface.IBaggageCollectionPointPassenger;
 import AirportRapsody.Interface.IBaggageCollectionPointPorter;
+import AirportRapsody.Interface.IGeneralRepository;
+
 import AirportRapsody.State.SPorter;
 
 public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, IBaggageCollectionPointPassenger {
-    private MGeneralRepository MGeneralRepository;
+    private IGeneralRepository MGeneralRepository;
     ReentrantLock lock = new ReentrantLock(true);
     Condition porterArrival = lock.newCondition();
     private boolean moreBags;      

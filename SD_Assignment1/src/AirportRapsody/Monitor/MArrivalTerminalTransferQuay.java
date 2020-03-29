@@ -25,6 +25,7 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
 
     public MArrivalTerminalTransferQuay(Integer BUS_CAPACITY, MGeneralRepository MGeneralRepository) {
         WAITING_QUEUE = new LinkedList<Integer>();
+        BUS_QUEUE = new LinkedList<Integer>();
         this.BUS_CAPACITY = BUS_CAPACITY;
         this.MGeneralRepository = MGeneralRepository;
     }
@@ -71,14 +72,14 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         {
             lock.unlock();
         }            
-        return waitToEnterToBus(passengerID);
+        return waitToEnterToBus();
     }   
 
-    public SPassenger waitToEnterToBus(Integer passengerID){
+    public SPassenger waitToEnterToBus(){
         lock.lock();
         try{
             boarding.await();
-            WAITING_QUEUE.remove();
+            Integer passengerID = WAITING_QUEUE.remove();
             BUS_QUEUE.add(passengerID);
 
             if(BUS_QUEUE.size() == busQueueSize){

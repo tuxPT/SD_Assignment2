@@ -2,6 +2,7 @@ package AirportRapsody.Monitor;
 
 import AirportRapsody.Interface.IArrivalLoungePassenger;
 import AirportRapsody.Interface.IArrivalLoungePorter;
+import AirportRapsody.Interface.IGeneralRepository;
 import AirportRapsody.State.SPassenger;
 import AirportRapsody.State.SPorter;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePorter {
-    private MGeneralRepository MGeneralRepository;
+    private IGeneralRepository MGeneralRepository;
     private Integer NUMBER_OF_PASSENGERS;
     private Integer PLANE_PASSENGERS;
 
@@ -28,14 +29,11 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     }
 
     // PASSENGER
-    public void addPassenger(List<Integer> t_bags, boolean t_TRANSIT)
+    public void addPassenger()
     {        
         lock.lock();
         try{            
             NUMBER_OF_PASSENGERS++;
-            for(Integer id:t_bags) {
-                plane_hold.add(new Bag(id,t_TRANSIT));
-            }
             if(NUMBER_OF_PASSENGERS == PLANE_PASSENGERS){
                 lastPassenger.signalAll();
                 NUMBER_OF_PASSENGERS = 0;   
@@ -97,14 +95,21 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     }
 
     @Override
-    public SPassenger whatShouldIDo(List<Integer> t_bags, boolean t_TRANSIT) {       
-        addPassenger(t_bags, t_TRANSIT);
-        //meter um sleep random
+    public SPassenger whatShouldIDo(Integer id, Integer t_bags, boolean t_TRANSIT) {
+        addPassenger();
+        MGeneralRepository.updatePassenger(SPassenger.AT_THE_DISEMBARKING_ZONE,
+                id,
+                null,
+                null,
+                t_bags != null ? t_bags : 0,
+                0,
+                t_TRANSIT);
+                        //meter um sleep random
         if(t_TRANSIT){
             return takeABus();
         }
         else{
-            if(t_bags.size() > 0){
+            if(t_bags > 0){
                 return goCollectABag();
             }
             else{
@@ -129,4 +134,7 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         return SPassenger.EXITING_THE_ARRIVAL_TERMINAL;
     }
 
+    public void addBag(Bag bag){
+        plane_hold.add(bag);
+    }
 }

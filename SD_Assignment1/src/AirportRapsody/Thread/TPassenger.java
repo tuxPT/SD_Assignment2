@@ -1,6 +1,7 @@
 package AirportRapsody.Thread;
 
 import AirportRapsody.Interface.*;
+import AirportRapsody.Monitor.Bag;
 import AirportRapsody.State.SPassenger;
 
 import java.util.*;
@@ -65,14 +66,16 @@ public class TPassenger extends Thread {
     private IDepartureTerminalPassenger MDepartureTerminal;
 
     public TPassenger(Integer pthread_number, boolean TRANSIT,
-            IArrivalLoungePassenger MArrivalLounge, IArrivalTerminalExitPassenger MArrivalTerminalExit,
-            IArrivalTerminalTransferQuayPassenger MArrivalTerminalTransferQuay,
-            IBaggageCollectionPointPassenger MBaggageCollectionPoint,
-            IBaggageReclaimOfficePassenger MBaggageReclaimOffice,
-            IDepartureTerminalTransferQuayPassenger MDepartureTerminalTransferQuay,
-            IDepartureTerminalPassenger MDepartureTerminal) {
+                      List<Integer> temp, Integer PLANE_PASSENGERS, IArrivalLoungePassenger MArrivalLounge, IArrivalTerminalExitPassenger MArrivalTerminalExit,
+                      IArrivalTerminalTransferQuayPassenger MArrivalTerminalTransferQuay,
+                      IBaggageCollectionPointPassenger MBaggageCollectionPoint,
+                      IBaggageReclaimOfficePassenger MBaggageReclaimOffice,
+                      IDepartureTerminalTransferQuayPassenger MDepartureTerminalTransferQuay,
+                      IDepartureTerminalPassenger MDepartureTerminal) {
 
         this.endOfLife = false;
+        this.PASSENGERS_PER_PLANE = PLANE_PASSENGERS;
+        this.bags = temp;
         this.pthread_number = pthread_number;
         this.TRANSIT = random.nextBoolean();
         this.curState = SPassenger.AT_THE_DISEMBARKING_ZONE;
@@ -92,7 +95,7 @@ public class TPassenger extends Thread {
         while (!endOfLife) {
             switch (curState) {
                 case AT_THE_DISEMBARKING_ZONE:
-                    curState = MArrivalLounge.whatShouldIDo(bags,TRANSIT);
+                    curState = MArrivalLounge.whatShouldIDo(pthread_number, bags.size(), TRANSIT);
                     break;
                 case AT_THE_LUGGAGE_COLLECTION_POINT:
                     NUMBER_OF_BAGS_RETRIEVED = MBaggageCollectionPoint.goCollectABag(bags);

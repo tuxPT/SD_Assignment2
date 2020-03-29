@@ -1,12 +1,13 @@
 package AirportRapsody.Monitor;
 
 import AirportRapsody.Interface.IDepartureTerminalPassenger;
+import AirportRapsody.Interface.IGeneralRepository;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MDepartureTerminal implements IDepartureTerminalPassenger {
-    private MGeneralRepository MGeneralRepository;
+    private IGeneralRepository MGeneralRepository;
     Integer CURRENT_NUMBER_OF_PASSENGERS;
 
     ReentrantLock lock = new ReentrantLock(true);

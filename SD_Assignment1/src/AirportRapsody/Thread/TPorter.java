@@ -6,7 +6,8 @@ import AirportRapsody.Interface.ITemporaryStorageAreaPorter;
 import AirportRapsody.Monitor.Bag;
 import AirportRapsody.State.SPorter;
 
-public class TPorter extends Thread {    
+public class TPorter extends Thread {
+    private boolean endOfDay;
 
     public Bag getBag() {
         return bag;
@@ -32,23 +33,22 @@ public class TPorter extends Thread {
     private IBaggageCollectionPointPorter MBaggageCollectionPoint;
     private ITemporaryStorageAreaPorter MTemporaryStorageArea;
 
-    public TPorter(Integer pthread_number, Integer PLANES_TO_LAND, IArrivalLoungePorter MArrivalLounge,
+    public TPorter(Integer pthread_number, IArrivalLoungePorter MArrivalLounge,
             IBaggageCollectionPointPorter MBaggageCollectionPoint, ITemporaryStorageAreaPorter MTemporaryStorageArea) {
-        this.PLANES_TO_LAND = PLANES_TO_LAND;
         this.pthread_number = pthread_number;
         this.MArrivalLounge = MArrivalLounge;
         this.MBaggageCollectionPoint = MBaggageCollectionPoint;
         this.MTemporaryStorageArea = MTemporaryStorageArea;
         this.curState = SPorter.WAITING_FOR_A_PLANE_TO_LAND;
+        this.endOfDay = false;
     }
 
     @Override
     public void run() {
-        while (PLANES_TO_LAND >= 0) {
+        while (!endOfDay) {
             switch (curState) {
                 case WAITING_FOR_A_PLANE_TO_LAND:
                     curState = MArrivalLounge.takeARest();
-                    PLANES_TO_LAND--;                    
                     break;
                 case AT_THE_PLANES_HOLD:
                     // TRY TO GET BAG
@@ -69,5 +69,9 @@ public class TPorter extends Thread {
             }
             //sleep
         }
+    }
+
+    public void setEndOfDay() {
+        endOfDay = true;
     }
 }

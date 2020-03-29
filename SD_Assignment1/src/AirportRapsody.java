@@ -5,11 +5,14 @@ import AirportRapsody.Thread.TPassenger;
 import AirportRapsody.Thread.TPorter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class AirportRapsody {
 
     public static void main(String[] args) throws Exception {
+        Random random = new Random();
         ArrayList<Bag>[] bags;
         Integer PLANE_PASSENGERS, MAX_PORTER, MAX_BUSDRIVER, PLANES_PER_DAY, MAX_BAGS_NUMBER,BUS_CAPACITY;
         PLANE_PASSENGERS = 6;
@@ -26,7 +29,7 @@ public class AirportRapsody {
         TPassenger[] TPassenger = new TPassenger[PLANE_PASSENGERS];
 
         // INSTANCIAR MONITORES
-        MGeneralRepository MGeneralRepository = new MGeneralRepository();
+        MGeneralRepository MGeneralRepository = new MGeneralRepository(PLANE_PASSENGERS, BUS_CAPACITY);
         MArrivalLounge MArrivalLounge = new MArrivalLounge(PLANE_PASSENGERS, MGeneralRepository);
         MArrivalTerminalExit MArrivalTerminalExit = new MArrivalTerminalExit(MGeneralRepository);
         MArrivalTerminalTransferQuay MArrivalTerminalTransferQuay = new MArrivalTerminalTransferQuay(BUS_CAPACITY, MGeneralRepository);
@@ -36,7 +39,7 @@ public class AirportRapsody {
         MDepartureTerminalTransferQuay MDepartureTerminalTransferQuay = new MDepartureTerminalTransferQuay(MGeneralRepository);
         MTemporaryStorageArea MTemporaryStorageArea = new MTemporaryStorageArea(MGeneralRepository);       
 
-        bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
+
 
         // Instanciar threads
         
@@ -48,48 +51,72 @@ public class AirportRapsody {
         }
 
         for (int i = 0; i < MAX_PORTER; i++) {
-            TPorter[i] = new TPorter(i, PLANES_PER_DAY, (IArrivalLoungePorter) MArrivalLounge,
+            TPorter[i] = new TPorter(i, (IArrivalLoungePorter) MArrivalLounge,
                     (IBaggageCollectionPointPorter) MBaggageCollectionPoint,
                     (ITemporaryStorageAreaPorter) MTemporaryStorageArea);
             // executa o run
             TPorter[i].start();
         }
+        for(int p=0; p<PLANES_PER_DAY; p++) {
+            //total bags generator
+            bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
+            //lost bags generator
+            int count = 0;
+            for(int i=0; i<bags.length; i++){
+                for(int j=0; j<bags[i].size(); j++){
+                    Integer probability = random.nextInt(10);
+                    //20% of lost bags
+                    if(probability > 2){
+                        MArrivalLounge.addBag(bags[i].get(j));
+                        count++;
+                    }
+                }
+            }
+            MGeneralRepository.setBags(count);
 
-        for (int i = 0; i < PLANE_PASSENGERS; i++) {
-            Random r = new Random();
-            boolean t_TRANSIT;
-            if (bags[i].size() != 0){
-                t_TRANSIT = bags[i].get(0).getTRANSIT();
+            for (int i = 0; i < PLANE_PASSENGERS; i++) {
+                Random r = new Random();
+                boolean t_TRANSIT;
+                if (bags[i].size() != 0){
+                    t_TRANSIT = bags[i].get(0).getTRANSIT();
+                }
+                else{
+                    t_TRANSIT = r.nextBoolean();
+                }
+                List<Integer> temp = new LinkedList<Integer>();
+                for(Bag b: bags[i]){
+                    temp.add(b.getID());
+                }
+                TPassenger[i] = new TPassenger(i,t_TRANSIT, temp, PLANE_PASSENGERS,
+                        (IArrivalLoungePassenger) MArrivalLounge, (IArrivalTerminalExitPassenger) MArrivalTerminalExit,
+                        (IArrivalTerminalTransferQuayPassenger) MArrivalTerminalTransferQuay,
+                        (IBaggageCollectionPointPassenger) MBaggageCollectionPoint,
+                        (IBaggageReclaimOfficePassenger) MBaggageReclaimOffice,
+                        (IDepartureTerminalTransferQuayPassenger) MDepartureTerminalTransferQuay,
+                        (IDepartureTerminalPassenger) MDepartureTerminal);
+                // executa o run
+                TPassenger[i].start();
             }
-            else{
-                t_TRANSIT = r.nextBoolean();
+
+            // Wait for joins
+            for (int i = 0; i < TPassenger.length; i++) {
+                try {
+                    TPassenger[i].join();
+                } catch (InterruptedException e) {
+                }
             }
-            TPassenger[i] = new TPassenger(i,t_TRANSIT,
-                    (IArrivalLoungePassenger) MArrivalLounge, (IArrivalTerminalExitPassenger) MArrivalTerminalExit,
-                    (IArrivalTerminalTransferQuayPassenger) MArrivalTerminalTransferQuay,
-                    (IBaggageCollectionPointPassenger) MBaggageCollectionPoint,
-                    (IBaggageReclaimOfficePassenger) MBaggageReclaimOffice,
-                    (IDepartureTerminalTransferQuayPassenger) MDepartureTerminalTransferQuay,
-                    (IDepartureTerminalPassenger) MDepartureTerminal);
-            // executa o run
-            TPassenger[i].start();
         }
 
-        // Wait for joins
-        for (int i = 0; i < TPassenger.length; i++) {
-            try {
-                TPassenger[i].join();
-            } catch (InterruptedException e) {
-            }
-        }
         for (int i = 0; i < TPorter.length; i++) {
             try {
+                TPorter[i].setEndOfDay();
                 TPorter[i].join();
             } catch (InterruptedException e) {
             }
         }
         for (int i = 0; i < TBusDriver.length; i++) {
             try {
+                TBusDriver[i].setEndOfDay();
                 TBusDriver[i].join();
             } catch (InterruptedException e) {
             }

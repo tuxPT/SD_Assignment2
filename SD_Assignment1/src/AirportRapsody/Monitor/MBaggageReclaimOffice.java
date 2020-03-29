@@ -4,10 +4,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import AirportRapsody.Interface.IBaggageReclaimOfficePassenger;
 import AirportRapsody.State.SPassenger;
+import AirportRapsody.Interface.IGeneralRepository;
 
 public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
 {
-    private MGeneralRepository MGeneralRepository;
+    private IGeneralRepository MGeneralRepository;
     ReentrantLock lock = new ReentrantLock(true);
 
     Integer NUMBER_OF_LOST_BAGS;        

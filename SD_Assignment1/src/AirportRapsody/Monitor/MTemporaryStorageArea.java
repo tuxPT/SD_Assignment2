@@ -2,11 +2,12 @@ package AirportRapsody.Monitor;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import AirportRapsody.Interface.IGeneralRepository;
 import AirportRapsody.Interface.ITemporaryStorageAreaPorter;
 import AirportRapsody.State.SPorter;
 
 public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
-    private MGeneralRepository MGeneralRepository;
+    private IGeneralRepository MGeneralRepository;
     ReentrantLock lock = new ReentrantLock(true);
 
     Integer NUMBER_OF_BAGS;

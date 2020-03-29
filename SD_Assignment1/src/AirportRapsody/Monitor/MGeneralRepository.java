@@ -1,5 +1,6 @@
 package AirportRapsody.Monitor;
 
+import AirportRapsody.Interface.IGeneralRepository;
 import AirportRapsody.State.SBusDriver;
 import AirportRapsody.State.SPassenger;
 import AirportRapsody.State.SPorter;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MGeneralRepository {
+public class MGeneralRepository implements IGeneralRepository {
     List<String> log;
     Integer FN, BN, CB, SR;
     SBusDriver busDriverStat;
@@ -25,11 +26,27 @@ public class MGeneralRepository {
     //Final Report
     Integer nNonTransit, ntransit, totalBags, lostBags;
 
-    ReentrantLock lock = new ReentrantLock();
+    ReentrantLock lock = new ReentrantLock(true);
 
     
-    public MGeneralRepository() {
-        FN = 0;
+    public MGeneralRepository(Integer PLANE_PASSENGERS, Integer BUS_CAPACITY) {
+        this.FN = 1;
+        this.BN = 0;
+        this.CB = 0;
+        this.SR = 0;
+
+        this.passengerStat = new SPassenger[PLANE_PASSENGERS];
+        this.transit = new Boolean[PLANE_PASSENGERS];
+        this.startTotalBags = new Integer[PLANE_PASSENGERS];
+        this.passengerCollectedBags = new Integer[PLANE_PASSENGERS];
+        this.waitingQueue = new LinkedList<Integer>();
+        this.busSeats = new Integer[BUS_CAPACITY];
+        this.busSeatSize = 0;
+        this.nNonTransit = 0;
+        this.ntransit = 0;
+        this.totalBags = 0;
+        this.lostBags = 0;
+
         log = new LinkedList<String>();
         log.add("               AIRPORT RHAPSODY - Description of the internal state of the problem\n" +
                 "\n" +
@@ -45,7 +62,8 @@ public class MGeneralRepository {
 
     }
 
-    void updatePorter(SPorter Stat, Integer BN, Integer CB, Integer SR){
+    @Override
+    public void updatePorter(SPorter Stat, Integer BN, Integer CB, Integer SR){
         lock.lock();
         try{
             this.BN = BN != -1 ? BN : this.BN;
@@ -62,7 +80,8 @@ public class MGeneralRepository {
         }
     }
 
-    void updateBusDriver(SBusDriver Stat){
+    @Override
+    public void updateBusDriver(SBusDriver Stat){
         lock.lock();
         try{
             this.busDriverStat = Stat != null ? Stat : this.busDriverStat;
@@ -76,7 +95,8 @@ public class MGeneralRepository {
         }
     }
 
-    void updatePassenger(SPassenger Stat, Integer id, Boolean addWaitingQueue, Boolean addBusSeats, Integer startBags, Integer collectedBags, Boolean transit){
+    @Override
+    public void updatePassenger(SPassenger Stat, Integer id, Boolean addWaitingQueue, Boolean addBusSeats, Integer startBags, Integer collectedBags, Boolean transit){
         lock.lock();
         try{
             this.passengerStat[id] = Stat != null ? Stat : this.passengerStat[id];
@@ -114,7 +134,7 @@ public class MGeneralRepository {
         }
     }
 
-    void reset(){
+    public void reset(){
         lock.lock();
         try{
             for(int i= 0; i<transit.length; i++){
@@ -151,20 +171,25 @@ public class MGeneralRepository {
     void print() {
         List<Integer> tempWaitingQueue = new LinkedList<>(waitingQueue);
         String stat = String.format("" +
-                " '%1d'  '%1d'  '%3.3s'  '%1d'  '%1d'   '%3.3s'   '%1d'  '%1d'  '%1d'  '%1d'  '%1d'  '%1d'   '%1d'  '%1d'  '%1d'" +
+                " %1d  %1d  %3s  %1d  %1d   %3s   %1s  %1s  %1s  %1s  %1s  %1s   %1s  %1s  %1s" +
                 "\n" +
-                "'%3.3s' '%3.s'  '%1d'   '%1d'  '%3.3s' '%3.3s'  '%1d'   '%1d'  '%3.3s' '%3.3s'  '%1d'   '%1d'  '%3.3s' '%3.3s  '%1d'   '%1d'  '%3.3s' '%3.3s'  '%1d'   '%1d'  '%3.3s' '%3.3s'  '%1d'   '%1d'" +
+                "%3s %3s  %1s   %1s  %3.3s %3.3s  %1s   %1s  %3.3s %3.3s  %1s   %1s  %3.3s %3.3s  %1s   %1s  %3.3s %3.3s  %1s   %1s  %3.3s %3.3s  %1s   %1s" +
                 "\n",
                 FN, BN,
                 mapPorterStat(porterStat), CB, SR,
-                mapBusDriverStat(busDriverStat), oneHifen(tempWaitingQueue.get(0)), oneHifen(tempWaitingQueue.get(1)), oneHifen(tempWaitingQueue.get(2)), oneHifen(tempWaitingQueue.get(3)), oneHifen(tempWaitingQueue.get(4)), oneHifen(tempWaitingQueue.get(5)),
+                mapBusDriverStat(busDriverStat), oneHifen(tempWaitingQueue.size() > 0 ? tempWaitingQueue.get(0) : null),
+                oneHifen(tempWaitingQueue.size() > 1 ? tempWaitingQueue.get(1) : null),
+                oneHifen(tempWaitingQueue.size() > 2 ? tempWaitingQueue.get(2) : null),
+                oneHifen(tempWaitingQueue.size() > 3 ? tempWaitingQueue.get(3) : null),
+                oneHifen(tempWaitingQueue.size() > 4 ? tempWaitingQueue.get(4) : null),
+                oneHifen(tempWaitingQueue.size() > 5 ? tempWaitingQueue.get(5) : null),
                 oneHifen(busSeats[0]), oneHifen(busSeats[1]), oneHifen(busSeats[2]),
-                mapPassenger(passengerStat[0]), mapTransit(transit[0]), oneHifen(startTotalBags[0]), oneHifen(passengerCollectedBags[0]),
-                mapPassenger(passengerStat[1]), mapTransit(transit[1]), oneHifen(startTotalBags[1]), oneHifen(passengerCollectedBags[1]),
-                mapPassenger(passengerStat[2]), mapTransit(transit[2]), oneHifen(startTotalBags[2]), oneHifen(passengerCollectedBags[2]),
-                mapPassenger(passengerStat[3]), mapTransit(transit[3]), oneHifen(startTotalBags[3]), oneHifen(passengerCollectedBags[3]),
-                mapPassenger(passengerStat[4]), mapTransit(transit[4]), oneHifen(startTotalBags[4]), oneHifen(passengerCollectedBags[4]),
-                mapPassenger(passengerStat[5]), mapTransit(transit[5]), oneHifen(startTotalBags[5]), oneHifen(passengerCollectedBags[5])
+                mapPassenger(passengerStat[0]), mapTransit(transit[0]), IntegerOneHifen(startTotalBags[0]), IntegerOneHifen(passengerCollectedBags[0]),
+                mapPassenger(passengerStat[1]), mapTransit(transit[1]), IntegerOneHifen(startTotalBags[1]), IntegerOneHifen(passengerCollectedBags[1]),
+                mapPassenger(passengerStat[2]), mapTransit(transit[2]), IntegerOneHifen(startTotalBags[2]), IntegerOneHifen(passengerCollectedBags[2]),
+                mapPassenger(passengerStat[3]), mapTransit(transit[3]), IntegerOneHifen(startTotalBags[3]), IntegerOneHifen(passengerCollectedBags[3]),
+                mapPassenger(passengerStat[4]), mapTransit(transit[4]), IntegerOneHifen(startTotalBags[4]), IntegerOneHifen(passengerCollectedBags[4]),
+                mapPassenger(passengerStat[5]), mapTransit(transit[5]), IntegerOneHifen(startTotalBags[5]), IntegerOneHifen(passengerCollectedBags[5])
                 );
         System.out.println(stat);
         log.add(stat);
@@ -192,57 +217,85 @@ public class MGeneralRepository {
         }
     }
 
+    String IntegerOneHifen(Integer i){
+        if(i == null){
+            return "-";
+        }
+        else{
+            return Integer.toString(i);
+        }
+    }
+
 
     String mapPorterStat(SPorter stat){
-        switch (stat) {
-            case WAITING_FOR_A_PLANE_TO_LAND:
-                return "WPTL";
-            case AT_THE_PLANES_HOLD:
-                return "APLH";
-            case AT_THE_LUGGAGE_BELT_CONVEYOR:
-                return "ALCB";
-            case AT_THE_STOREROOM:
-                return "ASTR";
-            default:
-                return "---";
+        if(stat != null) {
+            switch (stat) {
+                case WAITING_FOR_A_PLANE_TO_LAND:
+                    return "WPTL";
+                case AT_THE_PLANES_HOLD:
+                    return "APLH";
+                case AT_THE_LUGGAGE_BELT_CONVEYOR:
+                    return "ALCB";
+                case AT_THE_STOREROOM:
+                    return "ASTR";
+                default:
+                    return "---";
+            }
+        }
+        else{
+            return "---";
         }
     }
 
     String mapBusDriverStat(SBusDriver stat){
-        switch (stat) {
-            case PARKING_AT_THE_ARRIVAL_TERMINAL:
-                return "PKAT";
-            case DRIVING_FORWARD:
-                return "DRFW";
-            case PARKING_AT_THE_DEPARTURE_TERMINAL:
-                return "PKDT";
-            case DRIVING_BACKWARD:
-                return "DRBW";
-            default:
-                return "---";
+        if(stat != null) {
+            switch (stat) {
+                case PARKING_AT_THE_ARRIVAL_TERMINAL:
+                    return "PKAT";
+                case DRIVING_FORWARD:
+                    return "DRFW";
+                case PARKING_AT_THE_DEPARTURE_TERMINAL:
+                    return "PKDT";
+                case DRIVING_BACKWARD:
+                    return "DRBW";
+                default:
+                    return "---";
+            }
+        }
+        else{
+            return "---";
         }
     }
 
     String mapPassenger(SPassenger stat) {
-        switch (stat) {
-            case AT_THE_DISEMBARKING_ZONE:
-                return "WSD";
-            case AT_THE_LUGGAGE_COLLECTION_POINT:
-                return "LCP";
-            case AT_THE_BAGGAGE_RECLAIM_OFFICE:
-                return "BRO";
-            case EXITING_THE_ARRIVAL_TERMINAL:
-                return "EAT";
-            case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-                return "ATT";
-            case TERMINAL_TRANSFER:
-                return "TRT";
-            case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
-                return "DTT";
-            case ENTERING_THE_DEPARTURE_TERMINAL:
-                return "EDT";
-            default:
-                return "---";
+        if (stat != null) {
+            switch (stat) {
+                case AT_THE_DISEMBARKING_ZONE:
+                    return "WSD";
+                case AT_THE_LUGGAGE_COLLECTION_POINT:
+                    return "LCP";
+                case AT_THE_BAGGAGE_RECLAIM_OFFICE:
+                    return "BRO";
+                case EXITING_THE_ARRIVAL_TERMINAL:
+                    return "EAT";
+                case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
+                    return "ATT";
+                case TERMINAL_TRANSFER:
+                    return "TRT";
+                case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
+                    return "DTT";
+                case ENTERING_THE_DEPARTURE_TERMINAL:
+                    return "EDT";
+                default:
+                    return "---";
+            }
         }
+        else{
+            return "---";
+        }
+    }
+
+    public void setBags(int count) {
+        this.BN = count;
     }
 }
