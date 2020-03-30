@@ -2,6 +2,7 @@ package AirportRapsody.Monitor;
 
 import AirportRapsody.Interface.IArrivalTerminalExitPassenger;
 import AirportRapsody.Interface.IGeneralRepository;
+import AirportRapsody.State.SPassenger;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,9 +21,21 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
     }
 
     // PASSENGER
-    public void addPassenger()
+    public void addPassenger(Integer id)
     {
-        CURRENT_NUMBER_OF_PASSENGERS++;       
+        assert id != null : "Thread_id não especificado";
+        lock.lock();
+        try {
+            CURRENT_NUMBER_OF_PASSENGERS++;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);
+            lock.unlock();
+        }
+
     }
 
     // PASSENGER
@@ -39,8 +52,8 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
     }
 
     public void lastPassenger(){
-        lastPassenger.signalAll();
         lock.lock();
+        lastPassenger.signalAll();
         try{
             // SLEEP
             CURRENT_NUMBER_OF_PASSENGERS = 0;

@@ -2,7 +2,9 @@ package AirportRapsody.Monitor;
 
 import AirportRapsody.Interface.IDepartureTerminalPassenger;
 import AirportRapsody.Interface.IGeneralRepository;
+import AirportRapsody.State.SPassenger;
 
+import java.awt.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,20 +30,29 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
     // PASSENGER
     public void waitingForLastPassenger()
     {
+        lock.lock();
         try{
             lastPassenger.await();            
         }
         catch(Exception e) {
             e.printStackTrace();
-        }   
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
     public Integer getCURRENT_NUMBER_OF_PASSENGERS() {
         return CURRENT_NUMBER_OF_PASSENGERS;
-    }        
+    }
+
+    public SPassenger prepareNextLeg(Integer id) {
+        MGeneralRepository.updatePassenger(SPassenger.ENTERING_THE_DEPARTURE_TERMINAL, id, null, null, null, false, null);
+        return SPassenger.ENTERING_THE_DEPARTURE_TERMINAL;
+    }
+
 
     public void lastPassenger(){        
-        lastPassenger.signalAll();
         lock.lock();
         try{
             CURRENT_NUMBER_OF_PASSENGERS = 0;
@@ -50,7 +61,8 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
             e.printStackTrace();
         }
         finally{
+            lastPassenger.signalAll();
             lock.unlock();
         }
-    }    
+    }
 }

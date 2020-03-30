@@ -26,6 +26,10 @@ public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
         catch(Exception e){
             e.printStackTrace();
         }
-        return SPorter.AT_THE_PLANES_HOLD;      
+        finally {
+            MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, NUMBER_OF_BAGS);
+            lock.unlock();
+        }
+        return SPorter.AT_THE_PLANES_HOLD;
     }
 }

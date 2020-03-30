@@ -3,6 +3,6 @@ package AirportRapsody.Interface;
 import AirportRapsody.State.SPassenger;
 
 public interface IBaggageReclaimOfficePassenger {
-    SPassenger addBag(int i);
-    SPassenger goHome();
+    SPassenger addBag(Integer id, int i);
+    SPassenger goHome(Integer id);
 }

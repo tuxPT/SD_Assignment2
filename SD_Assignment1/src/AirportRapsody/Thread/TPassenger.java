@@ -98,7 +98,7 @@ public class TPassenger extends Thread {
                     curState = MArrivalLounge.whatShouldIDo(pthread_number, bags.size(), TRANSIT);
                     break;
                 case AT_THE_LUGGAGE_COLLECTION_POINT:
-                    NUMBER_OF_BAGS_RETRIEVED = MBaggageCollectionPoint.goCollectABag(bags);
+                    NUMBER_OF_BAGS_RETRIEVED = MBaggageCollectionPoint.goCollectABag(pthread_number, bags);
                     if (bags.size() == NUMBER_OF_BAGS_RETRIEVED){
                         curState = goHome();
                     }
@@ -107,10 +107,10 @@ public class TPassenger extends Thread {
                     }
                     break;
                 case AT_THE_BAGGAGE_RECLAIM_OFFICE:
-                    curState = MBaggageReclaimOffice.addBag(bags.size() - NUMBER_OF_BAGS_RETRIEVED);
+                    curState = MBaggageReclaimOffice.addBag(pthread_number, bags.size() - NUMBER_OF_BAGS_RETRIEVED);
                     break;
                 case EXITING_THE_ARRIVAL_TERMINAL:
-                    MArrivalTerminalExit.addPassenger();
+                    MArrivalTerminalExit.addPassenger(pthread_number);
                     if (PASSENGERS_PER_PLANE == MArrivalTerminalExit.getCURRENT_NUMBER_OF_PASSENGERS()
                             + MDepartureTerminal.getCURRENT_NUMBER_OF_PASSENGERS()) {
                         MArrivalTerminalExit.lastPassenger();
@@ -119,16 +119,18 @@ public class TPassenger extends Thread {
                         MArrivalTerminalExit.waitingForLastPassenger();
                     }
                     endOfLife = true;
+                    System.out.println("NAO VAI HAVER ENTERRO");
+
                     break;
 
                 case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
                     curState = MArrivalTerminalTransferQuay.enterTheBus(pthread_number);
                     break;
                 case TERMINAL_TRANSFER:
-                    curState = MDepartureTerminalTransferQuay.leaveTheBus();
+                    curState = MDepartureTerminalTransferQuay.leaveTheBus(pthread_number);
                     break;
                 case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
-                    curState = prepareNextLeg();
+                    curState = MDepartureTerminal.prepareNextLeg(pthread_number);
                     break;
                 case ENTERING_THE_DEPARTURE_TERMINAL:
                     MDepartureTerminal.addPassenger();
@@ -140,13 +142,10 @@ public class TPassenger extends Thread {
                         MDepartureTerminal.waitingForLastPassenger();
                     }
                     endOfLife = true;
+                    System.out.println("NAO VAI HAVER ENTERRO");
                     break;
             }           
         }
-    }
-
-    private SPassenger prepareNextLeg() {
-        return SPassenger.ENTERING_THE_DEPARTURE_TERMINAL;
     }
 
 

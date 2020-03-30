@@ -30,7 +30,7 @@ public class MGeneralRepository implements IGeneralRepository {
 
     
     public MGeneralRepository(Integer PLANE_PASSENGERS, Integer BUS_CAPACITY) {
-        this.FN = 1;
+        this.FN = 0;
         this.BN = 0;
         this.CB = 0;
         this.SR = 0;
@@ -39,6 +39,7 @@ public class MGeneralRepository implements IGeneralRepository {
         this.transit = new Boolean[PLANE_PASSENGERS];
         this.startTotalBags = new Integer[PLANE_PASSENGERS];
         this.passengerCollectedBags = new Integer[PLANE_PASSENGERS];
+        Arrays.fill(this.passengerCollectedBags, null);
         this.waitingQueue = new LinkedList<Integer>();
         this.busSeats = new Integer[BUS_CAPACITY];
         this.busSeatSize = 0;
@@ -66,16 +67,18 @@ public class MGeneralRepository implements IGeneralRepository {
     public void updatePorter(SPorter Stat, Integer BN, Integer CB, Integer SR){
         lock.lock();
         try{
-            this.BN = BN != -1 ? BN : this.BN;
-            this.CB = CB != -1 ? CB : this.CB;
-            this.SR = SR != -1 ? SR : this.SR;
+            this.BN = BN !=null ? BN : this.BN;
+            this.CB = CB != null ? CB : this.CB;
+            this.SR = SR != null ? SR : this.SR;
             this.porterStat = Stat != null ? Stat : this.porterStat;
+            assert this.porterStat != null : "Stat porter is null";
 
         }catch (Exception e){
             e.printStackTrace();
         }
         finally {
             //print
+            print();
             lock.unlock();
         }
     }
@@ -96,13 +99,13 @@ public class MGeneralRepository implements IGeneralRepository {
     }
 
     @Override
-    public void updatePassenger(SPassenger Stat, Integer id, Boolean addWaitingQueue, Boolean addBusSeats, Integer startBags, Integer collectedBags, Boolean transit){
+    public void updatePassenger(SPassenger Stat, Integer id, Boolean addWaitingQueue, Boolean addBusSeats, Integer startBags, Boolean collectedBags, Boolean transit){
         lock.lock();
         try{
             this.passengerStat[id] = Stat != null ? Stat : this.passengerStat[id];
             if(addWaitingQueue != null){
                 if(addWaitingQueue){
-                    waitingQueue.add(id);
+                    waitingQueue.add(id + 1);
                 }
                 else{
                     waitingQueue.remove();
@@ -110,20 +113,26 @@ public class MGeneralRepository implements IGeneralRepository {
             }
             if(addBusSeats != null){
                 if(addBusSeats){
-                    busSeats[busSeatSize] = id;
+                    busSeats[busSeatSize] = id + 1;
                     busSeatSize++;
                 }
                 else{
                     for(int i=0; i<busSeats.length; i++){
-                        if(busSeats[i] == id){
+                        if(busSeats[i] != null && busSeats[i] == id + 1){
                             busSeats[i] = null;
                             busSeatSize--;
                         }
                     }
                 }
             }
+            if(this.passengerCollectedBags[id] != null && collectedBags == true){
+                CB--;
+                this.passengerCollectedBags[id]++;
+            }
+            else if (this.passengerCollectedBags[id] == null && collectedBags == false) {
+                this.passengerCollectedBags[id] = 0;
+            }
             this.startTotalBags[id] = (startBags != null) ? startBags: this.startTotalBags[id];
-            this.passengerCollectedBags[id] = (collectedBags != null) ? collectedBags : this.passengerCollectedBags[id];
             this.transit[id] = (transit != null) ? transit : this.transit[id];
         }catch (Exception e){
             e.printStackTrace();
@@ -134,27 +143,29 @@ public class MGeneralRepository implements IGeneralRepository {
         }
     }
 
-    public void reset(){
+    public void nextFlight(){
         lock.lock();
         try{
             for(int i= 0; i<transit.length; i++){
-                if(transit[i]){
-                    ntransit++;
-                }
-                else{
-                    nNonTransit++;
+                if(transit[i] != null){
+                    if(transit[i]){
+                        ntransit++;
+                    }
+                    else{
+                        nNonTransit++;
+                    }
                 }
             }
             for(int i=0; i<startTotalBags.length; i++){
-                totalBags+=startTotalBags[i];
-                lostBags += (startTotalBags[i] - passengerCollectedBags[i]);
+                if(startTotalBags[i] != null && lostBags != null) {
+                    totalBags += startTotalBags[i];
+                    lostBags += (startTotalBags[i] - passengerCollectedBags[i]);
+                }
             }
             FN++;
-            BN = null;
-            CB = null;
-            SR = null;
-            busDriverStat = null;
-            porterStat= null;
+            BN = 0;
+            CB = 0;
+            SR = 0;
             Arrays.fill(passengerStat, null);
             Arrays.fill(transit, null);
             Arrays.fill(startTotalBags, null);
@@ -163,7 +174,6 @@ public class MGeneralRepository implements IGeneralRepository {
             e.printStackTrace();
         }
         finally {
-            print();
             lock.unlock();
         }
     }
@@ -177,12 +187,12 @@ public class MGeneralRepository implements IGeneralRepository {
                 "\n",
                 FN, BN,
                 mapPorterStat(porterStat), CB, SR,
-                mapBusDriverStat(busDriverStat), oneHifen(tempWaitingQueue.size() > 0 ? tempWaitingQueue.get(0) : null),
-                oneHifen(tempWaitingQueue.size() > 1 ? tempWaitingQueue.get(1) : null),
-                oneHifen(tempWaitingQueue.size() > 2 ? tempWaitingQueue.get(2) : null),
-                oneHifen(tempWaitingQueue.size() > 3 ? tempWaitingQueue.get(3) : null),
-                oneHifen(tempWaitingQueue.size() > 4 ? tempWaitingQueue.get(4) : null),
-                oneHifen(tempWaitingQueue.size() > 5 ? tempWaitingQueue.get(5) : null),
+                mapBusDriverStat(busDriverStat), oneHifen(tempWaitingQueue.size() > 0 ? tempWaitingQueue.get(0): null),
+                oneHifen(tempWaitingQueue.size() > 1 ? tempWaitingQueue.get(1): null),
+                oneHifen(tempWaitingQueue.size() > 2 ? tempWaitingQueue.get(2): null),
+                oneHifen(tempWaitingQueue.size() > 3 ? tempWaitingQueue.get(3): null),
+                oneHifen(tempWaitingQueue.size() > 4 ? tempWaitingQueue.get(4): null),
+                oneHifen(tempWaitingQueue.size() > 5 ? tempWaitingQueue.get(5): null),
                 oneHifen(busSeats[0]), oneHifen(busSeats[1]), oneHifen(busSeats[2]),
                 mapPassenger(passengerStat[0]), mapTransit(transit[0]), IntegerOneHifen(startTotalBags[0]), IntegerOneHifen(passengerCollectedBags[0]),
                 mapPassenger(passengerStat[1]), mapTransit(transit[1]), IntegerOneHifen(startTotalBags[1]), IntegerOneHifen(passengerCollectedBags[1]),
@@ -243,7 +253,7 @@ public class MGeneralRepository implements IGeneralRepository {
             }
         }
         else{
-            return "---";
+            return "WPTL";
         }
     }
 
@@ -263,7 +273,7 @@ public class MGeneralRepository implements IGeneralRepository {
             }
         }
         else{
-            return "---";
+            return "PKAT";
         }
     }
 

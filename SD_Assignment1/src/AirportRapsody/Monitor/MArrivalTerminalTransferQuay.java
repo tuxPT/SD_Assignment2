@@ -31,66 +31,72 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
     }
   
     public SBusDriver announcingBusBoarding() {
+        //MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL);
         lock.lock();
         try{
             do{
-                waitingQueue.await(20, TimeUnit.SECONDS);
+                waitingQueue.await(10, TimeUnit.SECONDS);
+                if(WAITING_QUEUE.size() == 0){
+                    return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
+                }
                 //WAITING_QUEUE se WAITING_QUEUE menor ou igual a BUS_CAPACITY senão BUS_CAPACITY
-                busQueueSize  = WAITING_QUEUE.size() <= BUS_CAPACITY ? WAITING_QUEUE.size(): BUS_CAPACITY;
+                busQueueSize  = WAITING_QUEUE.size() <= BUS_CAPACITY ? WAITING_QUEUE.size(): BUS_CAPACITY;                
             }
             while(busQueueSize == 0);
             //inicia o boarding
             for(int i=0; i<busQueueSize; i++) {
                 boarding.signal();
             }
-            //espera que entrem os passageiros sinalizados
-            busFull.await();            
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        finally {            
-            lock.unlock();            
-        }
-        return SBusDriver.DRIVING_FORWARD;
-    }    
-
-    public SPassenger enterTheBus(Integer passengerID) {
-        lock.lock();
-        busQueueSize = 0;
-        try{
-            WAITING_QUEUE.add(passengerID);
-           if (WAITING_QUEUE.size() == 3)
-           {
-                waitingQueue.signalAll();
-           }           
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        finally
-        {
-            lock.unlock();
-        }            
-        return waitToEnterToBus();
-    }   
-
-    public SPassenger waitToEnterToBus(){
-        lock.lock();
-        try{
-            boarding.await();
-            Integer passengerID = WAITING_QUEUE.remove();
-            BUS_QUEUE.add(passengerID);
-
-            if(BUS_QUEUE.size() == busQueueSize){
-                busFull.signalAll();
-            }            
+            //espera que entrem os passageiros sinalizados            
+            busFull.await();               
         }
         catch(Exception e) {
             e.printStackTrace();
         }
         finally {
+            busQueueSize = 0;
+            lock.unlock();            
+        }
+        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_FORWARD);
+        return SBusDriver.DRIVING_FORWARD;
+    }    
+
+    public SPassenger enterTheBus(Integer passengerID) {
+        lock.lock();
+        try{
+            WAITING_QUEUE.add(passengerID);
+            MGeneralRepository.updatePassenger(SPassenger.AT_THE_ARRIVAL_TRANSFER_TERMINAL, passengerID, true, null, null, false, null);
+           if (WAITING_QUEUE.size() == 3)
+           {
+                waitingQueue.signalAll();
+           }
+           return waitToEnterToBus(passengerID);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        finally
+        {            
             lock.unlock();
+        }
+        return waitToEnterToBus(passengerID);
+    }
+
+    private SPassenger waitToEnterToBus(Integer id){
+        try {
+            boarding.await();
+            Integer passengerID = WAITING_QUEUE.remove();
+            assert passengerID == id : "";
+            BUS_QUEUE.add(passengerID);           
+            MGeneralRepository.updatePassenger(null, passengerID, false, true, null, false, null);
+            if (BUS_QUEUE.size() == busQueueSize) {
+                
+                busFull.signalAll();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return SPassenger.TERMINAL_TRANSFER;
     }      
@@ -99,13 +105,14 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
        
 
     public Integer goToDepartureTerminal() {
-        //sleep
         try{
             TimeUnit.SECONDS.sleep(5);
         }
         catch(Exception e){
             e.printStackTrace();
-        }        
-        return BUS_QUEUE.size();
+        }   
+        Integer tmp = BUS_QUEUE.size();
+        BUS_QUEUE.clear();     
+        return tmp;
     }
 }

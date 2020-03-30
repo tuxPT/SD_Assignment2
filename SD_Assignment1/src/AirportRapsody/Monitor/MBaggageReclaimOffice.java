@@ -19,12 +19,11 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
     }
     
     // only passenger can add
-    public SPassenger addBag(int number_of_bags) {       
+    public SPassenger addBag(Integer id, int number_of_bags) {
         lock.lock();
         try{
             // SLEEP
             NUMBER_OF_LOST_BAGS += number_of_bags;
-            return goHome();
         }
         catch(Exception e){
             e.printStackTrace();
@@ -32,11 +31,13 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
         finally{
             lock.unlock();           
         }
-        return null;
+        return goHome(id);
+
     }
 
-    public SPassenger goHome()
+    public SPassenger goHome(Integer id)
     {
+        MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);
         return SPassenger.EXITING_THE_ARRIVAL_TERMINAL;
     }
 }

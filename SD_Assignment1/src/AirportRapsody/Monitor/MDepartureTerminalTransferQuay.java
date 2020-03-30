@@ -34,20 +34,21 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
 
     @Override
     public SBusDriver parkTheBusAndLetPassOff(Integer NUMBER_OF_PASSENGERS) {
-        
         lock.lock();
+        MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_DEPARTURE_TERMINAL);
         try{
             this.NUMBER_OF_PASSENGERS = NUMBER_OF_PASSENGERS;
-            parkTheBus.signalAll();              
-            lastPassenger.await();    
+            parkTheBus.signalAll();
+            lastPassenger.await();
         }
         catch (Exception e){
             e.printStackTrace();
         }
         finally {
             lock.unlock();
-        }            
-       
+        }
+        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_BACKWARD);
+        reset();
         return SBusDriver.DRIVING_BACKWARD;
     }
 
@@ -59,19 +60,22 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
         }
         catch(Exception e){
             e.printStackTrace();
-        }        
+        }
+        MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL);
         return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
     }
 
     @Override
-    public SPassenger leaveTheBus() {
+    public SPassenger leaveTheBus(Integer id) {
         lock.lock();
+        MGeneralRepository.updatePassenger(SPassenger.TERMINAL_TRANSFER, id, null, null, null, false, null);
         try {
             parkTheBus.await();
-            //
+            DISEMBARKED_PASSENGERS++;
             if(DISEMBARKED_PASSENGERS == NUMBER_OF_PASSENGERS){
                 lastPassenger.signalAll();
             }
+            MGeneralRepository.updatePassenger(SPassenger.AT_THE_DEPARTURE_TRANSFER_TERMINAL, id, null, false, null,  false, null);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -18,7 +18,7 @@ public class AirportRapsody {
         PLANE_PASSENGERS = 6;
         MAX_PORTER = 1;
         MAX_BUSDRIVER = 1;
-        PLANES_PER_DAY = 5;
+        PLANES_PER_DAY = 2;
         Boolean END_OF_DAY = false;
         MAX_BAGS_NUMBER = 2;
         BUS_CAPACITY = 3;
@@ -58,13 +58,14 @@ public class AirportRapsody {
             TPorter[i].start();
         }
         for(int p=0; p<PLANES_PER_DAY; p++) {
+            MGeneralRepository.nextFlight();
             //total bags generator
             bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
             //lost bags generator
             int count = 0;
             for(int i=0; i<bags.length; i++){
                 for(int j=0; j<bags[i].size(); j++){
-                    Integer probability = random.nextInt(10);
+                    Integer probability = random.nextInt(100);
                     //20% of lost bags
                     if(probability > 2){
                         MArrivalLounge.addBag(bags[i].get(j));
@@ -72,6 +73,7 @@ public class AirportRapsody {
                     }
                 }
             }
+            System.out.printf("Malas: %d\n", count);
             MGeneralRepository.setBags(count);
 
             for (int i = 0; i < PLANE_PASSENGERS; i++) {
@@ -87,6 +89,7 @@ public class AirportRapsody {
                 for(Bag b: bags[i]){
                     temp.add(b.getID());
                 }
+
                 TPassenger[i] = new TPassenger(i,t_TRANSIT, temp, PLANE_PASSENGERS,
                         (IArrivalLoungePassenger) MArrivalLounge, (IArrivalTerminalExitPassenger) MArrivalTerminalExit,
                         (IArrivalTerminalTransferQuayPassenger) MArrivalTerminalTransferQuay,
@@ -105,15 +108,19 @@ public class AirportRapsody {
                 } catch (InterruptedException e) {
                 }
             }
+            System.out.println("CARALHO");
         }
 
         for (int i = 0; i < TPorter.length; i++) {
             try {
                 TPorter[i].setEndOfDay();
                 TPorter[i].join();
+
             } catch (InterruptedException e) {
             }
         }
+        System.out.println("CARALHO2");
+
         for (int i = 0; i < TBusDriver.length; i++) {
             try {
                 TBusDriver[i].setEndOfDay();
@@ -121,6 +128,8 @@ public class AirportRapsody {
             } catch (InterruptedException e) {
             }
         }
+        System.out.println("CARALHO3");
+
         // MLogger.close();
     }
 
