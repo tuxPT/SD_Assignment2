@@ -36,6 +36,7 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     public Bag tryToCollectABag() {
         Bag tmp = null;
         lock.lock();
+        MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, null);
         try {
             if (plane_hold.size() != 0)
             {
@@ -54,25 +55,20 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     @Override
     public SPorter takeARest() {
         lock.lock();
-        //MGeneralRepository.updatePorter(SPorter.WAITING_FOR_A_PLANE_TO_LAND, plane_hold.size(), null, null);
         try {
-                System.out.println("BBBBBBBBBBBBBBBBBB");
-                System.out.println(NUMBER_OF_PASSENGERS);
-                System.out.println(PLANE_PASSENGERS);
                 //while(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS) {
                 lastPassenger.await(1, TimeUnit.SECONDS);
                 if(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS){
                     return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
                 }
-                System.out.println("AAAAAAAAAAAAAAAA");
                 //}
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         finally{
-            NUMBER_OF_PASSENGERS = 0;
-            MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, null);
+            //NUMBER_OF_PASSENGERS = 0;
+            //MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, null);
             lock.unlock();
         }
         return SPorter.AT_THE_PLANES_HOLD;
@@ -97,8 +93,8 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         lock.lock();
         try{            
             NUMBER_OF_PASSENGERS++;
-            System.out.println(PLANE_PASSENGERS);
-            System.out.println(NUMBER_OF_PASSENGERS);
+            //System.out.println(PLANE_PASSENGERS);
+            //System.out.println(NUMBER_OF_PASSENGERS);
             if(NUMBER_OF_PASSENGERS == PLANE_PASSENGERS){
                 lastPassenger.signalAll();
             }
@@ -110,8 +106,9 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
             e.printStackTrace();
         }
         finally{
-        lock.unlock();
-        }          
+            lock.unlock();
+        }
+        SPassenger tmp;
         MGeneralRepository.updatePassenger(SPassenger.AT_THE_DISEMBARKING_ZONE,
                 id,
                 null,
@@ -119,22 +116,26 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
                 t_bags != null ? t_bags : 0,
                 false,
                 t_TRANSIT);
-                        //meter um sleep random
-        
+        //meter um sleep random
         if(t_TRANSIT){
-            return takeABus(id);
+            tmp = takeABus(id);
         }
         else{
             if(t_bags > 0){
-                return goCollectABag(id);
+                tmp = goCollectABag(id);
             }
             else{
-                return goHome(id);
+                tmp = goHome(id);
             }
         }
+        return tmp;
+
     }
 
     public SPorter noMoreBagsToCollect() {
+        lock.lock();
+        NUMBER_OF_PASSENGERS = 0;
+        lock.unlock();
         MGeneralRepository.updatePorter(SPorter.WAITING_FOR_A_PLANE_TO_LAND, plane_hold.size(), null, null);
         return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
     }
@@ -154,8 +155,16 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     }
 
     public void addBag(Bag bag){
-        System.out.println(bag.getID());
-        plane_hold.add(bag);
+        //System.out.println(bag.getID());
+        lock.lock();
+        try {
+            plane_hold.add(bag);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
 }

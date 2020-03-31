@@ -54,7 +54,9 @@ public class TPorter extends Thread {
                     // TRY TO GET BAG
                     bag = MArrivalLounge.tryToCollectABag();
                     if (bag == null) {
+                        System.out.println("WARN PASSENGERS1");
                         MBaggageCollectionPoint.warnPassengers();
+                        System.out.println("WARN PASSENGERS2");
                         curState = MArrivalLounge.noMoreBagsToCollect();
                     } else {
                        curState = MArrivalLounge.carryItToAppropriateStore(bag);

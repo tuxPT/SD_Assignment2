@@ -41,10 +41,14 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
     // PASSENGER
     public void waitingForLastPassenger()
     {           
+        lock.lock();
         try{
             lastPassenger.await();            
         }
         catch(Exception e) {}
+        finally{
+            lock.unlock();
+        }
     }
 
     public Integer getCURRENT_NUMBER_OF_PASSENGERS() {

@@ -9,4 +9,5 @@ public interface IGeneralRepository {
     void updatePassenger(SPassenger Stat, Integer id, Boolean addWaitingQueue, Boolean addBusSeats, Integer startBags, Boolean collectBags, Boolean transit);
     void updateBusDriver(SBusDriver Stat);
     void nextFlight();
+    void endOfLifePlane();
 }

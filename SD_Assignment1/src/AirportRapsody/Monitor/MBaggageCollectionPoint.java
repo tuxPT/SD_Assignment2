@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import AirportRapsody.Interface.IBaggageCollectionPointPassenger;
 import AirportRapsody.Interface.IBaggageCollectionPointPorter;
 import AirportRapsody.Interface.IGeneralRepository;
-
+import AirportRapsody.State.SPassenger;
 import AirportRapsody.State.SPorter;
 
 public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, IBaggageCollectionPointPassenger {
@@ -31,32 +31,34 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
      public Integer goCollectABag(Integer id, List<Integer> total_bags)
      {          
         lock.lock();
-         Integer NUMBER_OF_BAGS_RETRIEVED = 0;
+        Integer NUMBER_OF_BAGS_RETRIEVED = 0;
          try{
-             porterArrival.await();
+             while(moreBags) {
+                 porterArrival.await();
 
-             do{
-                 List<Bag> removeList = new LinkedList<>();
+             //System.out.println("PASSAGEIROS ACORDARAM");
+                List<Bag> removeList = new LinkedList<>();
                 for (Bag bag: ListOfBags){
                     for (Integer i: total_bags){
                         // BAG BELONGS TO PASSENGER
                         if (i == bag.getID()){
+                            //System.out.println("PASSAGEIRO RETIROU UMA MALA");
                             removeList.add(bag);
                             NUMBER_OF_BAGS_RETRIEVED++;
                             MGeneralRepository.updatePassenger(null, id, null, null, null, true, null);
+                            //MGeneralRepository.updatePorter(null, null, ListOfBags.size(), null);
                         }
                     }   
                 }
-                ListOfBags.removeAll(removeList);
-
+                ListOfBags.removeAll(removeList);     
+                MGeneralRepository.updatePorter(null, null, ListOfBags.size(), null);           
                 if (total_bags.size() == NUMBER_OF_BAGS_RETRIEVED)
                 {
                     return NUMBER_OF_BAGS_RETRIEVED;
                 }
-                 porterArrival.await();
-
+                //porterArrival.await();
              }
-            while(moreBags);                                         
+
         }
         catch(Exception e){
             e.printStackTrace();
@@ -74,13 +76,13 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
         lock.lock();
         try{
             ListOfBags.add(bag);
-            porterArrival.signalAll();           
+            porterArrival.signalAll();   
+            //System.out.println("COLOCOU UMA MALA");         
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        finally{
-            System.out.println("efwongiwe igre ghreihgierg ieargher heriu hire gerig ieri");
+        finally{           
             MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, ListOfBags.size(), null);
             lock.unlock();
         }

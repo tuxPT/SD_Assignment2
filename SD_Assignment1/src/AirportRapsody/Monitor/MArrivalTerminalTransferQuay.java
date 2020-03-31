@@ -35,7 +35,7 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         lock.lock();
         try{
             do{
-                waitingQueue.await(10, TimeUnit.SECONDS);
+                waitingQueue.await(1, TimeUnit.SECONDS);
                 if(WAITING_QUEUE.size() == 0){
                     return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
                 }
@@ -55,10 +55,10 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         }
         finally {
             busQueueSize = 0;
-            lock.unlock();            
+            lock.unlock();
         }
-        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_FORWARD);
         return SBusDriver.DRIVING_FORWARD;
+
     }    
 
     public SPassenger enterTheBus(Integer passengerID) {
@@ -70,16 +70,17 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
            {
                 waitingQueue.signalAll();
            }
-           return waitToEnterToBus(passengerID);
         }
         catch(Exception e) {
             e.printStackTrace();
         }
         finally
-        {            
+        {
+            SPassenger tmp = waitToEnterToBus(passengerID);
             lock.unlock();
+            return tmp;
         }
-        return waitToEnterToBus(passengerID);
+
     }
 
     private SPassenger waitToEnterToBus(Integer id){
@@ -90,7 +91,6 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
             BUS_QUEUE.add(passengerID);           
             MGeneralRepository.updatePassenger(null, passengerID, false, true, null, false, null);
             if (BUS_QUEUE.size() == busQueueSize) {
-                
                 busFull.signalAll();
             }
         }
@@ -98,21 +98,27 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         {
             e.printStackTrace();
         }
-        return SPassenger.TERMINAL_TRANSFER;
-    }      
-       
-        
+        finally {
+            return SPassenger.TERMINAL_TRANSFER;
+        }
+    }
        
 
     public Integer goToDepartureTerminal() {
+        lock.lock();
+        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_FORWARD);
         try{
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(1);
         }
         catch(Exception e){
             e.printStackTrace();
-        }   
-        Integer tmp = BUS_QUEUE.size();
-        BUS_QUEUE.clear();     
-        return tmp;
+        }
+        finally {
+            Integer tmp = BUS_QUEUE.size();
+            BUS_QUEUE.clear();
+            lock.unlock();
+            return tmp;
+        }
+
     }
 }

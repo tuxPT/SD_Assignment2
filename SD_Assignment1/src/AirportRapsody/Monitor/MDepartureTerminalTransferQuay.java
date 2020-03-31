@@ -45,10 +45,10 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
             e.printStackTrace();
         }
         finally {
+            reset();
             lock.unlock();
         }
         MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_BACKWARD);
-        reset();
         return SBusDriver.DRIVING_BACKWARD;
     }
 
@@ -56,7 +56,7 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
     public SBusDriver goToArrivalTerminal() {
         // SLEEP
         try{
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.MILLISECONDS.sleep(100);
         }
         catch(Exception e){
             e.printStackTrace();

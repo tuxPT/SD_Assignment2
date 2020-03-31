@@ -18,7 +18,7 @@ public class AirportRapsody {
         PLANE_PASSENGERS = 6;
         MAX_PORTER = 1;
         MAX_BUSDRIVER = 1;
-        PLANES_PER_DAY = 2;
+        PLANES_PER_DAY = 5;
         Boolean END_OF_DAY = false;
         MAX_BAGS_NUMBER = 2;
         BUS_CAPACITY = 3;
@@ -63,18 +63,23 @@ public class AirportRapsody {
             bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
             //lost bags generator
             int count = 0;
+            int total_bags = 0;
             for(int i=0; i<bags.length; i++){
+                total_bags += bags[i].size();
                 for(int j=0; j<bags[i].size(); j++){
                     Integer probability = random.nextInt(100);
-                    //20% of lost bags
-                    if(probability > 2){
+                    //2% of lost bags
+                    if(probability > 10){
                         MArrivalLounge.addBag(bags[i].get(j));
                         count++;
                     }
                 }
             }
-            System.out.printf("Malas: %d\n", count);
+
+            System.out.printf("Malas: %d\n", total_bags );
+            System.out.printf("Lost: %d\n", total_bags - count);
             MGeneralRepository.setBags(count);
+            MBaggageCollectionPoint.newPlane();
 
             for (int i = 0; i < PLANE_PASSENGERS; i++) {
                 Random r = new Random();
@@ -108,7 +113,8 @@ public class AirportRapsody {
                 } catch (InterruptedException e) {
                 }
             }
-            System.out.println("CARALHO");
+            System.out.println("PASSAGEIROS ACABARAM TODOS");
+            MGeneralRepository.endOfLifePlane();
         }
 
         for (int i = 0; i < TPorter.length; i++) {
@@ -119,7 +125,7 @@ public class AirportRapsody {
             } catch (InterruptedException e) {
             }
         }
-        System.out.println("CARALHO2");
+        System.out.println("PORTER ACABOU");
 
         for (int i = 0; i < TBusDriver.length; i++) {
             try {
@@ -128,7 +134,9 @@ public class AirportRapsody {
             } catch (InterruptedException e) {
             }
         }
-        System.out.println("CARALHO3");
+        System.out.println("BUSDRIVER ACABOU");
+        MGeneralRepository.printRepository();
+
 
         // MLogger.close();
     }
@@ -136,7 +144,7 @@ public class AirportRapsody {
     private static ArrayList<Bag>[] generateBags(int PLANE_PASSENGERS, int MAX_BAGS_NUMBER) {
         // gerar numero de malas para o passageiro
         Random random = new Random();
-        Integer size = random.nextInt(MAX_BAGS_NUMBER + 1);
+        Integer size;
 
         ArrayList<Bag>[] bags = new ArrayList[PLANE_PASSENGERS];
         for (int i = 0; i < PLANE_PASSENGERS; i++)
@@ -148,6 +156,7 @@ public class AirportRapsody {
         // atribuir um id unico da mala ao passageiro
         for(int i=0; i<PLANE_PASSENGERS; i++) {
             TRANSIT = random.nextBoolean();
+            size = random.nextInt(MAX_BAGS_NUMBER + 1);
             for (int nbag = 0; nbag < size; nbag++) {
                 bags[i].add(new Bag(i * MAX_BAGS_NUMBER + nbag, TRANSIT));
             }

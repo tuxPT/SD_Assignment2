@@ -59,8 +59,13 @@ public class MGeneralRepository implements IGeneralRepository {
         System.out.print(log.get(0));
     }
 
-    private void printRepository(){
-
+    public void printRepository(){
+        String finalLog = String.format("Final report\n" +
+                "N. of passengers which have this airport as their final destination = %2d\n" +
+                "N. of passengers which are in transit = %2d\n" +
+                "N. of bags that should have been transported in the the planes hold = %2d\n" +
+                "N. of bags that were lost = %2d\n", nNonTransit, ntransit, totalBags, lostBags);
+        System.out.printf(finalLog);
     }
 
     @Override
@@ -125,14 +130,18 @@ public class MGeneralRepository implements IGeneralRepository {
                     }
                 }
             }
-            if(this.passengerCollectedBags[id] != null && collectedBags == true){
-                CB--;
-                this.passengerCollectedBags[id]++;
+
+            this.startTotalBags[id] = (startBags != null) ? startBags : this.startTotalBags[id];
+            if(this.startTotalBags[id] != null) {
+                if(this.passengerCollectedBags[id] == null){
+                    this.passengerCollectedBags[id] = 0;
+                }
+                if(collectedBags == true){
+                    CB--;
+                    this.passengerCollectedBags[id]++;
+                }
             }
-            else if (this.passengerCollectedBags[id] == null && collectedBags == false) {
-                this.passengerCollectedBags[id] = 0;
-            }
-            this.startTotalBags[id] = (startBags != null) ? startBags: this.startTotalBags[id];
+
             this.transit[id] = (transit != null) ? transit : this.transit[id];
         }catch (Exception e){
             e.printStackTrace();
@@ -143,7 +152,7 @@ public class MGeneralRepository implements IGeneralRepository {
         }
     }
 
-    public void nextFlight(){
+    public void endOfLifePlane() {
         lock.lock();
         try{
             for(int i= 0; i<transit.length; i++){
@@ -157,18 +166,33 @@ public class MGeneralRepository implements IGeneralRepository {
                 }
             }
             for(int i=0; i<startTotalBags.length; i++){
-                if(startTotalBags[i] != null && lostBags != null) {
+                if(startTotalBags[i] != null) {
                     totalBags += startTotalBags[i];
-                    lostBags += (startTotalBags[i] - passengerCollectedBags[i]);
+                    if(lostBags != null && transit[i] == false) {
+                        //System.out.printf("startTotalBags[%d] = %d\npassengerCollectedBags[%d] = %d\n", i, startTotalBags[i], i, passengerCollectedBags[i]);
+                        lostBags += (startTotalBags[i] - passengerCollectedBags[i]);
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+    public void nextFlight(){
+        lock.lock();
+        try{
             FN++;
-            BN = 0;
-            CB = 0;
-            SR = 0;
+            //BN = 0;
+            //CB = 0;
+            //SR = 0;
             Arrays.fill(passengerStat, null);
             Arrays.fill(transit, null);
             Arrays.fill(startTotalBags, null);
+            //System.out.println(passengerCollectedBags);
             Arrays.fill(passengerCollectedBags, null);
         }catch (Exception e){
             e.printStackTrace();
@@ -201,7 +225,7 @@ public class MGeneralRepository implements IGeneralRepository {
                 mapPassenger(passengerStat[4]), mapTransit(transit[4]), IntegerOneHifen(startTotalBags[4]), IntegerOneHifen(passengerCollectedBags[4]),
                 mapPassenger(passengerStat[5]), mapTransit(transit[5]), IntegerOneHifen(startTotalBags[5]), IntegerOneHifen(passengerCollectedBags[5])
                 );
-        System.out.println(stat);
+        System.out.print(stat);
         log.add(stat);
     }
 

@@ -21,6 +21,7 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
     // only passenger can add
     public SPassenger addBag(Integer id, int number_of_bags) {
         lock.lock();
+        MGeneralRepository.updatePassenger(SPassenger.AT_THE_BAGGAGE_RECLAIM_OFFICE, id, null, null, null, false, null);
         try{
             // SLEEP
             NUMBER_OF_LOST_BAGS += number_of_bags;

@@ -119,8 +119,7 @@ public class TPassenger extends Thread {
                         MArrivalTerminalExit.waitingForLastPassenger();
                     }
                     endOfLife = true;
-                    System.out.println("NAO VAI HAVER ENTERRO");
-
+                    System.out.println("PASSAGEIRO ACABOU");
                     break;
 
                 case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
@@ -142,7 +141,7 @@ public class TPassenger extends Thread {
                         MDepartureTerminal.waitingForLastPassenger();
                     }
                     endOfLife = true;
-                    System.out.println("NAO VAI HAVER ENTERRO");
+                    System.out.println("PASSAGEIRO ACABOU");
                     break;
             }           
         }
