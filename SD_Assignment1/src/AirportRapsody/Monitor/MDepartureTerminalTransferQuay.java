@@ -19,19 +19,37 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
 
     Integer DISEMBARKED_PASSENGERS;
 
+    /**
+     * @param MGeneralRepository The General Repository used for logging     
+     */
     public MDepartureTerminalTransferQuay(MGeneralRepository MGeneralRepository) {
         DISEMBARKED_PASSENGERS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }
     
+    /**
+     * Increments the number of disembarked by one.
+     * @return the number of disembarked passengers.
+     */
     public Integer increment() {
         return DISEMBARKED_PASSENGERS++;
     }
 
+    /**
+     * Resets the number of passenger's that have disembarked counter to zero.
+     */
     public void reset() {
         DISEMBARKED_PASSENGERS = 0;
     }
 
+    /**
+     * Called by the bus driver.<br/>
+     * Will warn the passengers that the bus has arrived so they can start disembarking.<br/>
+     * After being warned by the last passenger that all passengers have disembarked, it returns.
+     * @param NUMBER_OF_PASSENGERS number of passengers that were transport by the bus in the current journey.<br/>
+     * @return Bus driver's state DRIVING_BACKWARD
+     * @see SBusDriver
+     */
     @Override
     public SBusDriver parkTheBusAndLetPassOff(Integer NUMBER_OF_PASSENGERS) {
         lock.lock();
@@ -52,6 +70,13 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
         return SBusDriver.DRIVING_BACKWARD;
     }
 
+    /**
+     * Called by the driver.<br/>
+     * Simulates the bus journey.<br/>
+     * Will wait a bit of time (few milliseconds) and return.
+     * @return Bus driver's PARKING_AT_THE_ARRIVAL_TERMINAL
+     * @see SBusDriver
+     */
     @Override
     public SBusDriver goToArrivalTerminal() {
         // SLEEP
@@ -65,6 +90,14 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
         return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
     }
 
+    /**
+     * Called by a passenger.<br/>
+     * Passenger will wait until being warned by the bus driver that the bus has arrived so he can disembark.<br/>
+     * If he is the last passenger disembarking he'll warn the bus driver so he can go back to the arrival terminal.
+     * @param id passenger's id
+     * @return Passenger's state AT_THE_DEPARTURE_TRANSFER_TERMINAL
+     * @see SPassenger
+     */
     @Override
     public SPassenger leaveTheBus(Integer id) {
         lock.lock();

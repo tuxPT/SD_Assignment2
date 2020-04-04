@@ -1,7 +1,5 @@
 package AirportRapsody.Interface;
 
-import java.util.List;
-
 import AirportRapsody.State.SPassenger;
 
 public interface IArrivalLoungePassenger {

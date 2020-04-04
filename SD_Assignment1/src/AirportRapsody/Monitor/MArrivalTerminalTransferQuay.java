@@ -23,6 +23,10 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
     Condition boarding = lock.newCondition();
     Condition busFull = lock.newCondition();   
 
+    /**
+     * @param BUS_CAPACITY max number of passengers the bus can transport in a single trip
+     * @param MGeneralRepository The General Repository used for logging   
+     */
     public MArrivalTerminalTransferQuay(Integer BUS_CAPACITY, MGeneralRepository MGeneralRepository) {
         WAITING_QUEUE = new LinkedList<Integer>();
         BUS_QUEUE = new LinkedList<Integer>();
@@ -30,6 +34,16 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         this.MGeneralRepository = MGeneralRepository;
     }
   
+    /**
+     * Called by the bus driver.<br/>
+     * The bus driver order the passengers to board the bus when there are enough passengers in queue 
+     * to fill the whole bus or after a certain time (each few milliseconds, if there is at least
+     * one passenger in the waiting queue) to simulate a schedule.<br/>
+     * After the passengers starts embarking, the bus driver will wait until the last one to embark
+     * warns them that all passengers are aboard.
+     * @return BusDriver's state DRIVING_FORWARD
+     * @see SBusDriver
+     */
     public SBusDriver announcingBusBoarding() {
         //MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL);
         lock.lock();
@@ -61,6 +75,16 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
 
     }    
 
+    /**
+     * Called by a passenger.<br/>
+     * Passenger will enter the waiting queue.<br/>
+     * If its place in the waiting queue is equal to the bus capacity (it means there are enough passengers to fill the bus) he'll warn the busdriver.
+     * Otherwise he'll wait until the bus driver warns him to enter the bus.<br/>
+     * After receiving order to enter the bus, if he is the last passenger to enter he'll warn the bus driver that the bus is full so he can start the journey.
+     * @param passengerID passenger's ID
+     * @return Passenger's state TERMINAL_TRANSFER
+     * @see SPassenger
+     */
     public SPassenger enterTheBus(Integer passengerID) {
         lock.lock();
         try{
@@ -104,11 +128,17 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
     }
        
 
+    /**
+     * Called by the driver.<br/>
+     * Simulates the bus journey.<br/>
+     * Will wait a bit of time (few milliseconds) and return.
+     * @return the number of passengers that embarked the bus
+     */
     public Integer goToDepartureTerminal() {
         lock.lock();
         MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_FORWARD);
         try{
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
         }
         catch(Exception e){
             e.printStackTrace();

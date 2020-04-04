@@ -13,12 +13,22 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
 
     Integer NUMBER_OF_LOST_BAGS;        
 
+    /**
+     * @param MGeneralRepository The General Repository used for logging     
+     */
     public MBaggageReclaimOffice(MGeneralRepository MGeneralRepository) {
         NUMBER_OF_LOST_BAGS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }
     
-    // only passenger can add
+    /**
+     * Called by a passenger.<br/>
+     * Adds to the total number of lost bags the number of lost bags that the passenger has lost.
+     @param id passenger's id
+     @param number_of_bags number of bags that the current passenger lost
+     @return Passenger's state EXITING_THE_ARRIVAL_TERMINAL
+     @see SPassenger
+     */
     public SPassenger addBag(Integer id, int number_of_bags) {
         lock.lock();
         MGeneralRepository.updatePassenger(SPassenger.AT_THE_BAGGAGE_RECLAIM_OFFICE, id, null, null, null, false, null);
@@ -36,6 +46,11 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
 
     }
 
+    /**
+     @param id passenger's id
+     @return Passenger's state EXITING_THE_ARRIVAL_TERMINAL
+     @see SPassenger
+     */
     public SPassenger goHome(Integer id)
     {
         MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);

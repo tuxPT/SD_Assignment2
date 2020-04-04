@@ -18,8 +18,7 @@ public class AirportRapsody {
         PLANE_PASSENGERS = 6;
         MAX_PORTER = 1;
         MAX_BUSDRIVER = 1;
-        PLANES_PER_DAY = 5;
-        Boolean END_OF_DAY = false;
+        PLANES_PER_DAY = 5;        
         MAX_BAGS_NUMBER = 2;
         BUS_CAPACITY = 3;
 
@@ -68,16 +67,14 @@ public class AirportRapsody {
                 total_bags += bags[i].size();
                 for(int j=0; j<bags[i].size(); j++){
                     Integer probability = random.nextInt(100);
-                    //2% of lost bags
-                    if(probability > 10){
+                    //5% of lost bags
+                    if(probability > 5){
                         MArrivalLounge.addBag(bags[i].get(j));
                         count++;
                     }
                 }
             }
 
-            System.out.printf("Malas: %d\n", total_bags );
-            System.out.printf("Lost: %d\n", total_bags - count);
             MGeneralRepository.setBags(count);
             MBaggageCollectionPoint.newPlane();
 
@@ -113,7 +110,6 @@ public class AirportRapsody {
                 } catch (InterruptedException e) {
                 }
             }
-            System.out.println("PASSAGEIROS ACABARAM TODOS");
             MGeneralRepository.endOfLifePlane();
         }
 
@@ -125,7 +121,6 @@ public class AirportRapsody {
             } catch (InterruptedException e) {
             }
         }
-        System.out.println("PORTER ACABOU");
 
         for (int i = 0; i < TBusDriver.length; i++) {
             try {
@@ -134,9 +129,7 @@ public class AirportRapsody {
             } catch (InterruptedException e) {
             }
         }
-        System.out.println("BUSDRIVER ACABOU");
         MGeneralRepository.printRepository();
-
 
         // MLogger.close();
     }

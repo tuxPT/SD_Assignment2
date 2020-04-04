@@ -12,12 +12,20 @@ public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
 
     Integer NUMBER_OF_BAGS;
 
+    /**
+     * @param MGeneralRepository The General Repository used for logging     
+     */
     public MTemporaryStorageArea(MGeneralRepository MGeneralRepository) {
         NUMBER_OF_BAGS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }
 
-    // only porter can add
+    /**
+     * Called by the porter.<br/>
+     * Adds one more bags to the total of bags currently present in the storeroom.
+     @return Porter's state AT_THE_PLANES_HOLD
+     @see SPorter
+     */
     public SPorter addBag() {
         lock.lock();
         try{

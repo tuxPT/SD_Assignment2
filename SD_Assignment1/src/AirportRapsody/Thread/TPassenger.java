@@ -1,7 +1,6 @@
 package AirportRapsody.Thread;
 
 import AirportRapsody.Interface.*;
-import AirportRapsody.Monitor.Bag;
 import AirportRapsody.State.SPassenger;
 
 import java.util.*;
@@ -119,7 +118,6 @@ public class TPassenger extends Thread {
                         MArrivalTerminalExit.waitingForLastPassenger();
                     }
                     endOfLife = true;
-                    System.out.println("PASSAGEIRO ACABOU");
                     break;
 
                 case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
@@ -141,7 +139,6 @@ public class TPassenger extends Thread {
                         MDepartureTerminal.waitingForLastPassenger();
                     }
                     endOfLife = true;
-                    System.out.println("PASSAGEIRO ACABOU");
                     break;
             }           
         }
