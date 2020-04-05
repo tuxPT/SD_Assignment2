@@ -131,7 +131,7 @@ public class MGeneralRepository implements IGeneralRepository {
             this.passengerStat[id] = Stat != null ? Stat : this.passengerStat[id];
             if(addWaitingQueue != null){
                 if(addWaitingQueue){
-                    waitingQueue.add(id + 1);
+                    waitingQueue.add(id);
                 }
                 else{
                     waitingQueue.remove();
@@ -139,12 +139,12 @@ public class MGeneralRepository implements IGeneralRepository {
             }
             if(addBusSeats != null){
                 if(addBusSeats){
-                    busSeats[busSeatSize] = id + 1;
+                    busSeats[busSeatSize] = id;
                     busSeatSize++;
                 }
                 else{
                     for(int i=0; i<busSeats.length; i++){
-                        if(busSeats[i] != null && busSeats[i] == id + 1){
+                        if(busSeats[i] != null && busSeats[i] == id){
                             busSeats[i] = null;
                             busSeatSize--;
                         }

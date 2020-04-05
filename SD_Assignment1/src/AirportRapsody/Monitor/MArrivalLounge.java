@@ -22,6 +22,7 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
 
     ReentrantLock lock = new ReentrantLock(true);
     Condition lastPassenger = lock.newCondition();
+    Condition waitingPlaneToLand = lock.newCondition();
 
     /**
      * @param PLANE_PASSENGERS The number of passengers per plane
@@ -80,16 +81,12 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         try {
             MGeneralRepository.updatePorter(SPorter.WAITING_FOR_A_PLANE_TO_LAND, null, null, null, noStart);
             do {
-                //while(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS) {
+                waitingPlaneToLand.signal();
                 if (noMoreWork) {
                     return true;
                 }
-                lastPassenger.await(1, TimeUnit.MILLISECONDS);
-                /*
-                if(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS){
-                    return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
-                }*/
-                //}
+                lastPassenger.await(5, TimeUnit.MILLISECONDS);
+
             }while(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS);
 
         } catch (Exception e) {
@@ -232,6 +229,19 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         }
         catch (Exception e){
             e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+    public void waitForPorter(){
+        lock.lock();
+        try{
+            waitingPlaneToLand.await();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
         }
         finally {
             lock.unlock();

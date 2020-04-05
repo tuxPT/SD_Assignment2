@@ -112,7 +112,6 @@ public class TPassenger extends Thread {
                 case EXITING_THE_ARRIVAL_TERMINAL:
                     tmp = MArrivalTerminalExit.addPassenger(pthread_number, MDepartureTerminal.getCURRENT_NUMBER_OF_PASSENGERS());
                     if (tmp) {
-                        System.out.println("SIGNAL");
                         MArrivalTerminalExit.lastPassenger();
                         MDepartureTerminal.lastPassenger();
                     }
@@ -131,7 +130,6 @@ public class TPassenger extends Thread {
                 case ENTERING_THE_DEPARTURE_TERMINAL:
                     tmp = MDepartureTerminal.addPassenger(pthread_number, MArrivalTerminalExit.getCURRENT_NUMBER_OF_PASSENGERS());
                     if (tmp){
-                        System.out.println("SIGNAL");
                         MArrivalTerminalExit.lastPassenger();
                         MDepartureTerminal.lastPassenger();
                     }

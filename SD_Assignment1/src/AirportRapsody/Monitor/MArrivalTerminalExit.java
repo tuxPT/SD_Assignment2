@@ -41,7 +41,6 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
                 tmp = true;
             }
             else{
-                System.out.println("WAITING");
                 lastPassenger.await();
                 tmp = false;
             }

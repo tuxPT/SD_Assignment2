@@ -110,6 +110,7 @@ public class AirportRapsody {
                 } catch (InterruptedException e) {
                 }
             }
+            MArrivalLounge.waitForPorter();
             MGeneralRepository.endOfLifePlane();
         }
 

@@ -54,7 +54,7 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         try{
             MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL, noStart);
             do{
-                waitingQueue.await(1, TimeUnit.MILLISECONDS);
+                waitingQueue.await(5, TimeUnit.MILLISECONDS);
                 if(noMoreWork){
                     return true;
                 }

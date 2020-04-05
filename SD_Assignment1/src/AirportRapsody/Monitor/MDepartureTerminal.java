@@ -40,7 +40,6 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
                 tmp = true;
             }
             else{
-                System.out.println("WAITING");
                 lastPassenger.await();
                 tmp = false;
             }
