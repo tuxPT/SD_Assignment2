@@ -5,6 +5,9 @@ import AirportRapsody.State.SBusDriver;
 import AirportRapsody.State.SPassenger;
 import AirportRapsody.State.SPorter;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +15,6 @@ import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MGeneralRepository implements IGeneralRepository {
-    List<String> log;
     Integer FN, BN, CB, SR;
     SBusDriver busDriverStat;
     SPorter porterStat;
@@ -48,28 +50,43 @@ public class MGeneralRepository implements IGeneralRepository {
         this.totalBags = 0;
         this.lostBags = 0;
 
-        log = new LinkedList<String>();
-        log.add("               AIRPORT RHAPSODY - Description of the internal state of the problem\n" +
+        String stat = String.format("               AIRPORT RHAPSODY - Description of the internal state of the problem\n" +
                 "\n" +
                 "PLANE    PORTER                  DRIVER\n" +
                 "FN BN  Stat CB SR   Stat  Q1 Q2 Q3 Q4 Q5 Q6  S1 S2 S3\n" +
                 "                                                         PASSENGERS\n" +
                 "St1 Si1 NR1 NA1 St2 Si2 NR2 NA2 St3 Si3 NR3 NA3 St4 Si4 NR4 NA4 St5 Si5 NR5 NA5 St6 Si6 NR6 NA6" +
                 "\n");
-        System.out.print(log.get(0));
+        System.out.print(stat);
+        write(stat);
     }
 
     public void printRepository(){
-        String finalLog = String.format("Final report\n" +
+        String stat = String.format("Final report\n" +
                 "N. of passengers which have this airport as their final destination = %2d\n" +
                 "N. of passengers which are in transit = %2d\n" +
                 "N. of bags that should have been transported in the the planes hold = %2d\n" +
                 "N. of bags that were lost = %2d\n", nNonTransit, ntransit, totalBags, lostBags);
-        System.out.printf(finalLog);
+        System.out.printf(stat);
+        write(stat);
     }
 
+    private void write(String lines){
+        try {
+            Files.write(
+                    Paths.get("log.txt"),
+                    lines.getBytes(),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+    }
+
+
     @Override
-    public void updatePorter(SPorter Stat, Integer BN, Integer CB, Integer SR){
+    public void updatePorter(SPorter Stat, Integer BN, Integer CB, Integer SR, boolean print){
         lock.lock();
         try{
             this.BN = BN !=null ? BN : this.BN;
@@ -83,13 +100,15 @@ public class MGeneralRepository implements IGeneralRepository {
         }
         finally {
             //print
-            print();
+            if(print){
+                print();
+            }
             lock.unlock();
         }
     }
 
     @Override
-    public void updateBusDriver(SBusDriver Stat){
+    public void updateBusDriver(SBusDriver Stat, boolean print){
         lock.lock();
         try{
             this.busDriverStat = Stat != null ? Stat : this.busDriverStat;
@@ -98,7 +117,9 @@ public class MGeneralRepository implements IGeneralRepository {
         }
         finally {
             //print
-            print();
+            if(print){
+                print();
+            }
             lock.unlock();
         }
     }
@@ -226,7 +247,7 @@ public class MGeneralRepository implements IGeneralRepository {
                 mapPassenger(passengerStat[5]), mapTransit(transit[5]), IntegerOneHifen(startTotalBags[5]), IntegerOneHifen(passengerCollectedBags[5])
                 );
         System.out.print(stat);
-        log.add(stat);
+        write(stat);
     }
 
     String mapTransit(Boolean t){

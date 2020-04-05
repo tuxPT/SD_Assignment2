@@ -53,7 +53,7 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
     @Override
     public SBusDriver parkTheBusAndLetPassOff(Integer NUMBER_OF_PASSENGERS) {
         lock.lock();
-        MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_DEPARTURE_TERMINAL);
+        MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_DEPARTURE_TERMINAL, true);
         try{
             this.NUMBER_OF_PASSENGERS = NUMBER_OF_PASSENGERS;
             parkTheBus.signalAll();
@@ -66,7 +66,6 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
             reset();
             lock.unlock();
         }
-        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_BACKWARD);
         return SBusDriver.DRIVING_BACKWARD;
     }
 
@@ -80,13 +79,17 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
     @Override
     public SBusDriver goToArrivalTerminal() {
         // SLEEP
+        lock.lock();
+        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_BACKWARD, true);
         try{
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(30);
         }
         catch(Exception e){
             e.printStackTrace();
         }
-        MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL);
+        finally {
+            lock.unlock();
+        }
         return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
     }
 

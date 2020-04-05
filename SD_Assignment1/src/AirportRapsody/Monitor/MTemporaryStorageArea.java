@@ -29,13 +29,13 @@ public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
     public SPorter addBag() {
         lock.lock();
         try{
+            MGeneralRepository.updatePorter(SPorter.AT_THE_STOREROOM, null, null, NUMBER_OF_BAGS, true);
             NUMBER_OF_BAGS++; 
         }
         catch(Exception e){
             e.printStackTrace();
         }
         finally {
-            MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, NUMBER_OF_BAGS);
             lock.unlock();
         }
         return SPorter.AT_THE_PLANES_HOLD;

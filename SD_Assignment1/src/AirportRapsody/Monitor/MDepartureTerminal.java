@@ -10,26 +10,48 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MDepartureTerminal implements IDepartureTerminalPassenger {
     private IGeneralRepository MGeneralRepository;
     Integer CURRENT_NUMBER_OF_PASSENGERS;
-
+    private Integer PLANE_PASSENGERS;
     ReentrantLock lock = new ReentrantLock(true);
     Condition lastPassenger = lock.newCondition();
 
     /**
      * @param MGeneralRepository The General Repository used for logging   
      */
-    public MDepartureTerminal(MGeneralRepository MGeneralRepository)
+    public MDepartureTerminal(Integer PLANE_PASSENGERS, MGeneralRepository MGeneralRepository)
     {
         CURRENT_NUMBER_OF_PASSENGERS = 0;
         this.MGeneralRepository = MGeneralRepository;
+        this.PLANE_PASSENGERS = PLANE_PASSENGERS;
     }
 
     /**
      * Called by a passenger.<br/>
      * Will increment the number of current passengers in the departure terminal by one.
+     * @return
      */
-    public void addPassenger()
+    public boolean addPassenger(Integer id, Integer current_arrival)
     {
-        CURRENT_NUMBER_OF_PASSENGERS++;
+        lock.lock();
+        boolean tmp = false;
+        try {
+            CURRENT_NUMBER_OF_PASSENGERS++;
+            MGeneralRepository.updatePassenger(SPassenger.ENTERING_THE_DEPARTURE_TERMINAL, id, null, null, null, false, null);
+            if(current_arrival + CURRENT_NUMBER_OF_PASSENGERS == PLANE_PASSENGERS){
+                tmp = true;
+            }
+            else{
+                System.out.println("WAITING");
+                lastPassenger.await();
+                tmp = false;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return tmp;
     }
 
     /**
@@ -55,15 +77,26 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
      * @return the current number of passengers present in the departure terminal
      */
     public Integer getCURRENT_NUMBER_OF_PASSENGERS() {
-        return CURRENT_NUMBER_OF_PASSENGERS;
+        lock.lock();
+        Integer tmp = 0;
+        try{
+            tmp = CURRENT_NUMBER_OF_PASSENGERS;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+        finally {
+            lock.unlock();
+        }
+        return tmp;
     }
 
     /**
      * @return Passenger's state ENTERING_THE_DEPARTURE_TERMINAL
      * @see SPassenger
      */
-    public SPassenger prepareNextLeg(Integer id) {
-        MGeneralRepository.updatePassenger(SPassenger.ENTERING_THE_DEPARTURE_TERMINAL, id, null, null, null, false, null);
+    public SPassenger prepareNextLeg() {
         return SPassenger.ENTERING_THE_DEPARTURE_TERMINAL;
     } 
     
@@ -74,13 +107,13 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
     public void lastPassenger(){        
         lock.lock();
         try{
+            lastPassenger.signalAll();
             CURRENT_NUMBER_OF_PASSENGERS = 0;
         }
         catch(Exception e) {
             e.printStackTrace();
         }
         finally{
-            lastPassenger.signalAll();
             lock.unlock();
         }
     }

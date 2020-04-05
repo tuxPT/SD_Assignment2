@@ -17,6 +17,8 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
     Queue<Integer> BUS_QUEUE;
     Integer BUS_CAPACITY;
     Integer busQueueSize;
+    boolean noMoreWork;
+    boolean noStart;
 
     ReentrantLock lock = new ReentrantLock(true);
     Condition waitingQueue = lock.newCondition();
@@ -32,6 +34,8 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
         BUS_QUEUE = new LinkedList<Integer>();
         this.BUS_CAPACITY = BUS_CAPACITY;
         this.MGeneralRepository = MGeneralRepository;
+        this.noMoreWork = false;
+        this.noStart = false;
     }
   
     /**
@@ -44,15 +48,19 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
      * @return BusDriver's state DRIVING_FORWARD
      * @see SBusDriver
      */
-    public SBusDriver announcingBusBoarding() {
-        //MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL);
+    public boolean announcingBusBoarding() {
+        //
         lock.lock();
         try{
+            MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL, noStart);
             do{
-                waitingQueue.await(1, TimeUnit.SECONDS);
-                if(WAITING_QUEUE.size() == 0){
-                    return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
+                waitingQueue.await(1, TimeUnit.MILLISECONDS);
+                if(noMoreWork){
+                    return true;
                 }
+                /*if(WAITING_QUEUE.size() == 0){
+                    return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
+                }*/
                 //WAITING_QUEUE se WAITING_QUEUE menor ou igual a BUS_CAPACITY senão BUS_CAPACITY
                 busQueueSize  = WAITING_QUEUE.size() <= BUS_CAPACITY ? WAITING_QUEUE.size(): BUS_CAPACITY;                
             }
@@ -71,8 +79,7 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
             busQueueSize = 0;
             lock.unlock();
         }
-        return SBusDriver.DRIVING_FORWARD;
-
+        return false;
     }    
 
     /**
@@ -88,6 +95,9 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
     public SPassenger enterTheBus(Integer passengerID) {
         lock.lock();
         try{
+            if(!noStart){
+                noStart = true;
+            }
             WAITING_QUEUE.add(passengerID);
             MGeneralRepository.updatePassenger(SPassenger.AT_THE_ARRIVAL_TRANSFER_TERMINAL, passengerID, true, null, null, false, null);
            if (WAITING_QUEUE.size() == 3)
@@ -117,6 +127,9 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
             if (BUS_QUEUE.size() == busQueueSize) {
                 busFull.signalAll();
             }
+            else{
+                busFull.await();
+            }
         }
         catch (Exception e)
         {
@@ -136,9 +149,9 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
      */
     public Integer goToDepartureTerminal() {
         lock.lock();
-        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_FORWARD);
+        MGeneralRepository.updateBusDriver(SBusDriver.DRIVING_FORWARD, true);
         try{
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(30);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -150,5 +163,18 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
             return tmp;
         }
 
+    }
+    public void endOfWork(){
+        lock.lock();
+        try {
+            noMoreWork = true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+        finally {
+            lock.unlock();
+        }
     }
 }

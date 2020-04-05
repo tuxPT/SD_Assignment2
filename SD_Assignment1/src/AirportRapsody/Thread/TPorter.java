@@ -48,7 +48,12 @@ public class TPorter extends Thread {
         while (!endOfDay) {
             switch (curState) {
                 case WAITING_FOR_A_PLANE_TO_LAND:
-                    curState = MArrivalLounge.takeARest();
+                    if(MArrivalLounge.takeARest()){
+                        endOfDay = true;
+                    }
+                    else{
+                        curState = SPorter.AT_THE_PLANES_HOLD;
+                    }
                     break;
                 case AT_THE_PLANES_HOLD:
                     // TRY TO GET BAG

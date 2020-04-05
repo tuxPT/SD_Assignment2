@@ -30,11 +30,11 @@ public class AirportRapsody {
         // INSTANCIAR MONITORES
         MGeneralRepository MGeneralRepository = new MGeneralRepository(PLANE_PASSENGERS, BUS_CAPACITY);
         MArrivalLounge MArrivalLounge = new MArrivalLounge(PLANE_PASSENGERS, MGeneralRepository);
-        MArrivalTerminalExit MArrivalTerminalExit = new MArrivalTerminalExit(MGeneralRepository);
+        MArrivalTerminalExit MArrivalTerminalExit = new MArrivalTerminalExit(PLANE_PASSENGERS, MGeneralRepository);
         MArrivalTerminalTransferQuay MArrivalTerminalTransferQuay = new MArrivalTerminalTransferQuay(BUS_CAPACITY, MGeneralRepository);
         MBaggageCollectionPoint MBaggageCollectionPoint = new MBaggageCollectionPoint(MGeneralRepository);
         MBaggageReclaimOffice MBaggageReclaimOffice = new MBaggageReclaimOffice(MGeneralRepository);
-        MDepartureTerminal MDepartureTerminal = new MDepartureTerminal(MGeneralRepository);
+        MDepartureTerminal MDepartureTerminal = new MDepartureTerminal(PLANE_PASSENGERS, MGeneralRepository);
         MDepartureTerminalTransferQuay MDepartureTerminalTransferQuay = new MDepartureTerminalTransferQuay(MGeneralRepository);
         MTemporaryStorageArea MTemporaryStorageArea = new MTemporaryStorageArea(MGeneralRepository);       
 
@@ -115,7 +115,7 @@ public class AirportRapsody {
 
         for (int i = 0; i < TPorter.length; i++) {
             try {
-                TPorter[i].setEndOfDay();
+                MArrivalLounge.endOfWork();
                 TPorter[i].join();
 
             } catch (InterruptedException e) {
@@ -124,7 +124,7 @@ public class AirportRapsody {
 
         for (int i = 0; i < TBusDriver.length; i++) {
             try {
-                TBusDriver[i].setEndOfDay();
+                MArrivalTerminalTransferQuay.endOfWork();
                 TBusDriver[i].join();
             } catch (InterruptedException e) {
             }

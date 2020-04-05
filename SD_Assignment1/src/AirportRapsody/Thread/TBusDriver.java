@@ -28,7 +28,12 @@ public class TBusDriver extends Thread {
         while(!endOfDay) {
             switch(curState) {
                 case PARKING_AT_THE_ARRIVAL_TERMINAL:
-                    curState = MArrivalTerminalTransferQuayBusDriver.announcingBusBoarding();
+                    if(MArrivalTerminalTransferQuayBusDriver.announcingBusBoarding()){
+                        endOfDay = true;
+                    }
+                    else{
+                        curState = SBusDriver.DRIVING_FORWARD;
+                    }
                 break;
                 case DRIVING_FORWARD:
                     numberPassengersOnBus = MArrivalTerminalTransferQuayBusDriver.goToDepartureTerminal();

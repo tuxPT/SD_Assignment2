@@ -16,7 +16,8 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     private IGeneralRepository MGeneralRepository;
     private Integer NUMBER_OF_PASSENGERS;
     private Integer PLANE_PASSENGERS;
-
+    private boolean noMoreWork;
+    private boolean noStart;
     private List<Bag> plane_hold;
 
     ReentrantLock lock = new ReentrantLock(true);
@@ -32,6 +33,8 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         this.PLANE_PASSENGERS = PLANE_PASSENGERS;
         plane_hold = new LinkedList<>();
         this.MGeneralRepository = MGeneralRepository;
+        this.noMoreWork = false;
+        this.noStart = false;
     }
 
 
@@ -46,13 +49,15 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     public Bag tryToCollectABag() {
         Bag tmp = null;
         lock.lock();
-        MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, null);
         try {
             if (plane_hold.size() != 0)
             {
                 tmp = plane_hold.remove(0);
-                MGeneralRepository.updatePorter(null, plane_hold.size(), null, null);
-            }                    
+                MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, plane_hold.size(), null, null, true);
+            }
+            else{
+                MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, null, true);
+            }
         }catch (Exception e){
             e.printStackTrace();
         } 
@@ -70,25 +75,31 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
      * @see SPorter
      */
     @Override
-    public SPorter takeARest() {
+    public boolean takeARest() {
         lock.lock();
         try {
+            MGeneralRepository.updatePorter(SPorter.WAITING_FOR_A_PLANE_TO_LAND, null, null, null, noStart);
+            do {
                 //while(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS) {
-                lastPassenger.await(1, TimeUnit.SECONDS);
+                if (noMoreWork) {
+                    return true;
+                }
+                lastPassenger.await(1, TimeUnit.MILLISECONDS);
+                /*
                 if(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS){
                     return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
-                }
+                }*/
                 //}
+            }while(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         finally{
             //NUMBER_OF_PASSENGERS = 0;
-            //MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, null, null, null);
             lock.unlock();
         }
-        return SPorter.AT_THE_PLANES_HOLD;
+        return false;
     }    
 
     /**
@@ -105,11 +116,9 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         //sleep
         assert bag != null : "Bag não existe";
         if(bag.getTRANSIT()){
-            MGeneralRepository.updatePorter(SPorter.AT_THE_STOREROOM, null, null, null);
             return SPorter.AT_THE_STOREROOM;
         }
         else{
-            MGeneralRepository.updatePorter(SPorter.AT_THE_LUGGAGE_BELT_CONVEYOR, null, null, null);
             return SPorter.AT_THE_LUGGAGE_BELT_CONVEYOR;
         }
     }
@@ -132,13 +141,23 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
     @Override
     public SPassenger whatShouldIDo(Integer id, Integer t_bags, boolean t_TRANSIT) {         
         lock.lock();
-        try{            
+        try{
             NUMBER_OF_PASSENGERS++;
+            if(!noStart){
+                noStart = true;
+            }
+            MGeneralRepository.updatePassenger(SPassenger.AT_THE_DISEMBARKING_ZONE,
+                    id,
+                    null,
+                    null,
+                    t_bags != null ? t_bags : 0,
+                    false,
+                    t_TRANSIT);
             if(NUMBER_OF_PASSENGERS == PLANE_PASSENGERS){
                 lastPassenger.signalAll();
             }
             else{
-                lastPassenger.await();
+                //lastPassenger.await();
             }
         }
         catch(Exception e){
@@ -148,23 +167,17 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
             lock.unlock();
         }
         SPassenger tmp;
-        MGeneralRepository.updatePassenger(SPassenger.AT_THE_DISEMBARKING_ZONE,
-                id,
-                null,
-                null,
-                t_bags != null ? t_bags : 0,
-                false,
-                t_TRANSIT);
+
         //meter um sleep random
         if(t_TRANSIT){
-            tmp = takeABus(id);
+            tmp = takeABus();
         }
         else{
             if(t_bags > 0){
-                tmp = goCollectABag(id);
+                tmp = goCollectABag();
             }
             else{
-                tmp = goHome(id);
+                tmp = goHome();
             }
         }
         return tmp;
@@ -181,21 +194,18 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         lock.lock();
         NUMBER_OF_PASSENGERS = 0;
         lock.unlock();
-        MGeneralRepository.updatePorter(SPorter.WAITING_FOR_A_PLANE_TO_LAND, plane_hold.size(), null, null);
         return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
     }
 
-    private SPassenger takeABus(Integer id) {       
+    private SPassenger takeABus() {
         return SPassenger.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
     }
 
-    private SPassenger goCollectABag(Integer id) {
-        MGeneralRepository.updatePassenger(SPassenger.AT_THE_LUGGAGE_COLLECTION_POINT, id, null, null, null, false, null);
+    private SPassenger goCollectABag() {
         return SPassenger.AT_THE_LUGGAGE_COLLECTION_POINT;
     }
 
-    private SPassenger goHome(Integer id) {
-        MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);
+    private SPassenger goHome() {
         return SPassenger.EXITING_THE_ARRIVAL_TERMINAL;
     }
 
@@ -215,5 +225,16 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
             lock.unlock();
         }
     }
-
+    public void endOfWork(){
+        lock.lock();
+        try{
+            noMoreWork = true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
 }

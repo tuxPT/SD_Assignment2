@@ -53,7 +53,6 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
      */
     public SPassenger goHome(Integer id)
     {
-        MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);
         return SPassenger.EXITING_THE_ARRIVAL_TERMINAL;
     }
 }

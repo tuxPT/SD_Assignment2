@@ -5,7 +5,7 @@ import AirportRapsody.State.SPorter;
 
 public interface IArrivalLoungePorter {
     Bag tryToCollectABag();
-    SPorter takeARest();
+    boolean takeARest();
     SPorter noMoreBagsToCollect();
     SPorter carryItToAppropriateStore(Bag bag);
 }

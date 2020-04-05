@@ -26,6 +26,7 @@ public class TPassenger extends Thread {
     private boolean endOfLife;
     private Boolean TRANSIT;
 
+    private boolean tmp;
     public List<Integer> getBags() {
         return bags;
     }
@@ -109,13 +110,11 @@ public class TPassenger extends Thread {
                     curState = MBaggageReclaimOffice.addBag(pthread_number, bags.size() - NUMBER_OF_BAGS_RETRIEVED);
                     break;
                 case EXITING_THE_ARRIVAL_TERMINAL:
-                    MArrivalTerminalExit.addPassenger(pthread_number);
-                    if (PASSENGERS_PER_PLANE == MArrivalTerminalExit.getCURRENT_NUMBER_OF_PASSENGERS()
-                            + MDepartureTerminal.getCURRENT_NUMBER_OF_PASSENGERS()) {
+                    tmp = MArrivalTerminalExit.addPassenger(pthread_number, MDepartureTerminal.getCURRENT_NUMBER_OF_PASSENGERS());
+                    if (tmp) {
+                        System.out.println("SIGNAL");
                         MArrivalTerminalExit.lastPassenger();
                         MDepartureTerminal.lastPassenger();
-                    } else {
-                        MArrivalTerminalExit.waitingForLastPassenger();
                     }
                     endOfLife = true;
                     break;
@@ -127,16 +126,14 @@ public class TPassenger extends Thread {
                     curState = MDepartureTerminalTransferQuay.leaveTheBus(pthread_number);
                     break;
                 case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
-                    curState = MDepartureTerminal.prepareNextLeg(pthread_number);
+                    curState = MDepartureTerminal.prepareNextLeg();
                     break;
                 case ENTERING_THE_DEPARTURE_TERMINAL:
-                    MDepartureTerminal.addPassenger();
-                    if (PASSENGERS_PER_PLANE == MArrivalTerminalExit.getCURRENT_NUMBER_OF_PASSENGERS()
-                            + MDepartureTerminal.getCURRENT_NUMBER_OF_PASSENGERS()) {
+                    tmp = MDepartureTerminal.addPassenger(pthread_number, MArrivalTerminalExit.getCURRENT_NUMBER_OF_PASSENGERS());
+                    if (tmp){
+                        System.out.println("SIGNAL");
                         MArrivalTerminalExit.lastPassenger();
                         MDepartureTerminal.lastPassenger();
-                    } else {
-                        MDepartureTerminal.waitingForLastPassenger();
                     }
                     endOfLife = true;
                     break;
