@@ -1,20 +1,62 @@
-package clientSide.Passenger;
+package clientSide;
 
-public class mainPassenger {
-    public void main(String[] args){
-        for(int p=0; p<PLANES_PER_DAY; p++) {
+import genclass.GenericIO;
+import shared_regions.IArrivalLoungePassenger;
+
+/**
+ * Este tipo de dados simula uma solução do lado do cliente do Problema dos
+ * Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
+ * (replicação do servidor) com lançamento estático dos threads barbeiro. A
+ * comunicação baseia-se em passagem de mensagens sobre sockets usando o
+ * protocolo TCP.
+ */
+
+public class mainBusDriver {
+    /**
+     * Programa principal.
+     */
+
+    public static void main(String[] args) {
+        int nCustomer = 5; // número de clientes
+        int nBarber = 2; // número máximo de barbeiros
+        TPassenger[] TPassenger = new TPassenger[PLANE_PASSENGERS];
+        IArrivalLoungePassenger ArrivalLoungeStub; // stub à barbearia
+        int nIter; // número de iterações do ciclo de vida dos clientes
+        String fName; // nome do ficheiro de logging
+        String serverHostName; // nome do sistema computacional onde está o servidor
+        int serverPortNumb; // número do port de escuta do servidor
+
+        /* Obtenção dos parâmetros do problema */
+        GenericIO.writelnString("\n" + "      Problema dos Barbeiros Sonolentos\n");
+        GenericIO.writeString("Numero de iterações? ");
+        nIter = GenericIO.readlnInt();
+        GenericIO.writeString("Nome do ficheiro de logging? ");
+        fName = GenericIO.readlnString();
+        GenericIO.writeString("Nome do sistema computacional onde está o servidor? ");
+        serverHostName = GenericIO.readlnString();
+        GenericIO.writeString("Número do port de escuta do servidor? ");
+        serverPortNumb = GenericIO.readlnInt();
+        ArrivalLoungeStub = new ArrivalLoungeStub(serverHostName, serverPortNumb);
+
+        // INSTANCIAR MONITORES
+
+        /* Comunicação ao servidor dos parâmetros do problema */
+
+        bShopStub.probPar(fName, nIter);
+
+        for (int p = 0; p < PLANES_PER_DAY; p++) {
             MGeneralRepository.nextFlight();
-            //total bags generator
+            // total bags generator
             bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
-            //lost bags generator
+            // lost bags generator
             int count = 0;
             int total_bags = 0;
-            for(int i=0; i<bags.length; i++){
+            for (int i = 0; i < bags.length; i++) {
                 total_bags += bags[i].size();
-                for(int j=0; j<bags[i].size(); j++){
+                for (int j = 0; j < bags[i].size(); j++) {
                     Integer probability = random.nextInt(100);
-                    //5% of lost bags
-                    if(probability > 5){
+                    // 5% of lost bags
+                    if (probability > 5) {
                         MArrivalLounge.addBag(bags[i].get(j));
                         count++;
                     }
@@ -27,18 +69,17 @@ public class mainPassenger {
             for (int i = 0; i < PLANE_PASSENGERS; i++) {
                 Random r = new Random();
                 boolean t_TRANSIT;
-                if (bags[i].size() != 0){
+                if (bags[i].size() != 0) {
                     t_TRANSIT = bags[i].get(0).getTRANSIT();
-                }
-                else{
+                } else {
                     t_TRANSIT = r.nextBoolean();
                 }
                 List<Integer> temp = new LinkedList<Integer>();
-                for(Bag b: bags[i]){
+                for (Bag b : bags[i]) {
                     temp.add(b.getID());
                 }
-                //instancia
-                TPassenger[i] = new TPassenger(i,t_TRANSIT, temp, PLANE_PASSENGERS,
+                // instancia
+                TPassenger[i] = new TPassenger(i, t_TRANSIT, temp, PLANE_PASSENGERS,
                         (IArrivalLoungePassenger) MArrivalLounge, (IArrivalTerminalExitPassenger) MArrivalTerminalExit,
                         (IArrivalTerminalTransferQuayPassenger) MArrivalTerminalTransferQuay,
                         (IBaggageCollectionPointPassenger) MBaggageCollectionPoint,
@@ -59,7 +100,10 @@ public class mainPassenger {
             MArrivalLounge.waitForPorter();
             MGeneralRepository.endOfLifePlane();
         }
-        MGeneralRepository.printRepository();
+        MArrivalLounge.endOfWork();
+        MArrivalTerminalTransferQuay.endOfWork();
+
+        //shutdown dos monitores
     }
 
     private static ArrayList<Bag>[] generateBags(int PLANE_PASSENGERS, int MAX_BAGS_NUMBER) {
