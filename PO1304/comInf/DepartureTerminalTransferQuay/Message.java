@@ -1,6 +1,7 @@
-package comInf;
+package comInf.DepartureTerminalTransferQuay;
 
 import java.io.*;
+import common_infrastructures.Bag;
 
 /**
  *   Este tipo de dados define as mensagens que são trocadas entre os clientes e o servidor numa solução do Problema
@@ -17,92 +18,26 @@ public class Message implements Serializable
 
    private static final long serialVersionUID = 1001L;
 
-  /* Tipos das mensagens */
+   /* Tipos das mensagens */
+   /* Bus Driver */
+   // SBusDriver parkTheBusAndLetPassOff(Integer n); 
+   public static final int PBLPF                = 1;
 
-  /**
-   *  Inicialização do ficheiro de logging (operação pedida pelo cliente)
-   */
+   // SBusDriver goToArrivalTerminal();
+   public static final int GTAT                 = 2;
 
-   public static final int SETNFIC  =  1;
+   /* Passenger */
+   //SPassenger leaveTheBus(Integer id);
+   public static final int LTB                  = 3;
 
-  /**
-   *  Ficheiro de logging foi inicializado (resposta enviada pelo servidor)
-   */
+   //SBusDriver State DRIVING_BACKWARD
+   public static final int STATE_DB             = 4;
 
-   public static final int NFICDONE =  2;
+   //SBusDriver State PARKING_AT_THE_ARRIVAL_TERMINAL
+   public static final int STATE_PKAT           = 5;
 
-  /**
-   *  Corte de cabelo (operação pedida pelo cliente)
-   */
-
-   public static final int REQCUTH  =  3;
-
-  /**
-   *  Cabelo cortado (resposta enviada pelo servidor)
-   */
-
-   public static final int CUTHDONE =  4;
-
-  /**
-   *  Barbearia cheia (resposta enviada pelo servidor)
-   */
-
-   public static final int BSHOPF   =  5;
-
-  /**
-   *  Alertar o thread barbeiro do fim de operações (operação pedida pelo cliente)
-   */
-
-   public static final int ENDOP    =  6;
-
-  /**
-   *  Operação realizada com sucesso (resposta enviada pelo servidor)
-   */
-
-   public static final int ACK      =  7;
-
-  /**
-   *  Mandar o barbeiro dormir (operação pedida pelo cliente)
-   */
-
-   public static final int GOTOSLP  =  8;
-
-  /**
-   *  Continuação do ciclo de vida do barbeiro (resposta enviada pelo servidor)
-   */
-
-   public static final int CONT     =  9;
-
-  /**
-   *  Terminação do ciclo de vida do barbeiro (resposta enviada pelo servidor)
-   */
-
-   public static final int END      = 10;
-
-  /**
-   *  Chamar um cliente pelo barbeiro (operação pedida pelo cliente)
-   */
-
-   public static final int CALLCUST = 11;
-
-  /**
-   *  Enviar a identificação do cliente (resposta enviada pelo servidor)
-   */
-
-   public static final int CUSTID   = 12;
-
-  /**
-   *  Receber pagamento pelo barbeiro (operação pedida pelo cliente)
-   */
-
-   public static final int GETPAY   = 13;
-
-  /**
-   *  Shutdown do servidor (operação pedida pelo cliente)
-   */
-
-   public static final int SHUT   = 14;
-
+   //SPassenger State AT_THE_DEPARTURE_TRANSFER_TERMINAL
+   public static final int STATE_DTT            = 6;
 
   /* Campos das mensagens */
 
@@ -116,25 +51,26 @@ public class Message implements Serializable
    *  Identificação do cliente
    */
 
-   private int custId = -1;
+   private int passengerID = -1;
 
-  /**
-   *  Identificação do barbeiro
+   /**
+   *  Identificação do cliente
    */
 
-   private int barbId = -1;
+  private int bags = -1;
 
   /**
-   *  Nome do ficheiro de logging
+   *  Identificação do cliente
    */
 
-   private String fName = null;
+  private boolean transit = false;
 
   /**
-   *  Número de iterações do ciclo de vida dos clientes
+   *  Identificação do cliente
    */
 
-   private int nIter = -1;
+  private Bag bag = null;
+
 
   /**
    *  Instanciação de uma mensagem (forma 1).
@@ -148,34 +84,17 @@ public class Message implements Serializable
    }
 
   /**
-   *  Instanciação de uma mensagem (forma 2).
-   *
-   *    @param type tipo da mensagem
-   *    @param id identificação do cliente/barbeiro
-   */ 
-
-
-   public Message (int type, int id)
-   {
-      msgType = type;
-      if ((msgType == REQCUTH) || (msgType == CUSTID))
-         custId= id;
-         else barbId = id;
-   }
-
-  /**
    *  Instanciação de uma mensagem (forma 3).
    *
    *    @param type tipo da mensagem
-   *    @param barbId identificação do barbeiro
+   *    @param bag mala
    *    @param custId identificação do cliente
    */
 
-   public Message (int type, int barbId, int custId)
+   public Message (int type, Bag bag)
    {
       msgType = type;
-      this.barbId= barbId;
-      this.custId= custId;
+      this.bag = bag;
    }
 
   /**
@@ -186,11 +105,12 @@ public class Message implements Serializable
    *    @param nIter número de iterações do ciclo de vida dos clientes
    */
 
-   public Message (int type, String name, int nIter)
+   public Message (int type, Integer id, Integer t_bags, boolean t_TRANSIT)
    {
       msgType = type;
-      fName= name;
-      this.nIter = nIter;
+      this.passengerID = id;
+      this.bags = t_bags;
+      this.transit = t_TRANSIT;
    }
 
   /**
@@ -210,43 +130,44 @@ public class Message implements Serializable
    *    @return identificação do cliente
    */
 
-   public int getCustId ()
+   public int getPassengerID ()
    {
-      return (custId);
+      return (this.getPassengerID());
    }
 
-  /**
-   *  Obtenção do valor do campo identificador do barbeiro.
+/**
+   *  Obtenção do valor do campo identificador do cliente.
    *
-   *    @return identificação do barbeiro
+   *    @return identificação do cliente
    */
 
-   public int getBarbId ()
-   {
-      return (barbId);
-   }
+  public int getBags ()
+  {
+     return (this.bags);
+  }
 
   /**
-   *  Obtenção do valor do campo nome do ficheiro de logging.
+   *  Obtenção do valor do campo identificador do cliente.
    *
-   *    @return nome do ficheiro
+   *    @return identificação do cliente
    */
 
-   public String getFName ()
-   {
-      return (fName);
-   }
+  public boolean getTransit ()
+  {
+     return (this.transit);
+  }
 
   /**
-   *  Obtenção do valor do campo número de iterações do ciclo de vida dos clientes.
+   *  Obtenção do valor do campo identificador do cliente.
    *
-   *    @return número de iterações do ciclo de vida dos clientes
+   *    @return identificação do cliente
    */
 
-   public int getNIter ()
-   {
-      return (nIter);
-   }
+  public Bag getBag ()
+  {
+     return (this.bag);
+  }
+
 
   /**
    *  Impressão dos campos internos.
