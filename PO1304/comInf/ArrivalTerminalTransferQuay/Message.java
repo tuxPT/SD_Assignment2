@@ -1,4 +1,4 @@
-package comInf;
+package comInf.ArrivalTerminalTransferQuay;
 
 import java.io.*;
 
@@ -41,17 +41,8 @@ public class Message implements Serializable {
 
     private int msgType = -1;
 
-    /**
-     * Identificação do cliente
-     */
-
-    private int custId = -1;
-
-    /**
-     * Identificação do barbeiro
-     */
-
-    private int barbId = -1;
+    // ID do passageiro
+    private int passengerID = -1;
 
     /**
      * Nome do ficheiro de logging
@@ -84,7 +75,7 @@ public class Message implements Serializable {
 
     public Message(int type, int id) {
         msgType = type;
-        this.id = id;
+        this.passengerID = id;
     }
 
     
@@ -99,23 +90,13 @@ public class Message implements Serializable {
     }
 
     /**
-     * Obtenção do valor do campo identificador do cliente.
+     * Obtenção do valor do ID do passageiro
      *
-     * @return identificação do cliente
+     * @return ID do passageiro
      */
 
-    public int getCustId() {
-        return (custId);
-    }
-
-    /**
-     * Obtenção do valor do campo identificador do barbeiro.
-     *
-     * @return identificação do barbeiro
-     */
-
-    public int getBarbId() {
-        return (barbId);
+    public int getPassengerID() {
+        return (this.passengerID);
     }
 
     /**
@@ -147,7 +128,7 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\nId Cliente = " + custId + "\nId Barbeiro = " + barbId
+        return ("Tipo = " + msgType + "\nID do passageiro = " + passengerID
                 + "\nNome Fic. Logging = " + fName + "\nN. de Iteracoes = " + nIter);
     }
 }

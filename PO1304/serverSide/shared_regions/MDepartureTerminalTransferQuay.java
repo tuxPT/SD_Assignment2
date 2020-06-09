@@ -1,14 +1,14 @@
-package shared_regions;
-
-import shared_regions.IDepartureTerminalTransferQuayBusDriver;
-import shared_regions.IDepartureTerminalTransferQuayPassenger;
-import shared_regions.IGeneralRepository;
-import common_infrastructures.SBusDriver;
-import common_infrastructures.SPassenger;
+package serverSide.shared_regions;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+
+import common_infrastructures.SBusDriver;
+import common_infrastructures.SPassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransferQuayBusDriver, IDepartureTerminalTransferQuayPassenger {
     private IGeneralRepository MGeneralRepository;
@@ -22,7 +22,7 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
     /**
      * @param MGeneralRepository The General Repository used for logging     
      */
-    public MDepartureTerminalTransferQuay(MGeneralRepository MGeneralRepository) {
+    public MDepartureTerminalTransferQuay(IGeneralRepository MGeneralRepository) {
         DISEMBARKED_PASSENGERS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }

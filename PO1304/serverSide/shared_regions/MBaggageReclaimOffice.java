@@ -1,10 +1,10 @@
-package shared_regions;
+package serverSide.shared_regions;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import shared_regions.IBaggageReclaimOfficePassenger;
 import common_infrastructures.SPassenger;
-import shared_regions.IGeneralRepository;
+import shared_regions_JavaInterfaces.IBaggageReclaimOfficePassenger;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
 {
@@ -16,7 +16,7 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
     /**
      * @param MGeneralRepository The General Repository used for logging     
      */
-    public MBaggageReclaimOffice(MGeneralRepository MGeneralRepository) {
+    public MBaggageReclaimOffice(IGeneralRepository MGeneralRepository) {
         NUMBER_OF_LOST_BAGS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }

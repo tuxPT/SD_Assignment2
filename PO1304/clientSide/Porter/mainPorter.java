@@ -1,5 +1,7 @@
 package clientSide.Porter;
 
+import entities.TPorter;
+
 public class mainPorter {
     public void main(String[] args){
         for (int i = 0; i < MAX_PORTER; i++) {

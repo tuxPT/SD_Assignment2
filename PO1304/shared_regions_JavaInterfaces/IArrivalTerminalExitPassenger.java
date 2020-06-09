@@ -1,4 +1,4 @@
-package shared_regions;
+package shared_regions_JavaInterfaces;
 
 public interface IArrivalTerminalExitPassenger {
     /**

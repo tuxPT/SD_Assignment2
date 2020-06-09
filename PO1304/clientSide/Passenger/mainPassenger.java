@@ -1,7 +1,25 @@
-package clientSide;
+package clientSide.Passenger;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+import clientSide.Stub.ArrivalLoungeStub;
+import common_infrastructures.Bag;
+import entities.TPassenger;
 import genclass.GenericIO;
-import shared_regions.IArrivalLoungePassenger;
+import serverSide.shared_regions.MArrivalLounge;
+import serverSide.shared_regions.MArrivalTerminalTransferQuay;
+import serverSide.shared_regions.MBaggageCollectionPoint;
+import serverSide.shared_regions.MGeneralRepository;
+import shared_regions_JavaInterfaces.IArrivalLoungePassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalExitPassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayPassenger;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPassenger;
+import shared_regions_JavaInterfaces.IBaggageReclaimOfficePassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalPassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
 
 /**
  * Este tipo de dados simula uma solução do lado do cliente do Problema dos
@@ -11,7 +29,7 @@ import shared_regions.IArrivalLoungePassenger;
  * protocolo TCP.
  */
 
-public class mainBusDriver {
+public class mainPassenger {
     /**
      * Programa principal.
      */

@@ -1,10 +1,10 @@
 package entities;
 
-import shared_regions.IArrivalLoungePorter;
-import shared_regions.IBaggageCollectionPointPorter;
-import shared_regions.ITemporaryStorageAreaPorter;
 import common_infrastructures.Bag;
 import common_infrastructures.SPorter;
+import shared_regions_JavaInterfaces.IArrivalLoungePorter;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPorter;
+import shared_regions_JavaInterfaces.ITemporaryStorageAreaPorter;
 
 public class TPorter extends Thread {
     private boolean endOfDay;

@@ -1,10 +1,16 @@
 package entities;
 
-import shared_regions.*;
-import common_infrastructures.SPassenger;
+import java.util.List;
+import java.util.Random;
 
-import java.util.*;
-import shared_regions.*;
+import common_infrastructures.SPassenger;
+import shared_regions_JavaInterfaces.IArrivalLoungePassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalExitPassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayPassenger;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPassenger;
+import shared_regions_JavaInterfaces.IBaggageReclaimOfficePassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalPassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
 
 public class TPassenger extends Thread {
     private Random random = new Random();

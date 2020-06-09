@@ -1,17 +1,17 @@
-package shared_regions;
+package serverSide.shared_regions;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import shared_regions.IBaggageCollectionPointPassenger;
-import shared_regions.IBaggageCollectionPointPorter;
-import shared_regions.IGeneralRepository;
+import common_infrastructures.Bag;
 import common_infrastructures.SPassenger;
 import common_infrastructures.SPorter;
-import common_infrastructures.Bag;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPassenger;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPorter;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, IBaggageCollectionPointPassenger {
     private IGeneralRepository MGeneralRepository;
@@ -24,7 +24,7 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
     /**
      * @param MGeneralRepository The General Repository used for logging     
      */
-    public MBaggageCollectionPoint(MGeneralRepository MGeneralRepository)
+    public MBaggageCollectionPoint(IGeneralRepository MGeneralRepository)
     {
         ListOfBags = new ArrayList<>(); 
         this.moreBags = true;

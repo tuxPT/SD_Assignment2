@@ -1,4 +1,4 @@
-package serverSide;
+package serverSide.ArrivalLounge;
 
 import genclass.GenericIO;
 import java.net.SocketTimeoutException;

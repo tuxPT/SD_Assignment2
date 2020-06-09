@@ -1,4 +1,4 @@
-package comInf;
+package comInf.BaggageReclaimOffice;
 
 import java.io.*;
 
@@ -18,14 +18,17 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 1001L;
 
     /* Tipos das mensagens */
-    // Passenger
-    // addBag(Integer id, int i);
+    /* Passenger */
+    /**
+     * addbag(Integer id, int i)
+     */
     public static final int ADD_BAG = 1;
 
-    // goHome(Integer id);
+    /**
+     * goHome(Integer id)
+     */ 
     public static final int GO_HOME = 2;
 
-    
     /* Campos das mensagens */
 
     /**
@@ -35,28 +38,15 @@ public class Message implements Serializable {
     private int msgType = -1;
 
     /**
-     * Identificação do cliente
+     * Identificador do passageiro
+     */
+    private int passengerId = -1;
+
+     /**
+     * Número de malas perdidas
      */
 
-    private int custId = -1;
-
-    /**
-     * Identificação do barbeiro
-     */
-
-    private int barbId = -1;
-
-    /**
-     * Nome do ficheiro de logging
-     */
-
-    private String fName = null;
-
-    /**
-     * Número de iterações do ciclo de vida dos clientes
-     */
-
-    private int nIter = -1;
+    private int numberOfLostBags = -1;
 
     /**
      * Instanciação de uma mensagem (forma 1).
@@ -72,43 +62,14 @@ public class Message implements Serializable {
      * Instanciação de uma mensagem (forma 2).
      *
      * @param type tipo da mensagem
-     * @param id   identificação do cliente/barbeiro
+     * @param id id do passageiro
+     * @param number_of_bags número de malas perdidas
      */
 
-    public Message(int type, int id) {
+    public Message(int type, Integer id, int number_of_bags) {
         msgType = type;
-        if ((msgType == REQCUTH) || (msgType == CUSTID))
-            custId = id;
-        else
-            barbId = id;
-    }
-
-    /**
-     * Instanciação de uma mensagem (forma 3).
-     *
-     * @param type   tipo da mensagem
-     * @param barbId identificação do barbeiro
-     * @param custId identificação do cliente
-     */
-
-    public Message(int type, int barbId, int custId) {
-        msgType = type;
-        this.barbId = barbId;
-        this.custId = custId;
-    }
-
-    /**
-     * Instanciação de uma mensagem (forma 4).
-     *
-     * @param type  tipo da mensagem
-     * @param name  nome do ficheiro de logging
-     * @param nIter número de iterações do ciclo de vida dos clientes
-     */
-
-    public Message(int type, String name, int nIter) {
-        msgType = type;
-        fName = name;
-        this.nIter = nIter;
+        passengerId = id;
+        numberOfLostBags = number_of_bags;
     }
 
     /**
@@ -118,47 +79,27 @@ public class Message implements Serializable {
      */
 
     public int getType() {
-        return (msgType);
+        return msgType;
     }
 
     /**
-     * Obtenção do valor do campo identificador do cliente.
+     * Obtenção do valor do campo identificador do passageiro.
      *
-     * @return identificação do cliente
+     * @return identificação do passageiro
      */
 
-    public int getCustId() {
-        return (custId);
+    public int getPassengerId() {
+        return passengerId;
     }
 
     /**
-     * Obtenção do valor do campo identificador do barbeiro.
+     * Obtenção do valor do campo do número de malas
      *
-     * @return identificação do barbeiro
+     * @return número de malas
      */
 
-    public int getBarbId() {
-        return (barbId);
-    }
-
-    /**
-     * Obtenção do valor do campo nome do ficheiro de logging.
-     *
-     * @return nome do ficheiro
-     */
-
-    public String getFName() {
-        return (fName);
-    }
-
-    /**
-     * Obtenção do valor do campo número de iterações do ciclo de vida dos clientes.
-     *
-     * @return número de iterações do ciclo de vida dos clientes
-     */
-
-    public int getNIter() {
-        return (nIter);
+    public int getNumberOfBags() {
+        return numberOfLostBags;
     }
 
     /**
@@ -167,10 +108,8 @@ public class Message implements Serializable {
      * @return string contendo, em linhas separadas, a concatenação da identificação
      *         de cada campo e valor respectivo
      */
-
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\nId Cliente = " + custId + "\nId Barbeiro = " + barbId
-                + "\nNome Fic. Logging = " + fName + "\nN. de Iteracoes = " + nIter);
+        return ("Tipo = " + msgType + "\nId Passageiro = " + passengerId + "\nNúmero de Malas = " + numberOfLostBags);
     }
 }

@@ -1,4 +1,4 @@
-package shared_regions;
+package shared_regions_JavaInterfaces;
 
 import java.util.List;
 

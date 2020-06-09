@@ -1,6 +1,9 @@
-package clientSide;
+package clientSide.BusDriver;
 
+import entities.TBusDriver;
 import genclass.GenericIO;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayBusDriver;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
 
 /**
  *   Este tipo de dados simula uma solução do lado do cliente do Problema dos Barbeiros Sonolentos que implementa o

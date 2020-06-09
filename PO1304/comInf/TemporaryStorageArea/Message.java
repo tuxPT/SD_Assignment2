@@ -1,7 +1,6 @@
 package comInf.TemporaryStorageArea;
 
 import java.io.*;
-import common_infrastructures.Bag;
 
 /**
  *   Este tipo de dados define as mensagens que são trocadas entre os clientes e o servidor numa solução do Problema
@@ -12,93 +11,43 @@ import common_infrastructures.Bag;
 
 public class Message implements Serializable
 {
-  /**
-   *  Chave de serialização
-   */
+    /**
+     *  Chave de serialização
+     */
 
-   private static final long serialVersionUID = 1001L;
+    private static final long serialVersionUID = 1001L;
 
-   /* Tipos das mensagens */
-   /* Porter */
-   // SPorter addBag() 
-   public static final int ADD_BAG              = 1;
+    /* Tipos das mensagens */
+    /* Porter */
+    /**
+    * SPorter addBag() 
+    */
+    public static final int ADD_BAG              = 1;
 
-   // SPorter State AT_THE_PLANES_HOLD
-   public static final int STATE_ATPH           = 2;
+    /**
+    * SPorter State AT_THE_PLANES_HOLD
+    */
 
-  /* Campos das mensagens */
+    public static final int STATE_ATPH           = 2;
 
-  /**
-   *  Tipo da mensagem
-   */
+    /* Campos das mensagens */
 
-   private int msgType = -1;
+    /**
+     *  Tipo da mensagem
+     */
 
-  /**
-   *  Identificação do cliente
-   */
+    private int msgType = -1;
 
-   private int passengerID = -1;
+    /**
+     *  Instanciação de uma mensagem (forma 1).
+     *
+     *    @param type tipo da mensagem
+     */
 
-   /**
-   *  Identificação do cliente
-   */
-
-  private int bags = -1;
-
-  /**
-   *  Identificação do cliente
-   */
-
-  private boolean transit = false;
-
-  /**
-   *  Identificação do cliente
-   */
-
-  private Bag bag = null;
-
-
-  /**
-   *  Instanciação de uma mensagem (forma 1).
-   *
-   *    @param type tipo da mensagem
-   */
-
-   public Message (int type)
-   {
-      msgType = type;
-   }
-
-  /**
-   *  Instanciação de uma mensagem (forma 3).
-   *
-   *    @param type tipo da mensagem
-   *    @param bag mala
-   *    @param custId identificação do cliente
-   */
-
-   public Message (int type, Bag bag)
-   {
-      msgType = type;
-      this.bag = bag;
-   }
-
-  /**
-   *  Instanciação de uma mensagem (forma 4).
-   *
-   *    @param type tipo da mensagem
-   *    @param name nome do ficheiro de logging
-   *    @param nIter número de iterações do ciclo de vida dos clientes
-   */
-
-   public Message (int type, Integer id, Integer t_bags, boolean t_TRANSIT)
-   {
-      msgType = type;
-      this.passengerID = id;
-      this.bags = t_bags;
-      this.transit = t_TRANSIT;
-   }
+    public Message (int type)
+    {
+        msgType = type;
+    }
 
   /**
    *  Obtenção do valor do campo tipo da mensagem.
@@ -108,53 +57,8 @@ public class Message implements Serializable
 
    public int getType ()
    {
-      return (msgType);
+      return msgType;
    }
-
-  /**
-   *  Obtenção do valor do campo identificador do cliente.
-   *
-   *    @return identificação do cliente
-   */
-
-   public int getPassengerID ()
-   {
-      return (this.getPassengerID());
-   }
-
-/**
-   *  Obtenção do valor do campo identificador do cliente.
-   *
-   *    @return identificação do cliente
-   */
-
-  public int getBags ()
-  {
-     return (this.bags);
-  }
-
-  /**
-   *  Obtenção do valor do campo identificador do cliente.
-   *
-   *    @return identificação do cliente
-   */
-
-  public boolean getTransit ()
-  {
-     return (this.transit);
-  }
-
-  /**
-   *  Obtenção do valor do campo identificador do cliente.
-   *
-   *    @return identificação do cliente
-   */
-
-  public Bag getBag ()
-  {
-     return (this.bag);
-  }
-
 
   /**
    *  Impressão dos campos internos.
@@ -166,10 +70,6 @@ public class Message implements Serializable
    @Override
    public String toString ()
    {
-      return ("Tipo = " + msgType +
-              "\nId Cliente = " + custId +
-              "\nId Barbeiro = " + barbId +
-              "\nNome Fic. Logging = " + fName +
-              "\nN. de Iteracoes = " + nIter);
+      return ("Tipo = " + msgType);
    }
 }

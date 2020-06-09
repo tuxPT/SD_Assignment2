@@ -1,17 +1,17 @@
-package shared_regions;
-
-import shared_regions.IArrivalLoungePassenger;
-import shared_regions.IArrivalLoungePorter;
-import shared_regions.IGeneralRepository;
-import common_infrastructures.SPassenger;
-import common_infrastructures.SPorter;
-import common_infrastructures.Bag;
+package serverSide.shared_regions;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+
+import common_infrastructures.Bag;
+import common_infrastructures.SPassenger;
+import common_infrastructures.SPorter;
+import shared_regions_JavaInterfaces.IArrivalLoungePassenger;
+import shared_regions_JavaInterfaces.IArrivalLoungePorter;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePorter {
     private IGeneralRepository MGeneralRepository;
@@ -29,7 +29,7 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
      * @param PLANE_PASSENGERS The number of passengers per plane
      * @param MGeneralRepository The General Repository used for logging
      */
-    public MArrivalLounge(int PLANE_PASSENGERS, MGeneralRepository MGeneralRepository)
+    public MArrivalLounge(int PLANE_PASSENGERS, IGeneralRepository MGeneralRepository)
     {
         NUMBER_OF_PASSENGERS = 0;
         this.PLANE_PASSENGERS = PLANE_PASSENGERS;

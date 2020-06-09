@@ -1,4 +1,4 @@
-package serverSide.ArrivalLounge;
+package serverSide.BaggageCollectionPoint;
 
 import comInf.ArrivalLounge.Message;
 import common_infrastructures.SPassenger;
@@ -11,7 +11,7 @@ import comInf.MessageException;
  * (replicação do servidor) com lançamento estático dos threads barbeiro.
  */
 
-public class ArrivalLoungeInterface {
+public class BaggageCollectionPointInterface {
    /**
     * Barbearia (representa o serviço a ser prestado)
     *
@@ -26,7 +26,7 @@ public class ArrivalLoungeInterface {
     * @param bShop barbearia
     */
 
-   public ArrivalLoungeInterface(MArrivalLounge ArrivalLounge) {
+   public BaggageCollectionPointInterface(MArrivalLounge ArrivalLounge) {
       this.ArrivalLounge = ArrivalLounge;
    }
 

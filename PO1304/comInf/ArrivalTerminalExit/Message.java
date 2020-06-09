@@ -1,4 +1,4 @@
-package comInf;
+package comInf.ArrivalTerminalExit;
 
 import java.io.*;
 
@@ -36,29 +36,11 @@ public class Message implements Serializable {
 
     private int msgType = -1;
 
-    /**
-     * Identificação do cliente
-     */
+    // thread number do passageiro
+    private int passengerID = -1;
 
-    private int custId = -1;
-
-    /**
-     * Identificação do barbeiro
-     */
-
-    private int barbId = -1;
-
-    /**
-     * Nome do ficheiro de logging
-     */
-
-    private String fName = null;
-
-    /**
-     * Número de iterações do ciclo de vida dos clientes
-     */
-
-    private int nIter = -1;
+    // numero de passageiros no DepartureTerminal
+    private int passengersDeparture = -1;
 
     /**
      * Instanciação de uma mensagem (forma 1).
@@ -78,10 +60,10 @@ public class Message implements Serializable {
      * @param curr number of passengers in DepartureTerminal
      */
 
-    public Message(int type, String id, int curr) {
+    public Message(int type, int id, int curr) {
         msgType = type;
-        this.id = id;
-        this.curr = curr;
+        this.passengerID = id;
+        this.passengersDeparture = curr;
     }
 
     /**
@@ -95,43 +77,23 @@ public class Message implements Serializable {
     }
 
     /**
-     * Obtenção do valor do campo identificador do cliente.
+     * Obtenção do ID do passageiro
      *
-     * @return identificação do cliente
+     * @return ID do passageiro
      */
 
-    public int getCustId() {
-        return (custId);
+    public int getPassengerID() {
+        return (this.passengerID);
     }
 
     /**
-     * Obtenção do valor do campo identificador do barbeiro.
+     * Obtenção do valor do número de passageiros no Departure Terminal
      *
-     * @return identificação do barbeiro
+     * @return número de passageiros no Departure Terminal
      */
 
-    public int getBarbId() {
-        return (barbId);
-    }
-
-    /**
-     * Obtenção do valor do campo nome do ficheiro de logging.
-     *
-     * @return nome do ficheiro
-     */
-
-    public String getFName() {
-        return (fName);
-    }
-
-    /**
-     * Obtenção do valor do campo número de iterações do ciclo de vida dos clientes.
-     *
-     * @return número de iterações do ciclo de vida dos clientes
-     */
-
-    public int getNIter() {
-        return (nIter);
+    public int getPassengersDeparture() {
+        return (this.passengersDeparture);
     }
 
     /**
@@ -143,7 +105,6 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\nId Cliente = " + custId + "\nId Barbeiro = " + barbId
-                + "\nNome Fic. Logging = " + fName + "\nN. de Iteracoes = " + nIter);
+        return ("Tipo = " + msgType + "\nID do passageiro = " + passengerID + "\nNumero de passageiros no Departure Terminal = " + passengersDeparture);
     }
 }

@@ -1,4 +1,4 @@
-package comInf;
+package comInf.GeneralRepository;
 
 import java.io.*;
 

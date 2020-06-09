@@ -1,10 +1,10 @@
-package shared_regions;
+package serverSide.shared_regions;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import shared_regions.IGeneralRepository;
-import shared_regions.ITemporaryStorageAreaPorter;
 import common_infrastructures.SPorter;
+import shared_regions_JavaInterfaces.IGeneralRepository;
+import shared_regions_JavaInterfaces.ITemporaryStorageAreaPorter;
 
 public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
     private IGeneralRepository MGeneralRepository;
@@ -15,7 +15,7 @@ public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
     /**
      * @param MGeneralRepository The General Repository used for logging     
      */
-    public MTemporaryStorageArea(MGeneralRepository MGeneralRepository) {
+    public MTemporaryStorageArea(IGeneralRepository MGeneralRepository) {
         NUMBER_OF_BAGS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }

@@ -1,15 +1,15 @@
-package shared_regions;
-
-import shared_regions.IArrivalTerminalTransferQuayBusDriver;
-import shared_regions.IArrivalTerminalTransferQuayPassenger;
-import common_infrastructures.SBusDriver;
-import common_infrastructures.SPassenger;
+package serverSide.shared_regions;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+
+import common_infrastructures.SBusDriver;
+import common_infrastructures.SPassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayBusDriver;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayPassenger;
 
 public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQuayBusDriver, IArrivalTerminalTransferQuayPassenger {
     private MGeneralRepository MGeneralRepository;

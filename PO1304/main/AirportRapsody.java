@@ -1,15 +1,35 @@
 package main;
 
-import common_infrastructures.*;
-import shared_regions.*;
-import entities.TBusDriver;
-import entities.TPassenger;
-import entities.TPorter;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import common_infrastructures.Bag;
+import entities.TBusDriver;
+import entities.TPassenger;
+import entities.TPorter;
+import serverSide.shared_regions.MArrivalLounge;
+import serverSide.shared_regions.MArrivalTerminalExit;
+import serverSide.shared_regions.MArrivalTerminalTransferQuay;
+import serverSide.shared_regions.MBaggageCollectionPoint;
+import serverSide.shared_regions.MBaggageReclaimOffice;
+import serverSide.shared_regions.MDepartureTerminal;
+import serverSide.shared_regions.MDepartureTerminalTransferQuay;
+import serverSide.shared_regions.MGeneralRepository;
+import serverSide.shared_regions.MTemporaryStorageArea;
+import shared_regions_JavaInterfaces.IArrivalLoungePassenger;
+import shared_regions_JavaInterfaces.IArrivalLoungePorter;
+import shared_regions_JavaInterfaces.IArrivalTerminalExitPassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayBusDriver;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayPassenger;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPassenger;
+import shared_regions_JavaInterfaces.IBaggageCollectionPointPorter;
+import shared_regions_JavaInterfaces.IBaggageReclaimOfficePassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalPassenger;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
+import shared_regions_JavaInterfaces.ITemporaryStorageAreaPorter;
 
 public class AirportRapsody {
 

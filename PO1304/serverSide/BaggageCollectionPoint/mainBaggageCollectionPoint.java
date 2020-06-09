@@ -1,4 +1,4 @@
-package serverSide.BaggageReclaimOffice;
+package serverSide.BaggageCollectionPoint
 
 import genclass.GenericIO;
 import java.net.SocketTimeoutException;
@@ -14,7 +14,7 @@ import java.net.SocketTimeoutException;
             // set up initial values
             // receive from clients
             // execute internal calls
-public class mainBaggageReclaimOffice
+public class mainBaggageCollectionPoint
 {
   /**
    *  Número do port de escuta do serviço a ser prestado (4000, por defeito)

@@ -1,7 +1,8 @@
 package entities;
 
-import shared_regions.*;
 import common_infrastructures.SBusDriver;
+import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayBusDriver;
+import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
 
 public class TBusDriver extends Thread {
 

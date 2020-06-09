@@ -1,11 +1,11 @@
-package shared_regions;
-
-import shared_regions.IArrivalTerminalExitPassenger;
-import shared_regions.IGeneralRepository;
-import common_infrastructures.SPassenger;
+package serverSide.shared_regions;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+
+import common_infrastructures.SPassenger;
+import shared_regions_JavaInterfaces.IArrivalTerminalExitPassenger;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
     private IGeneralRepository MGeneralRepository;
@@ -18,7 +18,7 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
      * @param PLANE_PASSENGERS number of passengers in a plane
      * @param MGeneralRepository The General Repository used for logging   
      */
-    public MArrivalTerminalExit(Integer PLANE_PASSENGERS, MGeneralRepository MGeneralRepository)
+    public MArrivalTerminalExit(Integer PLANE_PASSENGERS, IGeneralRepository MGeneralRepository)
     {        
         CURRENT_NUMBER_OF_PASSENGERS = 0;
         this.MGeneralRepository = MGeneralRepository;

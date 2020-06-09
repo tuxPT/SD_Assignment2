@@ -1,7 +1,6 @@
-package shared_regions;
+package shared_regions_JavaInterfaces;
 
 import common_infrastructures.SBusDriver;
-import common_infrastructures.SPassenger;
 
 public interface IArrivalTerminalTransferQuayBusDriver {
     /**

@@ -1,9 +1,4 @@
-package shared_regions;
-
-import shared_regions.IGeneralRepository;
-import common_infrastructures.SBusDriver;
-import common_infrastructures.SPassenger;
-import common_infrastructures.SPorter;
+package serverSide.shared_regions;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,6 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
+
+import common_infrastructures.SBusDriver;
+import common_infrastructures.SPassenger;
+import common_infrastructures.SPorter;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 public class MGeneralRepository implements IGeneralRepository {
     Integer FN, BN, CB, SR;

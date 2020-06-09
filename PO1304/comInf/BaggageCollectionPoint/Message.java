@@ -1,6 +1,7 @@
-package comInf;
+package comInf.BaggageCollectionPoint;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Este tipo de dados define as mensagens que são trocadas entre os clientes e o
@@ -39,17 +40,11 @@ public class Message implements Serializable {
 
     private int msgType = -1;
 
-    /**
-     * Identificação do cliente
-     */
+    // Passenger ID
+    private int passengerID = -1;
 
-    private int custId = -1;
-
-    /**
-     * Identificação do barbeiro
-     */
-
-    private int barbId = -1;
+    // Lista de malas do passageiro
+    private List<Integer> bags = null;
 
     /**
      * Nome do ficheiro de logging
@@ -83,36 +78,8 @@ public class Message implements Serializable {
 
     public Message(int type, int id, List<Integer> bag_ids) {
         msgType = type;
-        this.id = id;
-        this.bag_ids = bag_ids;
-    }
-
-    /**
-     * Instanciação de uma mensagem (forma 3).
-     *
-     * @param type   tipo da mensagem
-     * @param barbId identificação do barbeiro
-     * @param custId identificação do cliente
-     */
-
-    public Message(int type, int barbId, int custId) {
-        msgType = type;
-        this.barbId = barbId;
-        this.custId = custId;
-    }
-
-    /**
-     * Instanciação de uma mensagem (forma 4).
-     *
-     * @param type  tipo da mensagem
-     * @param name  nome do ficheiro de logging
-     * @param nIter número de iterações do ciclo de vida dos clientes
-     */
-
-    public Message(int type, String name, int nIter) {
-        msgType = type;
-        fName = name;
-        this.nIter = nIter;
+        this.passengerID = id;
+        this.bags = bag_ids;
     }
 
     /**
@@ -131,18 +98,8 @@ public class Message implements Serializable {
      * @return identificação do cliente
      */
 
-    public int getCustId() {
-        return (custId);
-    }
-
-    /**
-     * Obtenção do valor do campo identificador do barbeiro.
-     *
-     * @return identificação do barbeiro
-     */
-
-    public int getBarbId() {
-        return (barbId);
+    public int getPassengerID() {
+        return this.passengerID;
     }
 
     /**
@@ -174,7 +131,7 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\nId Cliente = " + custId + "\nId Barbeiro = " + barbId
+        return ("Tipo = " + msgType + "\nId do Passageiro = " + passengerID + "\nNumero de malas = " + bags
                 + "\nNome Fic. Logging = " + fName + "\nN. de Iteracoes = " + nIter);
     }
 }
