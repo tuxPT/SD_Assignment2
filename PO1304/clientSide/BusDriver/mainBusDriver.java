@@ -1,7 +1,6 @@
 package clientSide.BusDriver;
 
 import entities.TBusDriver;
-import genclass.GenericIO;
 import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayBusDriver;
 import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
 
@@ -31,15 +30,15 @@ public class mainBusDriver
 
      /* Obtenção dos parâmetros do problema */
 
-      GenericIO.writelnString ("\n" + "      Problema dos Barbeiros Sonolentos\n");
-      GenericIO.writeString ("Numero de iterações? ");
-      nIter = GenericIO.readlnInt ();
-      GenericIO.writeString ("Nome do ficheiro de logging? ");
-      fName = GenericIO.readlnString ();
-      GenericIO.writeString ("Nome do sistema computacional onde está o servidor? ");
-      serverHostName = GenericIO.readlnString ();
-      GenericIO.writeString ("Número do port de escuta do servidor? ");
-      serverPortNumb = GenericIO.readlnInt ();
+      System.out.println ("\n" + "      Problema dos Barbeiros Sonolentos\n");
+      System.out.print ("Numero de iterações? ");
+      nIter = Integer.parseInt(System.console().readLine());
+      System.out.print ("Nome do ficheiro de logging? ");
+      fName = System.console().readLine();
+      System.out.print ("Nome do sistema computacional onde está o servidor? ");
+      serverHostName = System.console().readLine();
+      System.out.print ("Número do port de escuta do servidor? ");
+      serverPortNumb = Integer.parseInt(System.console().readLine());
       bShopStub = new BarberShopStub (serverHostName, serverPortNumb);
 
      /* Criação dos threads barbeiro e cliente */

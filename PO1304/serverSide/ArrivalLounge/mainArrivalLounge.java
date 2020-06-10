@@ -1,6 +1,5 @@
 package serverSide.ArrivalLounge;
 
-import genclass.GenericIO;
 import java.net.SocketTimeoutException;
 
 /**
@@ -42,8 +41,8 @@ public class mainArrivalLounge
       scon.start ();                                       // com o endereço público
       bShop = new BarberShop ();                           // activação do serviço
       bShopInter = new BarberShopInterface (bShop);        // activação do interface com o serviço
-      GenericIO.writelnString ("O serviço foi estabelecido!");
-      GenericIO.writelnString ("O servidor esta em escuta.");
+      System.out.println ("O serviço foi estabelecido!");
+      System.out.println ("O servidor esta em escuta.");
 
      /* processamento de pedidos */
 
@@ -58,6 +57,6 @@ public class mainArrivalLounge
         {
         }
       scon.end ();                                         // terminação de operações
-      GenericIO.writelnString ("O servidor foi desactivado.");
+      System.out.println ("O servidor foi desactivado.");
    }
 }

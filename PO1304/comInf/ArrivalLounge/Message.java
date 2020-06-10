@@ -30,52 +30,64 @@ public class Message implements Serializable {
     /**
      *  takeARest()
      */
-    public static final int TAKE_REST = 2;
+    public static final int TAKE_REST            = 2;
 
     /**
      * tryToCollectABag()
      */
-    public static final int TRY_COLLECT = 3;
+    public static final int TRY_COLLECT          = 3;
+
+    /**
+     * Bag retrieved successfully
+     */
+    public static final int COLLECT_DONE         = 4;
+
+    /**
+     * No more bags to retrieve
+     */
+    public static final int NO_BAGS              = 5;
 
     /**
      * noMoreBagsToCollect()
      */
-    public static final int NO_MORE_BAGS = 4;
+    public static final int NO_MORE_BAGS         = 6;
 
     /**
      * carryItToAppropriateStore(Bag bag)
      */
-    public static final int CARRY_TO_APP_STORE = 5;
+    public static final int CARRY_TO_APP_STORE   = 7;
 
     /**
      * SPassenger State AT_THE_ARRIVAL_TRANSFER_TERMINAL
      */ 
-    public static final int STATE_ATT = 6;
+    public static final int STATE_ATT            = 8;
 
     /**
      * SPassenger State AT_THE_LUGGAGE_COLLECTION_POINT
      */
-    public static final int STATE_LCP = 7;
+    public static final int STATE_LCP            = 9;
 
     /**
      * SPassenger State EXITING_THE_ARRIVAL_TERMINAL
      */ 
-    public static final int STATE_EAT = 8;
+    public static final int STATE_EAT            = 10;
 
     /**
      * SPorter State WAITING_FOR_A_PLANE_TO_LAND
      */
-    public static final int STATE_WPTL = 9;
+    public static final int STATE_WPTL           = 11;
 
     /**
      * SPorter State AT_THE_STOREROOM
      */
-    public static final int STATE_ASTR = 10;
+    public static final int STATE_ASTR           = 12;
 
     /**
      * SPorter State AT_THE_LUGGAGE_BELT_CONVEYOR
      */
-    public static final int STATE_ALCB = 11;
+    public static final int STATE_ALCB           = 12;
+
+    //
 
     /* Campos das mensagens */
 

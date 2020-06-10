@@ -49,7 +49,7 @@ public class Message implements Serializable {
     private int passengerID = -1;
 
     /**
-     * Identificador da mala para colocar no Conveyor Belt
+     * Identificador do dono da mala para colocar no Conveyor Belt
      */
     private Integer bagID = -1;
 
@@ -73,7 +73,7 @@ public class Message implements Serializable {
      * Instanciação de uma mensagem (forma 1).
      *
      * @param type tipo da mensagem
-     * @param bag_id identificador da mala para colocar no Conveyor Belt
+     * @param bag_id Identificador do dono da mala para colocar no Conveyor Belt
      */
 
     public Message(int type, Integer bag_id) 
@@ -122,7 +122,7 @@ public class Message implements Serializable {
     /**
      * Obtenção do valor do campo identificador do cliente.
      *
-     * @return identificador da mala para colocar no Conveyor Belt
+     * @return Identificador do dono da mala para colocar no Conveyor Belt
      */
 
     public int getBagID() 

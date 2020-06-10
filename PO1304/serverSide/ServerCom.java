@@ -1,6 +1,5 @@
 package serverSide;
 
-import genclass.GenericIO;
 import java.io.*;
 import java.net.*;
 
@@ -84,14 +83,14 @@ public class ServerCom
         setTimeout (10000);
       }
       catch (BindException e)                         // erro fatal --- port já em uso
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível a associação do socket de escuta ao port: " +
                                  serverPortNumb + "!");
         e.printStackTrace ();
         System.exit (1);
       }
       catch (IOException e)                           // erro fatal --- outras causas
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - ocorreu um erro indeterminado na associação do socket de escuta ao port: " +
                                  serverPortNumb + "!");
         e.printStackTrace ();
@@ -110,7 +109,7 @@ public class ServerCom
       { listeningSocket.close ();
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível fechar o socket de escuta!");
         e.printStackTrace ();
         System.exit (1);
@@ -138,13 +137,13 @@ public class ServerCom
       { throw new SocketTimeoutException ("Timeout!");
       }
       catch (SocketException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - foi fechado o socket de escuta durante o processo de escuta!");
         e.printStackTrace ();
         System.exit (1);
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível abrir um canal de comunicação para um pedido pendente!");
         e.printStackTrace ();
         System.exit (1);
@@ -154,7 +153,7 @@ public class ServerCom
       { scon.in = new ObjectInputStream (scon.commSocket.getInputStream ());
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível abrir o canal de entrada do socket!");
         e.printStackTrace ();
         System.exit (1);
@@ -164,7 +163,7 @@ public class ServerCom
       { scon.out = new ObjectOutputStream (scon.commSocket.getOutputStream ());
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível abrir o canal de saída do socket!");
         e.printStackTrace ();
         System.exit (1);
@@ -185,7 +184,7 @@ public class ServerCom
       { in.close();
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível fechar o canal de entrada do socket!");
         e.printStackTrace ();
         System.exit (1);
@@ -195,7 +194,7 @@ public class ServerCom
       { out.close();
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível fechar o canal de saída do socket!");
         e.printStackTrace ();
         System.exit (1);
@@ -205,7 +204,7 @@ public class ServerCom
       { commSocket.close();
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - não foi possível fechar o socket de comunicação!");
         e.printStackTrace ();
         System.exit (1);
@@ -222,7 +221,7 @@ public class ServerCom
       { listeningSocket.setSoTimeout (time);
       }
       catch (SocketException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - ocorreu um erro na fixação de um timeout de escuta!");
         e.printStackTrace ();
         System.exit (1);
@@ -243,19 +242,19 @@ public class ServerCom
       { fromClient = in.readObject ();
       }
       catch (InvalidClassException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - o objecto lido não é passível de desserialização!");
         e.printStackTrace ();
         System.exit (1);
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - erro na leitura de um objecto do canal de entrada do socket de comunicação!");
         e.printStackTrace ();
         System.exit (1);
       }
       catch (ClassNotFoundException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - o objecto lido corresponde a um tipo de dados desconhecido!");
         e.printStackTrace ();
         System.exit (1);
@@ -276,19 +275,19 @@ public class ServerCom
       { out.writeObject (toClient);
       }
       catch (InvalidClassException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - o objecto a ser escrito não é passível de serialização!");
         e.printStackTrace ();
         System.exit (1);
       }
       catch (NotSerializableException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - o objecto a ser escrito pertence a um tipo de dados não serializável!");
         e.printStackTrace ();
         System.exit (1);
       }
       catch (IOException e)
-      { GenericIO.writelnString (Thread.currentThread ().getName () +
+      { System.out.println (Thread.currentThread ().getName () +
                                  " - erro na escrita de um objecto do canal de saída do socket de comunicação!");
         e.printStackTrace ();
         System.exit (1);

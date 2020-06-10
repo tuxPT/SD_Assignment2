@@ -78,7 +78,7 @@ public class ArrivalLoungeInterface {
       switch (inMessage.getType())
 
       {
-         case Message.WSD: // inicializar ficheiro de logging
+         case Message.WSD:
             SPassenger state = ArrivalLounge.whatShouldIDo(inMessage.getPassengerID(), inMessage.getBags(),
                   inMessage.getTransit());
             switch (state) {
