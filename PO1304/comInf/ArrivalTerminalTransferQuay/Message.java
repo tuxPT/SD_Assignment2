@@ -19,42 +19,43 @@ public class Message implements Serializable {
 
     /* Tipos das mensagens */
 
-    // PASSENGER
-    // enterTheBus(Integer Passenger_ID);
+    /* Passenger */
+    /**
+     * enterTheBus(Integer Passenger_ID)
+     */
     public static final int ENTER_BUS = 1;
 
-    // BUS_DRIVER
-    // announcingBusBoarding();
+    /* Bus Driver */
+    /**
+     * announcingBusBoarding()
+     */ 
     public static final int ANN_BUS_BOARD = 2;
 
-    // goToDepartureTerminal();
+    /**
+     * goToDepartureTerminal()
+     */
     public static final int GO2DEP_TERMINAL = 3;
 
-    // endOfWork();
+    /**
+     * endOfWork()
+     */
     public static final int END_OF_WORK = 4;
 
-    /* Campos das mensagens */
+    /**
+     * SPassenger State TERMINAL_TRANSFER
+     */
+    public static final int STATE_TRT = 5;
 
+    /* Campos das mensagens */
     /**
      * Tipo da mensagem
      */
-
     private int msgType = -1;
 
-    // ID do passageiro
+    /**
+     * Identificador do passageiro
+     */
     private int passengerID = -1;
-
-    /**
-     * Nome do ficheiro de logging
-     */
-
-    private String fName = null;
-
-    /**
-     * Número de iterações do ciclo de vida dos clientes
-     */
-
-    private int nIter = -1;
 
     /**
      * Instanciação de uma mensagem (forma 1).
@@ -62,7 +63,8 @@ public class Message implements Serializable {
      * @param type tipo da mensagem
      */
 
-    public Message(int type) {
+    public Message(int type) 
+    {
         msgType = type;
     }
 
@@ -73,20 +75,21 @@ public class Message implements Serializable {
      * @param id   passenger's ID
      */
 
-    public Message(int type, int id) {
+    public Message(int type, int id) 
+    {
         msgType = type;
         this.passengerID = id;
     }
-
-    
+ 
     /**
      * Obtenção do valor do campo tipo da mensagem.
      *
      * @return tipo da mensagem
      */
 
-    public int getType() {
-        return (msgType);
+    public int getType()
+    {
+        return msgType;
     }
 
     /**
@@ -95,28 +98,9 @@ public class Message implements Serializable {
      * @return ID do passageiro
      */
 
-    public int getPassengerID() {
-        return (this.passengerID);
-    }
-
-    /**
-     * Obtenção do valor do campo nome do ficheiro de logging.
-     *
-     * @return nome do ficheiro
-     */
-
-    public String getFName() {
-        return (fName);
-    }
-
-    /**
-     * Obtenção do valor do campo número de iterações do ciclo de vida dos clientes.
-     *
-     * @return número de iterações do ciclo de vida dos clientes
-     */
-
-    public int getNIter() {
-        return (nIter);
+    public int getPassengerID()
+    {
+        return passengerID;
     }
 
     /**
@@ -127,8 +111,8 @@ public class Message implements Serializable {
      */
 
     @Override
-    public String toString() {
-        return ("Tipo = " + msgType + "\nID do passageiro = " + passengerID
-                + "\nNome Fic. Logging = " + fName + "\nN. de Iteracoes = " + nIter);
+    public String toString()
+    {
+        return ("Tipo = " + msgType + "\nID do passageiro = " + passengerID);
     }
 }

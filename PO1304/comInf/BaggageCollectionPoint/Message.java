@@ -19,44 +19,44 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 1001L;
 
     /* Tipos das mensagens */
-    // Passenger
-    // goCollectABag(Integer id, List<Integer> t);
+    /* Passenger */
+    /**
+     * goCollectABag(Integer id, List<Integer> t)
+     */
     public static final int GO_COLLECT_BAG = 1;
 
-    // Porter
-    // warnPassengers();
+    /* Porter */
+    /**
+     * warnPassengers()
+     */ 
     public static final int WARN_PASS = 2;
 
-    // addBag(Bag bag);
+    /**
+     * addBag(Bag bag)
+     */
     public static final int ADD_BAG = 3;
 
-    
-
     /* Campos das mensagens */
-
     /**
      * Tipo da mensagem
      */
 
     private int msgType = -1;
 
-    // Passenger ID
+    /**
+     * Identificador do passageiro
+     */
     private int passengerID = -1;
 
-    // Lista de malas do passageiro
+    /**
+     * Identificador da mala para colocar no Conveyor Belt
+     */
+    private Integer bagID = -1;
+
+    /**
+     *  Lista de malas do passageiro
+     */
     private List<Integer> bags = null;
-
-    /**
-     * Nome do ficheiro de logging
-     */
-
-    private String fName = null;
-
-    /**
-     * Número de iterações do ciclo de vida dos clientes
-     */
-
-    private int nIter = -1;
 
     /**
      * Instanciação de uma mensagem (forma 1).
@@ -64,8 +64,22 @@ public class Message implements Serializable {
      * @param type tipo da mensagem
      */
 
-    public Message(int type) {
+    public Message(int type) 
+    {
         msgType = type;
+    }
+
+    /**
+     * Instanciação de uma mensagem (forma 1).
+     *
+     * @param type tipo da mensagem
+     * @param bag_id identificador da mala para colocar no Conveyor Belt
+     */
+
+    public Message(int type, Integer bag_id) 
+    {
+        msgType = type;
+        bagID = bag_id;
     }
 
     /**
@@ -73,10 +87,11 @@ public class Message implements Serializable {
      *
      * @param type tipo da mensagem
      * @param id   passenger's id
-     * @param passenger's id
+     * @param bag_ids lista dos identificadores das malas do passageiro
      */
 
-    public Message(int type, int id, List<Integer> bag_ids) {
+    public Message(int type, int id, List<Integer> bag_ids)
+     {
         msgType = type;
         this.passengerID = id;
         this.bags = bag_ids;
@@ -88,8 +103,9 @@ public class Message implements Serializable {
      * @return tipo da mensagem
      */
 
-    public int getType() {
-        return (msgType);
+    public int getType()
+     {
+        return msgType;
     }
 
     /**
@@ -98,28 +114,20 @@ public class Message implements Serializable {
      * @return identificação do cliente
      */
 
-    public int getPassengerID() {
-        return this.passengerID;
+    public int getPassengerID() 
+    {
+        return passengerID;
     }
 
     /**
-     * Obtenção do valor do campo nome do ficheiro de logging.
+     * Obtenção do valor do campo identificador do cliente.
      *
-     * @return nome do ficheiro
+     * @return identificador da mala para colocar no Conveyor Belt
      */
 
-    public String getFName() {
-        return (fName);
-    }
-
-    /**
-     * Obtenção do valor do campo número de iterações do ciclo de vida dos clientes.
-     *
-     * @return número de iterações do ciclo de vida dos clientes
-     */
-
-    public int getNIter() {
-        return (nIter);
+    public int getBagID() 
+    {
+        return bagID;
     }
 
     /**
@@ -131,7 +139,6 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\nId do Passageiro = " + passengerID + "\nNumero de malas = " + bags
-                + "\nNome Fic. Logging = " + fName + "\nN. de Iteracoes = " + nIter);
+        return ("Tipo = " + msgType + "\nId do Passageiro = " + passengerID + "\nNumero de malas = " + bags + "\nIdentificador da mala a colocar no Conveyor Belt = " + bagID);
     }
 }

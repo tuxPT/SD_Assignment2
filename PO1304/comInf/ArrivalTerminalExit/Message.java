@@ -19,14 +19,25 @@ public class Message implements Serializable {
 
     /* Tipos das mensagens */
     // Passengers
-    // addPassenger(Integer id, Integer curr);
+    /**
+     * addPassenger(Integer id, Integer curr)
+     */
     public static final int ADD_PASS = 1;
 
-    // getCURRENT_NUMBER_OF_PASSENGERS();
+    /**
+     * getCURRENT_NUMBER_OF_PASSENGERS()
+     */
     public static final int NUMBER_PASS = 2;
 
-    // lastPassenger();
+    /**
+     * lastPassenger()
+     */
     public static final int LAST_PASS = 3;
+
+    /**
+     * waitingForLastPassenger()
+     */
+    public static final int WAITING_FOR_LAST_PASS = 4;
 
     /* Campos das mensagens */
 
@@ -36,10 +47,14 @@ public class Message implements Serializable {
 
     private int msgType = -1;
 
-    // thread number do passageiro
+    /**
+     * identificador do passageiro
+     */
     private int passengerID = -1;
 
-    // numero de passageiros no DepartureTerminal
+    /**
+     * número de passageiros no DepartureTerminal
+     */
     private int passengersDeparture = -1;
 
     /**
@@ -48,19 +63,21 @@ public class Message implements Serializable {
      * @param type tipo da mensagem
      */
 
-    public Message(int type) {
+    public Message(int type) 
+    {
         msgType = type;
     }
 
     /**
-     * Instanciação de uma mensagem (forma 4).
+     * Instanciação de uma mensagem (forma 2).
      *
      * @param type  tipo da mensagem
      * @param id  thread number
      * @param curr number of passengers in DepartureTerminal
      */
 
-    public Message(int type, int id, int curr) {
+    public Message(int type, int id, int curr)
+     {
         msgType = type;
         this.passengerID = id;
         this.passengersDeparture = curr;
@@ -72,8 +89,9 @@ public class Message implements Serializable {
      * @return tipo da mensagem
      */
 
-    public int getType() {
-        return (msgType);
+    public int getType() 
+    {
+        return msgType;
     }
 
     /**
@@ -82,8 +100,9 @@ public class Message implements Serializable {
      * @return ID do passageiro
      */
 
-    public int getPassengerID() {
-        return (this.passengerID);
+    public int getPassengerID() 
+    {
+        return passengerID;
     }
 
     /**
@@ -92,8 +111,9 @@ public class Message implements Serializable {
      * @return número de passageiros no Departure Terminal
      */
 
-    public int getPassengersDeparture() {
-        return (this.passengersDeparture);
+    public int getPassengersDeparture() 
+    {
+        return passengersDeparture;
     }
 
     /**
@@ -104,7 +124,8 @@ public class Message implements Serializable {
      */
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return ("Tipo = " + msgType + "\nID do passageiro = " + passengerID + "\nNumero de passageiros no Departure Terminal = " + passengersDeparture);
     }
 }
