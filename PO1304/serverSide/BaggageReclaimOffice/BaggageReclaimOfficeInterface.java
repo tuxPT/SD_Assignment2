@@ -1,9 +1,9 @@
 package serverSide.BaggageReclaimOffice;
 
-import comInf.ArrivalLounge.Message;
 import common_infrastructures.SPassenger;
-import serverSide.shared_regions.MArrivalLounge;
-import comInf.MessageException;
+import serverSide.shared_regions.MBaggageReclaimOffice;
+import comInf.BaggageReclaimOffice.Message;
+import comInf.BaggageReclaimOffice.MessageException;
 
 /**
  * Este tipo de dados define o interface à barbearia numa solução do Problema
@@ -18,7 +18,7 @@ public class BaggageReclaimOfficeInterface {
      * @serialField bShop
      */
 
-    private MArrivalLounge ArrivalLounge;
+    private MBaggageReclaimOffice BaggageReclaimOffice;
 
     /**
      * Instanciação do interface à barbearia.
@@ -26,8 +26,8 @@ public class BaggageReclaimOfficeInterface {
      * @param bShop barbearia
      */
 
-    public BaggageReclaimOfficeInterface(MArrivalLounge ArrivalLounge) {
-      this.ArrivalLounge = ArrivalLounge;
+    public BaggageReclaimOfficeInterface(MBaggageReclaimOffice BaggageReclaimOffice) {
+      this.BaggageReclaimOffice = BaggageReclaimOffice;
    }
 
    /**
@@ -47,25 +47,14 @@ public class BaggageReclaimOfficeInterface {
       /* validação da mensagem recebida */
 
       switch (inMessage.getType()) {
-         case Message.SETNFIC:
-            if ((inMessage.getFName() == null) || (inMessage.getFName().equals("")))
-               throw new MessageException("Nome do ficheiro inexistente!", inMessage);
+         case Message.ADD_BAG:
+            if(inMessage.getPassengerId() < 0)
+               throw new MessageException("Id do passageiro inválido!", inMessage);
+            if(inMessage.getNumberOfBags() < 0)
+               throw new MessageException("O número de malas perdidas é inválido!", inMessage);
             break;
-         case Message.REQCUTH:
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
-            break;
-         case Message.ENDOP:
-         case Message.GOTOSLP:
-         case Message.CALLCUST:
             if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
                throw new MessageException("Id do barbeiro inválido!", inMessage);
-            break;
-         case Message.GETPAY:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
             break;
          case Message.SHUT: // shutdown do servidor
             break;
@@ -78,47 +67,16 @@ public class BaggageReclaimOfficeInterface {
       switch (inMessage.getType())
 
       {
-         case Message.WSD: // inicializar ficheiro de logging
-            SPassenger state = ArrivalLounge.whatShouldIDo(inMessage.getPassengerID(), inMessage.getBags(),
-                  inMessage.getTransit());
-            switch (state) {
-               case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-                  outMessage = new Message(Message.STATE_ATT);
-                  break;
-               case AT_THE_LUGGAGE_COLLECTION_POINT:
-                  outMessage = new Message(Message.STATE_LCP);
-                  break;
+         case Message.ADD_BAG:
+            SPassenger state = BaggageReclaimOffice.addBag(inMessage.getPassengerId(), inMessage.getNumberOfBags());
+            switch(state){
                case EXITING_THE_ARRIVAL_TERMINAL:
                   outMessage = new Message(Message.STATE_EAT);
                   break;
-               default: break;
+               default:
+                  break;
             }
-            break;
-
-         case Message.TAKE_REST:
-            if (bShop.goCutHair(inMessage.getCustId())) // o cliente quer cortar o cabelo
-               outMessage = new Message(Message.CUTHDONE); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.BSHOPF); // gerar resposta negativa
-            break;
-         case Message.TRY_COLLECT:
-            if (bShop.goToSleep(inMessage.getBarbId())) // o barbeiro vai dormir
-               outMessage = new Message(Message.END); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.CONT); // gerar resposta negativa
-            break;
-         case Message.NO_MORE_BAGS:
-            int custID = bShop.callCustomer(inMessage.getBarbId()); // chamar cliente
-            outMessage = new Message(Message.CUSTID, custID); // enviar id do cliente
-            break;
-         case Message.CARRY_TO_APP_STORE: // receber pagamento
-            bShop.getPayment(inMessage.getBarbId(), inMessage.getCustId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-         case Message.ENDOP: // fim de operações do barbeiro
-            bShop.endOperation(inMessage.getBarbId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
+            break;   
          case Message.SHUT: // shutdown do servidor
             ServerSleepingBarbers.waitConnection = false;
             (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);

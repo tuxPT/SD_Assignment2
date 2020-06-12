@@ -35,7 +35,6 @@ public class MBaggageReclaimOffice implements IBaggageReclaimOfficePassenger
             lock.unlock();           
         }
         return goHome(id);
-
     }
 
 

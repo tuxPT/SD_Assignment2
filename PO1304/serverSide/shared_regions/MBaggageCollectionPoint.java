@@ -100,9 +100,6 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
         }
     }
 
-    /**
-     * Resets the CollectionPoint's state to be ready to receive the next plane.
-     */
     public void newPlane(){
         lock.lock();
         try{

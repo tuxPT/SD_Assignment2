@@ -18,4 +18,9 @@ public interface IBaggageCollectionPointPorter {
      * @see SPorter
      */
     SPorter addBag(Bag bag);
+
+    /**
+     * Resets the CollectionPoint's state to be ready to receive the next plane.
+     */
+    public void newPlane();
 }

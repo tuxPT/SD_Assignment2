@@ -92,7 +92,6 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
             lock.unlock();
             return tmp;
         }
-
     }
 
     private SPassenger waitToEnterToBus(Integer id){

@@ -90,6 +90,7 @@ public class Message implements Serializable
 
     public Message (int type, Integer idn)
     {
+        msgType = type;
         if (type == Message.PBLPF)
         {
             numberOfPassengersOnBus = idn;

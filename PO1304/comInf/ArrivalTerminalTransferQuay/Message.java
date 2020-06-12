@@ -23,23 +23,38 @@ public class Message implements Serializable {
     /**
      * enterTheBus(Integer Passenger_ID)
      */
-    public static final int ENTER_BUS = 1;
+    public static final int ENTER_BUS           = 1;
 
     /* Bus Driver */
     /**
      * announcingBusBoarding()
      */ 
-    public static final int ANN_BUS_BOARD = 2;
+    public static final int ANN_BUS_BOARD       = 2;
 
     /**
      * goToDepartureTerminal()
      */
-    public static final int GO2DEP_TERMINAL = 3;
+    public static final int GO2DEP_TERMINAL     = 3;
 
     /**
      * endOfWork()
      */
-    public static final int END_OF_WORK = 4;
+    public static final int END_OF_WORK         = 4;
+
+    /**
+     * Indicates that there is no more work left to do
+     */
+    public static final int NO_MORE_WORK        = 5;
+
+    /**
+     * Indicates that the bus is leaving
+     */
+    public static final int BUS_LEAVING         = 6;
+
+     /**
+     * ACKNOWLEDGE
+     */
+    public static final int ACK                 = 7;
 
     /**
      * SPassenger State TERMINAL_TRANSFER
@@ -58,6 +73,11 @@ public class Message implements Serializable {
     private int passengerID = -1;
 
     /**
+     * Número de passageiro a bordo do autocarro
+     */
+    private int passengersOnBoard = -1;
+
+    /**
      * Instanciação de uma mensagem (forma 1).
      *
      * @param type tipo da mensagem
@@ -72,13 +92,18 @@ public class Message implements Serializable {
      * Instanciação de uma mensagem (forma 2).
      *
      * @param type tipo da mensagem
-     * @param id   passenger's ID
+     * @param n   identificador do passageiro ou número de passageiros a bordo do autocarro
      */
 
-    public Message(int type, int id) 
+    public Message(int type, int n) 
     {
         msgType = type;
-        this.passengerID = id;
+        if(type == ENTER_BUS){
+            this.passengerID = n;
+        }
+        else if(type == ACK){
+            this.passengersOnBoard = n;
+        }
     }
  
     /**
@@ -103,6 +128,17 @@ public class Message implements Serializable {
         return passengerID;
     }
 
+     /**
+     * Obtenção do número de passageiros a bordo do autocarro
+     *
+     * @return Número de passageiros a bordo do autocarro
+     */
+
+    public int getNumberOfPassengersOnBoard()
+    {
+        return passengersOnBoard;
+    }
+
     /**
      * Impressão dos campos internos. Usada para fins de debugging.
      *
@@ -113,6 +149,8 @@ public class Message implements Serializable {
     @Override
     public String toString()
     {
-        return ("Tipo = " + msgType + "\nID do passageiro = " + passengerID);
+        return ("Tipo = " + msgType
+        + "\nID do passageiro = " + passengerID
+        + "\nNúmero de passageiros a bordo do autocarro = " + passengersOnBoard);
     }
 }

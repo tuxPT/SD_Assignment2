@@ -192,12 +192,7 @@ public class ArrivalLoungeStub implements IArrivalLoungePassenger, IArrivalLoung
         }
         con.close();
 
-        switch(inMessage.getType())
-        {
-            case Message.STATE_WPTL:
-                return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
-       }
-       return null;
+       return SPorter.WAITING_FOR_A_PLANE_TO_LAND;
     }
 
     public void addBag(Bag bag){

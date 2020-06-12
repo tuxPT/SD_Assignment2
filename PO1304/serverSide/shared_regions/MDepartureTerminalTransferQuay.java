@@ -84,6 +84,5 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
 
         }
         return SPassenger.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
-
     }
 }

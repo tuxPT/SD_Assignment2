@@ -45,9 +45,24 @@ public class Message implements Serializable
     public static final int PNL                  = 5;
 
     /**
+     * Indicates that the passenger is the last one to attempt to exit the Airport
+     */
+    public static final int IS_LAST_PASS         = 6;
+
+    /**
+     * Indicates that the passenger is not the last one to attempt to exit the Airport
+     */
+    public static final int IS_NOT_LAST_PASS     = 7;
+
+    /**
+    * ACKNOWLEDGE
+    */
+    public static final int ACK                  = 8;
+
+    /**
     * SPassenger State ENTERING_THE_DEPARTURE_TERMINAL
     */
-    public static final int STATE_EDT            = 6;
+    public static final int STATE_EDT            = 9;
 
     /* Campos das mensagens */
 
@@ -63,9 +78,12 @@ public class Message implements Serializable
 
     private int passengerID = -1;
 
-    /**
-    * Número de passageiros atual no ArrivalTerminalExit
-    */
+     /**
+     * número de passageiros no DepartureTerminal
+     */
+    private int currentNumberOfPassengers = -1;
+
+
 
     private int currentArrival = -1;
 
@@ -78,6 +96,19 @@ public class Message implements Serializable
     public Message (int type)
     {
         msgType = type;
+    }
+
+    /**
+     * Instanciação de uma mensagem (forma 2).
+     *
+     * @param type tipo da mensagem
+     * @param numberOfPass_t Número de passageiros atualmente no ArrivalTerminalExit
+     */
+
+    public Message(int type, int numberOfPass_t) 
+    {
+        msgType = type;
+        currentNumberOfPassengers = numberOfPass_t;
     }
 
     /**
@@ -127,6 +158,17 @@ public class Message implements Serializable
     }
 
     /**
+     * Obtenção do valor do número de passageiros no DepartureTerminal
+     *
+     * @return número de passageiros no DepartureTerminal
+     */
+
+    public int getCurrentNumberOfPassengers() 
+    {
+        return currentNumberOfPassengers;
+    }
+
+    /**
      *  Impressão dos campos internos.
      *  Usada para fins de debugging.
      *
@@ -136,8 +178,9 @@ public class Message implements Serializable
     @Override
     public String toString ()
     {
-        return ("Tipo = " + msgType +
-                "\nId Passageiro = " + passengerID +
-                "\nNúmero de Passageiros no ArrivalTerminalExit = " + currentArrival);
+        return ("Tipo = " + msgType
+        + "\nId Passageiro = " + passengerID
+        + "\nNúmero de Passageiros no ArrivalTerminalExit = " + currentArrival
+        + "\nNúmero de passageiros atuais (DepartureTerminal) = " + currentNumberOfPassengers);
     }
 }

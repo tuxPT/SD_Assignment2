@@ -22,12 +22,17 @@ public class Message implements Serializable {
     /**
      * addbag(Integer id, int i)
      */
-    public static final int ADD_BAG = 1;
+    public static final int ADD_BAG      = 1;
 
     /**
      * goHome(Integer id)
      */ 
-    public static final int GO_HOME = 2;
+    public static final int GO_HOME      = 2;
+
+    /**
+     * ACKNOWLEDGE
+     */ 
+    public static final int STATE_EAT    = 3;
 
     /* Campos das mensagens */
 
@@ -110,6 +115,8 @@ public class Message implements Serializable {
      */
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\nId Passageiro = " + passengerId + "\nNúmero de Malas = " + numberOfLostBags);
+        return ("Tipo = " + msgType
+        + "\nId Passageiro = " + passengerId
+        + "\nNúmero de Malas = " + numberOfLostBags);
     }
 }

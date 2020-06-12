@@ -1,7 +1,6 @@
 package serverSide.shared_regions;
 
 import java.util.concurrent.locks.ReentrantLock;
-
 import common_infrastructures.SPorter;
 import shared_regions_JavaInterfaces.IGeneralRepository;
 import shared_regions_JavaInterfaces.ITemporaryStorageAreaPorter;
@@ -19,7 +18,6 @@ public class MTemporaryStorageArea implements ITemporaryStorageAreaPorter {
         NUMBER_OF_BAGS = 0;
         this.MGeneralRepository = MGeneralRepository;
     }
-
 
     public SPorter addBag() {
         lock.lock();

@@ -37,22 +37,22 @@ public class Message implements Serializable {
     /**
      * waitingForLastPassenger()
      */
-    public static final int WAITING_FOR_LAST_PASS    = 4;
+    public static final int WAITING_FOR_LAST_PASS     = 4;
 
     /**
      * Indicates that the passenger is the last one to attempt to exit the Airport
      */
-    public static final int IS_LAST_PASS             = 5;
+    public static final int IS_LAST_PASS              = 5;
 
     /**
      * Indicates that the passenger is not the last one to attempt to exit the Airport
      */
-    public static final int IS_NOT_LAST_PASS         = 6;
+    public static final int IS_NOT_LAST_PASS          = 6;
 
      /**
      * ACKNOWLEDGE
      */
-    public static final int ACK                  = 19;
+    public static final int ACK                       = 7;
 
     /* Campos das mensagens */
 
@@ -89,15 +89,16 @@ public class Message implements Serializable {
     }
 
     /**
-     * Instanciação de uma mensagem (forma 1).
+     * Instanciação de uma mensagem (forma 2).
      *
      * @param type tipo da mensagem
+     * @param numberOfPass_t Número de passageiros atualmente no ArrivalTerminalExit
      */
 
-    public Message(int type, int numberofPass_t) 
+    public Message(int type, int numberOfPass_t) 
     {
         msgType = type;
-        currentNumberOfPassengers = numberofPass_t;
+        currentNumberOfPassengers = numberOfPass_t;
     }
 
     /**
@@ -149,9 +150,9 @@ public class Message implements Serializable {
     }
 
     /**
-     * Obtenção do valor do número de passageiros no Departure Terminal
+     * Obtenção do valor do número de passageiros no ArrivalTerminalExit
      *
-     * @return número de passageiros no Departure Terminal
+     * @return número de passageiros no ArrivalTerminalExit
      */
 
     public int getCurrentNumberOfPassengers() 

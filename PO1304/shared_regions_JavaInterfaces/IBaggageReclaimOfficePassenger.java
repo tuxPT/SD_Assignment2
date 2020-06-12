@@ -12,11 +12,4 @@ public interface IBaggageReclaimOfficePassenger {
      @see SPassenger
      */
     SPassenger addBag(Integer id, int i);
-
-    /**
-     @param id passenger's id
-     @return Passenger's state EXITING_THE_ARRIVAL_TERMINAL
-     @see SPassenger
-     */
-    SPassenger goHome(Integer id);
 }

@@ -115,15 +115,13 @@ public class ArrivalTerminalExitStub implements IArrivalTerminalExitPassenger
     }
     con.close();
 
-    if (inMessage.getCurrentNumberOfPassengers() >= 0){
-        return inMessage.getCurrentNumberOfPassengers();
-    }
-    else{
+    if (inMessage.getCurrentNumberOfPassengers() < 0){
         System.out.println("Thread " + Thread.currentThread().getName() + ": Número de passageiros recebidos é inválido!");
         System.out.println(inMessage.toString());
         System.exit(1);
+       
     }
-    return null;
+    return inMessage.getCurrentNumberOfPassengers();
   }
 
   @Override

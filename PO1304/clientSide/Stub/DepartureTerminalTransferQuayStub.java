@@ -4,6 +4,8 @@ import common_infrastructures.SBusDriver;
 import common_infrastructures.SPassenger;
 import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
 import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
+import clientSide.ClientCom;
+import comInf.DepartureTerminalTransferQuay.Message;
 
 public class DepartureTerminalTransferQuayStub
         implements IDepartureTerminalTransferQuayBusDriver, IDepartureTerminalTransferQuayPassenger {
@@ -37,20 +39,78 @@ public class DepartureTerminalTransferQuayStub
     }
 
     @Override
-    public SPassenger leaveTheBus(Integer id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public SBusDriver parkTheBusAndLetPassOff(Integer n) {
-        // TODO Auto-generated method stub
-        return null;
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.PBLPF, n); // pede a realização do serviço
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.STATE_DB) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+        
+       return SBusDriver.DRIVING_BACKWARD;
     }
 
     @Override
 	public SBusDriver goToArrivalTerminal() {
-		// TODO Auto-generated method stub
-		return null;
+		ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.GTAT); // pede a realização do serviço
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.STATE_PKAT) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+        
+        return SBusDriver.PARKING_AT_THE_ARRIVAL_TERMINAL;
     }
+
+    @Override
+    public SPassenger leaveTheBus(Integer id) {
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.LTB); // pede a realização do serviço
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.STATE_DTT) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+        
+        return SPassenger.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
+    }   
+   
 }
