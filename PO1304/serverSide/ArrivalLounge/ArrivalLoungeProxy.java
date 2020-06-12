@@ -1,6 +1,6 @@
 package serverSide;
 
-import comInf.Message;
+import comInf.ArrivalLounge.Message;
 import comInf.MessageException;
 
 /**

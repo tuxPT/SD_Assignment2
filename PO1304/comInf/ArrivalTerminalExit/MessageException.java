@@ -1,4 +1,4 @@
-package comInf;
+package comInf.ArrivalTerminalExit;
 
 /**
  *   Este tipo de dados define uma excepção que é lançada se a mensagem for inválida.

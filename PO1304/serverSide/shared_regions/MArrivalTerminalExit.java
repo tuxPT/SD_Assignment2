@@ -27,8 +27,7 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
 
 
     public boolean addPassenger(Integer id, Integer current_Departure)
-    {
-        assert id != null : "Thread_id não especificado";
+    {        
         lock.lock();
         boolean tmp = false;
         try {
@@ -49,9 +48,19 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
             lock.unlock();
         }
         return tmp;
-
     }
 
+    public void waitingForLastPassenger()
+    {           
+        lock.lock();
+        try{
+            lastPassenger.await();            
+        }
+        catch(Exception e) {}
+        finally{
+            lock.unlock();
+        }
+    }
 
     public Integer getCURRENT_NUMBER_OF_PASSENGERS() {
         lock.lock();

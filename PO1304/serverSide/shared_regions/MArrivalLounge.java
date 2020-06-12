@@ -39,9 +39,6 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         this.noStart = false;
     }
 
-
-
-
     @Override
     public Bag tryToCollectABag() {
         Bag tmp = null;
@@ -143,7 +140,6 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
             }
         }
         return tmp;
-
     }
 
 

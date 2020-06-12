@@ -1,9 +1,9 @@
 package serverSide.ArrivalTerminalExit;
 
-import comInf.ArrivalLounge.Message;
 import common_infrastructures.SPassenger;
-import serverSide.shared_regions.MArrivalLounge;
-import comInf.MessageException;
+import serverSide.shared_regions.MArrivalTerminalExit;
+import comInf.ArrivalTerminalExit.Message;
+import comInf.ArrivalTerminalExit.MessageException;
 
 /**
  * Este tipo de dados define o interface à barbearia numa solução do Problema
@@ -18,7 +18,7 @@ public class ArrivalTerminalExitInterface {
      * @serialField bShop
      */
 
-    private MArrivalLounge ArrivalLounge;
+    private MArrivalTerminalExit ArrivalTerminalExit;
 
     /**
      * Instanciação do interface à barbearia.
@@ -26,8 +26,8 @@ public class ArrivalTerminalExitInterface {
      * @param bShop barbearia
      */
 
-    public ArrivalTerminalExitInterface(MArrivalLounge ArrivalLounge) {
-      this.ArrivalLounge = ArrivalLounge;
+    public ArrivalTerminalExitInterface(MArrivalTerminalExit ArrivalTerminalExit) {
+      this.ArrivalTerminalExit = ArrivalTerminalExit;
    }
 
    /**
@@ -46,26 +46,19 @@ public class ArrivalTerminalExitInterface {
 
       /* validação da mensagem recebida */
 
-      switch (inMessage.getType()) {
-         case Message.SETNFIC:
-            if ((inMessage.getFName() == null) || (inMessage.getFName().equals("")))
-               throw new MessageException("Nome do ficheiro inexistente!", inMessage);
+      switch (inMessage.getType())
+      {
+         case Message.ADD_PASS:
+            if(inMessage.getPassengerID() < 0)
+               throw new MessageException("ID do passageiro inválido!", inMessage);
+            if(inMessage.getPassengersDeparture() < 0)
+               throw new MessageException("O número de passageiros no DepartureTerminal é inválido!", inMessage);
+            break;     
+         case Message.WAITING_FOR_LAST_PASS:
             break;
-         case Message.REQCUTH:
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
+         case Message.NUMBER_PASS:
             break;
-         case Message.ENDOP:
-         case Message.GOTOSLP:
-         case Message.CALLCUST:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            break;
-         case Message.GETPAY:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
+         case Message.LAST_PASS:
             break;
          case Message.SHUT: // shutdown do servidor
             break;
@@ -76,48 +69,29 @@ public class ArrivalTerminalExitInterface {
       /* seu processamento */
 
       switch (inMessage.getType())
-
       {
-         case Message.WSD: // inicializar ficheiro de logging
-            SPassenger state = ArrivalLounge.whatShouldIDo(inMessage.getPassengerID(), inMessage.getBags(),
-                  inMessage.getTransit());
-            switch (state) {
-               case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-                  outMessage = new Message(Message.STATE_ATT);
-                  break;
-               case AT_THE_LUGGAGE_COLLECTION_POINT:
-                  outMessage = new Message(Message.STATE_LCP);
-                  break;
-               case EXITING_THE_ARRIVAL_TERMINAL:
-                  outMessage = new Message(Message.STATE_EAT);
-                  break;
-               default: break;
+         case Message.ADD_PASS:
+            boolean lastPassenger = ArrivalTerminalExit.addPassenger(inMessage.getPassengerID(), inMessage.getPassengersDeparture());
+            if(lastPassenger){
+               outMessage = new Message(Message.IS_LAST_PASS);
+            }
+            else{
+               outMessage = new Message(Message.IS_NOT_LAST_PASS);
             }
             break;
-
-         case Message.TAKE_REST:
-            if (bShop.goCutHair(inMessage.getCustId())) // o cliente quer cortar o cabelo
-               outMessage = new Message(Message.CUTHDONE); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.BSHOPF); // gerar resposta negativa
+         case Message.WAITING_FOR_LAST_PASS:
+            ArrivalTerminalExit.waitingForLastPassenger();
+            outMessage = new Message(Message.ACK);
             break;
-         case Message.TRY_COLLECT:
-            if (bShop.goToSleep(inMessage.getBarbId())) // o barbeiro vai dormir
-               outMessage = new Message(Message.END); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.CONT); // gerar resposta negativa
+         case Message.NUMBER_PASS:
+            Integer numberOfPass = ArrivalTerminalExit.getCURRENT_NUMBER_OF_PASSENGERS();
+            if(numberOfPass < 0)
+               throw new MessageException("O número de passageiros recebido (ArrivalTerminalExit) é inválido!", inMessage);
+            outMessage = new Message(Message.ACK, numberOfPass);
             break;
-         case Message.NO_MORE_BAGS:
-            int custID = bShop.callCustomer(inMessage.getBarbId()); // chamar cliente
-            outMessage = new Message(Message.CUSTID, custID); // enviar id do cliente
-            break;
-         case Message.CARRY_TO_APP_STORE: // receber pagamento
-            bShop.getPayment(inMessage.getBarbId(), inMessage.getCustId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-         case Message.ENDOP: // fim de operações do barbeiro
-            bShop.endOperation(inMessage.getBarbId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
+         case Message.LAST_PASS:
+            ArrivalTerminalExit.lastPassenger();
+            outMessage = new Message(Message.ACK);
             break;
          case Message.SHUT: // shutdown do servidor
             ServerSleepingBarbers.waitConnection = false;
@@ -126,6 +100,6 @@ public class ArrivalTerminalExitInterface {
             break;
       }
 
-      return (outMessage);
+      return outMessage;
    }
 }

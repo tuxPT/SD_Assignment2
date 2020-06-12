@@ -1,9 +1,11 @@
 package serverSide.ArrivalLounge;
 
+import common_infrastructures.Bag;
+import comInf.ArrivalLounge.MessageException;
 import comInf.ArrivalLounge.Message;
 import common_infrastructures.SPassenger;
+import common_infrastructures.SPorter;
 import serverSide.shared_regions.MArrivalLounge;
-import comInf.MessageException;
 
 /**
  * Este tipo de dados define o interface à barbearia numa solução do Problema
@@ -46,26 +48,33 @@ public class ArrivalLoungeInterface {
 
       /* validação da mensagem recebida */
 
-      switch (inMessage.getType()) {
-         case Message.SETNFIC:
-            if ((inMessage.getFName() == null) || (inMessage.getFName().equals("")))
-               throw new MessageException("Nome do ficheiro inexistente!", inMessage);
+      switch (inMessage.getType()) 
+      {
+         case Message.TRY_COLLECT:
+            break;         
+         case Message.TAKE_REST:
             break;
-         case Message.REQCUTH:
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
+         case Message.CARRY_TO_APP_STORE:
+            if(inMessage.getBag() == null)
+               throw new MessageException("A mala não existe!", inMessage);
             break;
-         case Message.ENDOP:
-         case Message.GOTOSLP:
-         case Message.CALLCUST:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
+         case Message.WSD:
+            if (inMessage.getPassengerID() < 0)
+               throw new MessageException("Id de passageiro inválido!", inMessage);
+            if (inMessage.getBags() < 0)
+               throw new MessageException("Número de malas inválidas!", inMessage);
+            if (inMessage.getTransit() != false && inMessage.getTransit() != true)
+               throw new MessageException("Tipo de passageiro inválido!", inMessage);
             break;
-         case Message.GETPAY:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
+         case Message.NO_MORE_BAGS:
+            break;
+         case Message.ADD_BAG:
+            if(inMessage.getBag() == null)
+               throw new MessageException("A mala não existe!", inMessage);
+            break;
+         case Message.END_OF_WORK:
+            break;
+         case Message.WAIT_FOR_PORTER:
             break;
          case Message.SHUT: // shutdown do servidor
             break;
@@ -76,9 +85,39 @@ public class ArrivalLoungeInterface {
       /* seu processamento */
 
       switch (inMessage.getType())
-
       {
-         case Message.WSD:
+         case Message.TRY_COLLECT:
+            Bag bag = ArrivalLounge.tryToCollectABag();
+            if (bag == null){
+               outMessage = new Message(Message.NO_BAG);
+            }
+            else{
+               outMessage = new Message(Message.COLLECT_DONE);
+            }
+            break;
+         case Message.TAKE_REST:
+            boolean no_more_work = ArrivalLounge.takeARest();
+            if (no_more_work){
+               outMessage = new Message(Message.NO_MORE_WORK);
+            }
+            else{
+               outMessage = new Message(Message.PLANE_ARRIVED);
+            }
+            break;
+         case Message.CARRY_TO_APP_STORE:{ // receber pagamento
+            SPorter state = ArrivalLounge.carryItToAppropriateStore(inMessage.getBag());
+            switch(state){
+               case AT_THE_STOREROOM:
+                  outMessage = new Message(Message.STATE_ASTR);
+                  break;
+               case AT_THE_LUGGAGE_BELT_CONVEYOR:
+                  outMessage = new Message(Message.STATE_ALCB);
+                  break;
+               default:
+                  break;
+            }
+            break;}
+         case Message.WSD:{
             SPassenger state = ArrivalLounge.whatShouldIDo(inMessage.getPassengerID(), inMessage.getBags(),
                   inMessage.getTransit());
             switch (state) {
@@ -91,33 +130,31 @@ public class ArrivalLoungeInterface {
                case EXITING_THE_ARRIVAL_TERMINAL:
                   outMessage = new Message(Message.STATE_EAT);
                   break;
-               default: break;
+               default: 
+                  break;
+            }
+            break;}       
+         case Message.NO_MORE_BAGS:
+            SPorter state = ArrivalLounge.noMoreBagsToCollect();
+            switch(state){
+               case WAITING_FOR_A_PLANE_TO_LAND:
+                  outMessage = new Message(Message.STATE_WPTL);
+                  break;
+               default:
+                  break;
             }
             break;
-
-         case Message.TAKE_REST:
-            if (bShop.goCutHair(inMessage.getCustId())) // o cliente quer cortar o cabelo
-               outMessage = new Message(Message.CUTHDONE); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.BSHOPF); // gerar resposta negativa
+         case Message.ADD_BAG:
+            ArrivalLounge.addBag(inMessage.getBag());
+            outMessage = new Message(Message.ACK);
             break;
-         case Message.TRY_COLLECT:
-            if (bShop.goToSleep(inMessage.getBarbId())) // o barbeiro vai dormir
-               outMessage = new Message(Message.END); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.CONT); // gerar resposta negativa
+         case Message.END_OF_WORK:
+            ArrivalLounge.endOfWork();
+            outMessage = new Message(Message.ACK);
             break;
-         case Message.NO_MORE_BAGS:
-            int custID = bShop.callCustomer(inMessage.getBarbId()); // chamar cliente
-            outMessage = new Message(Message.CUSTID, custID); // enviar id do cliente
-            break;
-         case Message.CARRY_TO_APP_STORE: // receber pagamento
-            bShop.getPayment(inMessage.getBarbId(), inMessage.getCustId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-         case Message.ENDOP: // fim de operações do barbeiro
-            bShop.endOperation(inMessage.getBarbId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
+         case Message.WAIT_FOR_PORTER:
+            ArrivalLounge.waitForPorter();
+            outMessage = new Message(Message.ACK);
             break;
          case Message.SHUT: // shutdown do servidor
             ServerSleepingBarbers.waitConnection = false;
@@ -126,6 +163,6 @@ public class ArrivalLoungeInterface {
             break;
       }
 
-      return (outMessage);
+      return outMessage;
    }
 }

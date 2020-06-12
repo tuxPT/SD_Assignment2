@@ -1,6 +1,8 @@
 package clientSide.Stub;
 
 import shared_regions_JavaInterfaces.IArrivalTerminalExitPassenger;
+import clientSide.ClientCom;
+import comInf.ArrivalTerminalExit.Message;
 
 /**
  * Este tipo de dados define o stub à barbearia numa solução do Problema dos
@@ -40,22 +42,110 @@ public class ArrivalTerminalExitStub implements IArrivalTerminalExitPassenger
 
   @Override
   public boolean addPassenger(Integer id, Integer curr) {
-      // TODO Auto-generated method stub
-      return false;
+    ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+    Message inMessage, outMessage;
+
+    while (!con.open()) // aguarda ligação
+    {
+        try {
+            Thread.currentThread().sleep((long) (10));
+        } catch (InterruptedException e) {
+        }
+    }
+    outMessage = new Message(Message.ADD_PASS, id, curr); // pede a realização do serviço
+    con.writeObject(outMessage);
+    inMessage = (Message) con.readObject();
+    if ((inMessage.getType() != Message.IS_LAST_PASS) && (inMessage.getType() != Message.IS_NOT_LAST_PASS)){
+        System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+        System.out.println(inMessage.toString());
+        System.exit(1);
+    }
+    con.close();
+    
+    if(inMessage.getType() == Message.IS_LAST_PASS){
+        return true;
+    }
+    else{
+        return false;
+    }
+  }
+
+  @Override
+  public void waitingForLastPassenger(){
+    ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+    Message inMessage, outMessage;
+
+    while (!con.open()) // aguarda ligação
+    {
+        try {
+            Thread.currentThread().sleep((long) (10));
+        } catch (InterruptedException e) {
+        }
+    }
+    outMessage = new Message(Message.WAITING_FOR_LAST_PASS); // pede a realização do serviço
+    con.writeObject(outMessage);
+    inMessage = (Message) con.readObject();
+    if ((inMessage.getType() != Message.ACK)){
+        System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+        System.out.println(inMessage.toString());
+        System.exit(1);
+    }
+    con.close();
   }
 
   @Override
   public Integer getCURRENT_NUMBER_OF_PASSENGERS() {
-      // TODO Auto-generated method stub
-      return null;
+    ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+    Message inMessage, outMessage;
+
+    while (!con.open()) // aguarda ligação
+    {
+        try {
+            Thread.currentThread().sleep((long) (10));
+        } catch (InterruptedException e) {
+        }
+    }
+    outMessage = new Message(Message.WAITING_FOR_LAST_PASS); // pede a realização do serviço
+    con.writeObject(outMessage);
+    inMessage = (Message) con.readObject();
+    if (inMessage.getType() != Message.ACK){
+        System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+        System.out.println(inMessage.toString());
+        System.exit(1);
+    }
+    con.close();
+
+    if (inMessage.getCurrentNumberOfPassengers() >= 0){
+        return inMessage.getCurrentNumberOfPassengers();
+    }
+    else{
+        System.out.println("Thread " + Thread.currentThread().getName() + ": Número de passageiros recebidos é inválido!");
+        System.out.println(inMessage.toString());
+        System.exit(1);
+    }
+    return null;
   }
 
   @Override
   public void lastPassenger() {
-      // TODO Auto-generated method stub
+    ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+    Message inMessage, outMessage;
 
+    while (!con.open()) // aguarda ligação
+    {
+        try {
+            Thread.currentThread().sleep((long) (10));
+        } catch (InterruptedException e) {
+        }
+    }
+    outMessage = new Message(Message.LAST_PASS); // pede a realização do serviço
+    con.writeObject(outMessage);
+    inMessage = (Message) con.readObject();
+    if (inMessage.getType() != Message.ACK){
+        System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+        System.out.println(inMessage.toString());
+        System.exit(1);
+    }
+    con.close();
   }
-
- 
-   
 }

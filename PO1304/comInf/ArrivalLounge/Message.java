@@ -24,7 +24,7 @@ public class Message implements Serializable {
     /**
      * whatShouldIDo(pthread_number, bags.size(), TRANSIT)
      */
-    public static final int WSD = 1;
+    public static final int WSD                  = 1;
 
     /* Porter */
     /**
@@ -45,49 +45,77 @@ public class Message implements Serializable {
     /**
      * No more bags to retrieve
      */
-    public static final int NO_BAGS              = 5;
+    public static final int NO_BAG               = 5;
+
+     /**
+     * Add bag to the plane hold
+     */
+    public static final int ADD_BAG              = 6;
+
+    /**
+     * No more work to do
+     */
+    public static final int NO_MORE_WORK         = 7;
+
+     /**
+     * Plane has arrived
+     */
+    public static final int PLANE_ARRIVED        = 8;
 
     /**
      * noMoreBagsToCollect()
      */
-    public static final int NO_MORE_BAGS         = 6;
+    public static final int NO_MORE_BAGS         = 9;
+
+     /**
+     * waitForPorter() 
+     */
+    public static final int WAIT_FOR_PORTER      = 10;
+
+     /**
+     * endOfWork
+     */
+    public static final int END_OF_WORK          = 11;
 
     /**
      * carryItToAppropriateStore(Bag bag)
      */
-    public static final int CARRY_TO_APP_STORE   = 7;
+    public static final int CARRY_TO_APP_STORE   = 12;
 
     /**
      * SPassenger State AT_THE_ARRIVAL_TRANSFER_TERMINAL
      */ 
-    public static final int STATE_ATT            = 8;
+    public static final int STATE_ATT            = 13;
 
     /**
      * SPassenger State AT_THE_LUGGAGE_COLLECTION_POINT
      */
-    public static final int STATE_LCP            = 9;
+    public static final int STATE_LCP            = 14;
 
     /**
      * SPassenger State EXITING_THE_ARRIVAL_TERMINAL
      */ 
-    public static final int STATE_EAT            = 10;
+    public static final int STATE_EAT            = 15;
 
     /**
      * SPorter State WAITING_FOR_A_PLANE_TO_LAND
      */
-    public static final int STATE_WPTL           = 11;
+    public static final int STATE_WPTL           = 16;
 
     /**
      * SPorter State AT_THE_STOREROOM
      */
-    public static final int STATE_ASTR           = 12;
+    public static final int STATE_ASTR           = 17;
 
     /**
      * SPorter State AT_THE_LUGGAGE_BELT_CONVEYOR
      */
-    public static final int STATE_ALCB           = 12;
-
-    //
+    public static final int STATE_ALCB           = 18;
+    
+    /**
+     * ACKNOWLEDGE
+     */
+    public static final int ACK                  = 19;
 
     /* Campos das mensagens */
 
@@ -139,10 +167,10 @@ public class Message implements Serializable {
    *    @param bag mala
    */
 
-   public Message (int type, Bag bag)
+   public Message (int type, Bag t_bag)
    {
         msgType = type;
-        this.bag = bag;
+        bag = t_bag;
    }
 
     /**
@@ -156,9 +184,9 @@ public class Message implements Serializable {
 
     public Message(int type, Integer id, Integer t_bags, boolean t_TRANSIT) {
         msgType = type;
-        this.passengerID = id;
-        this.bags = t_bags;
-        this.transit = t_TRANSIT;
+        passengerID = id;
+        bags = t_bags;
+        transit = t_TRANSIT;
     }
 
     /**

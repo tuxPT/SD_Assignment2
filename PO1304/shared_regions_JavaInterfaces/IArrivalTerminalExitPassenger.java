@@ -11,6 +11,13 @@ public interface IArrivalTerminalExitPassenger {
      */
     boolean addPassenger(Integer id, Integer curr);
 
+     /**
+     * Called by a passenger.<br/>
+     * After entering the arrival terminal exit, the passenger will wait for the last passenger to arrive (either the arrival terminal exit
+     * or the departure terminal) so he can go home.
+     */
+    public void waitingForLastPassenger();
+
     /**
      * @return the current number of passengers present in the departure terminal
      */
