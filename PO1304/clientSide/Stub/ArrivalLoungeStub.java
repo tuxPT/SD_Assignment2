@@ -263,6 +263,57 @@ public class ArrivalLoungeStub implements IArrivalLoungePassenger, IArrivalLoung
         con.close();
     }
 
+    public void setPorterOut(){
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.SET_PORTER_OUT);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.ACK) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+    }
+
+    public boolean hasPorterEnded(){
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.HAS_PORTER_ENDED);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.ACK) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+
+        if(inMessage.getHasPorterEnded()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     // termina o processo
     public void shutdown() {
         ClientCom con = new ClientCom(serverHostName, serverPortNumb);
@@ -285,4 +336,6 @@ public class ArrivalLoungeStub implements IArrivalLoungePassenger, IArrivalLoung
         }
         con.close();
     }
+
+
 }

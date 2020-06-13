@@ -52,14 +52,25 @@ public class Message implements Serializable {
     public static final int BUS_LEAVING         = 6;
 
      /**
+     * Sets isBusDriverOut to true
+     */
+    public static final int SET_BUSDRIVER_OUT   = 7;
+
+    /**
+     * Indicates if the busdriver is done
+     */
+    public static final int HAS_BUSDRIVER_ENDED = 8;
+
+
+     /**
      * ACKNOWLEDGE
      */
-    public static final int ACK                 = 7;
+    public static final int ACK                 = 9;
 
     /**
      * SHUTDOWN
      */
-    public static final int SHUT                = 8;
+    public static final int SHUT                = 10;
 
     /**
      * SPassenger State TERMINAL_TRANSFER
@@ -81,6 +92,12 @@ public class Message implements Serializable {
      * Número de passageiro a bordo do autocarro
      */
     private int passengersOnBoard = -1;
+
+    /**
+     * Indica se o BusDriver já acabou
+     */
+    private boolean hasBusDriverEnded;
+
 
     /**
      * Instanciação de uma mensagem (forma 1).
@@ -112,6 +129,18 @@ public class Message implements Serializable {
     }
  
     /**
+     * Instanciação de uma mensagem (forma 3).
+     *
+     * @param hasBusDriverEnded_t indica se o BusDriver já acabou
+     */
+
+    public Message(int type, boolean hasBusDriverEnded_t) 
+    {
+        msgType = type;
+        hasBusDriverEnded = hasBusDriverEnded_t;
+    }
+
+    /**
      * Obtenção do valor do campo tipo da mensagem.
      *
      * @return tipo da mensagem
@@ -142,6 +171,17 @@ public class Message implements Serializable {
     public int getNumberOfPassengersOnBoard()
     {
         return passengersOnBoard;
+    }
+
+     /**
+     * Obter se o BusDriver já acabou
+     *
+     * @return se o BusDriver já acabou
+     */
+
+    public boolean getHasBusDriverEnded()
+    {
+        return hasBusDriverEnded;
     }
 
     /**

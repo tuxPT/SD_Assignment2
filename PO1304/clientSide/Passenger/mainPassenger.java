@@ -127,10 +127,10 @@ public class mainPassenger {
         while(!(PORTER_ENDED && BUSDRIVER_ENDED)){
             Thread.sleep(10);
             if(!PORTER_ENDED){
-                PORTER_ENDED = ArrivalLoungeStub.porterEnded();
+                PORTER_ENDED = ArrivalLoungeStub.hasPorter();
             }
             if(!BUSDRIVER_ENDED){
-                BUSDRIVER_ENDED = ArrivalTerminalTransferQuayStub.busdriverEnded();
+                BUSDRIVER_ENDED = ArrivalTerminalTransferQuayStub.hasBusDriverEnded();
             }
         }
         mGeneralRepositoryStub.printRepository();

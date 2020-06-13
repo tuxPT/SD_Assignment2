@@ -78,6 +78,10 @@ public class GeneralRepositoryInterface {
                 break;
             case Message.PRINT:
                 break;
+            case Message.SET_BAGS:
+                if(inMessage.getNumberOfBags() < 0)
+                    throw new MessageException("O número de malas para colocar no GeneralRepository é inválido!", inMessage);
+                break;
             case Message.SHUT: // shutdown do servidor
                 break;
             default:
@@ -114,6 +118,10 @@ public class GeneralRepositoryInterface {
                 break;
             case Message.PRINT:
                 GeneralRepository.printRepository();
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.SET_BAGS:
+                GeneralRepository.setBags(inMessage.getNumberOfBags());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.SHUT: // shutdown do servidor

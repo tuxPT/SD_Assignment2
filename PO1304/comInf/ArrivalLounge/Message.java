@@ -111,16 +111,26 @@ public class Message implements Serializable {
      * SPorter State AT_THE_LUGGAGE_BELT_CONVEYOR
      */
     public static final int STATE_ALCB           = 18;
+
+     /**
+     * Sets isPorterOut to true
+     */
+    public static final int SET_PORTER_OUT       = 19;
+
+    /**
+     * Indicates if the busdriver is done
+     */
+    public static final int HAS_PORTER_ENDED     = 20;
     
     /**
      * ACKNOWLEDGE
      */
-    public static final int ACK                  = 19;
+    public static final int ACK                  = 21;
 
     /**
      * SHUTDOWN
      */
-    public static final int SHUT                 = 20;
+    public static final int SHUT                 = 22;
 
     /* Campos das mensagens */
 
@@ -147,6 +157,11 @@ public class Message implements Serializable {
      */
 
     private boolean transit = false;
+
+     /**
+     * Indica se o Porter já acabou
+     */
+    private boolean hasPorterEnded;
 
     /**
      * Mala
@@ -192,6 +207,18 @@ public class Message implements Serializable {
         passengerID = id;
         bags = t_bags;
         transit = t_TRANSIT;
+    }
+
+    /**
+     * Instanciação de uma mensagem (forma 4).
+     *
+     * @param hasPorterEnded_t indica se o Porter já acabou
+     */
+
+    public Message(int type, boolean hasPorterEnded_t) 
+    {
+        msgType = type;
+        hasPorterEnded = hasPorterEnded_t;
     }
 
     /**
@@ -247,6 +274,17 @@ public class Message implements Serializable {
     public Bag getBag() 
     {
         return bag;
+    }
+
+     /**
+     * Obter se o Porter já acabou
+     *
+     * @return se o Porter já acabou
+     */
+
+    public boolean getHasPorterEnded()
+    {
+        return hasPorterEnded;
     }
 
     /**

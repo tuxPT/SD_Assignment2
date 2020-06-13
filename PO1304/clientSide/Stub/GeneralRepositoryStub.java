@@ -157,7 +157,7 @@ public class GeneralRepositoryStub implements IGeneralRepository {
 
     @Override
     public void printRepository() {
-         ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
         Message inMessage, outMessage;
 
         while (!con.open()) // aguarda ligação
@@ -168,6 +168,29 @@ public class GeneralRepositoryStub implements IGeneralRepository {
             }
         }
         outMessage = new Message(Message.PRINT); // pede a realização do serviço
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.ACK) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
+    }
+
+    @Override
+    public void setBags(int count){
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.SET_BAGS, count); // pede a realização do serviço
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         if (inMessage.getType() != Message.ACK) {

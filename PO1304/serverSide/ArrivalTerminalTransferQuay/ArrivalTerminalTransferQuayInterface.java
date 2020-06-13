@@ -14,6 +14,8 @@ public class ArrivalTerminalTransferQuayInterface {
 
     private MArrivalTerminalTransferQuay ArrivalTerminalTransferQuay;
 
+    private boolean isBusDriverOut = false;
+
     /**
      * Instanciação do interface ao ArrivalTerminalTransferQuay.
      *
@@ -51,6 +53,10 @@ public class ArrivalTerminalTransferQuayInterface {
             break;
          case Message.END_OF_WORK:
             break;
+         case Message.SET_BUSDRIVER_OUT:
+            break;
+         case Message.HAS_BUSDRIVER_ENDED:
+            break;
          case Message.SHUT: // shutdown do servidor
             break;
          default:
@@ -87,6 +93,13 @@ public class ArrivalTerminalTransferQuayInterface {
          case Message.END_OF_WORK:
             ArrivalTerminalTransferQuay.endOfWork();
             outMessage = new Message(Message.ACK);
+            break;
+         case Message.SET_BUSDRIVER_OUT:
+            isBusDriverOut = true;
+            outMessage = new Message(Message.ACK);
+            break;
+         case Message.HAS_BUSDRIVER_ENDED:
+            outMessage = new Message(Message.ACK, isBusDriverOut);
             break;
          case Message.SHUT: // shutdown do servidor
             mainArrivalTerminalTransferQuay.waitConnection = false;

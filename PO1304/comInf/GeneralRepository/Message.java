@@ -54,16 +54,21 @@ public class Message implements Serializable {
     public static final int PRINT                = 6;
 
     /**
+    * setBags(int count);
+    */
+    public static final int SET_BAGS             = 7;
+
+    /**
      * Shutdown do servidor (operação pedida pelo cliente)
      */
 
-    public static final int SHUT = 14;
-
+    public static final int SHUT                 = 8;
+ 
     /**
      * ACKNOWLEDGE
      */
 
-    public static final int ACK = 15;
+    public static final int ACK                  = 9;
 
     /* Campos das mensagens */
 
@@ -86,6 +91,12 @@ public class Message implements Serializable {
     private SPassenger sPassengerState = null;
 
     /* PASSENGER */
+
+    /**
+     * Número de malas
+     */
+    private int numberOfBags = -1;
+
     /**
      * ID do passageiro
      */
@@ -205,6 +216,18 @@ public class Message implements Serializable {
         this.CB = CB;
         this.SR = SR;
         this.print = print;
+    }
+
+     /**
+     * Instanciação de uma mensagem (forma 5).
+     *
+     * @param type  tipo da mensagem
+     * @param count Número de malas para colocar no GeneralRepository
+     */
+
+    public Message(int type, int count) {
+        msgType = type;
+        numberOfBags = count;
     }
 
     /**
@@ -334,6 +357,15 @@ public class Message implements Serializable {
      */
      public Integer getsSR() {
         return SR;
+    }
+
+     /**
+     * Obtenção número de malas no GeneralRepository
+     *
+     * @return número de malas no GeneralRepository
+     */
+    public Integer getNumberOfBags() {
+        return numberOfBags;
     }
 
     /**

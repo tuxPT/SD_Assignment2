@@ -57,4 +57,10 @@ public interface IGeneralRepository {
      * Prints the number of passengers in transit or nontransit and the number of bags lost or transported
      */
     void printRepository();
+
+    /**
+     * Atualiza o número de malas no GeneralRepository
+     * @param count Número de malas para color no GeneralRepository
+     */
+    void setBags(int count);
 }

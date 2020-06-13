@@ -22,6 +22,8 @@ public class ArrivalLoungeInterface {
 
    private MArrivalLounge ArrivalLounge;
 
+   private boolean isPorterOut = false;
+
    /**
     * Instanciação do interface à barbearia.
     *
@@ -75,6 +77,10 @@ public class ArrivalLoungeInterface {
          case Message.END_OF_WORK:
             break;
          case Message.WAIT_FOR_PORTER:
+            break;
+         case Message.SET_PORTER_OUT:
+            break;
+         case Message.HAS_PORTER_ENDED:
             break;
          case Message.SHUT: // shutdown do servidor
             break;
@@ -155,6 +161,13 @@ public class ArrivalLoungeInterface {
          case Message.WAIT_FOR_PORTER:
             ArrivalLounge.waitForPorter();
             outMessage = new Message(Message.ACK);
+            break;
+         case Message.SET_PORTER_OUT:
+            isPorterOut = true;
+            outMessage = new Message(Message.ACK);
+            break;
+         case Message.HAS_PORTER_ENDED:
+            outMessage = new Message(Message.ACK, isPorterOut);
             break;
          case Message.SHUT: // shutdown do servidor
             mainArrivalLounge.waitConnection = false;
