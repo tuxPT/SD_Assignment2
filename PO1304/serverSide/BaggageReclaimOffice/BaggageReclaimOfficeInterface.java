@@ -27,60 +27,60 @@ public class BaggageReclaimOfficeInterface {
      */
 
     public BaggageReclaimOfficeInterface(MBaggageReclaimOffice BaggageReclaimOffice) {
-      this.BaggageReclaimOffice = BaggageReclaimOffice;
-   }
+        this.BaggageReclaimOffice = BaggageReclaimOffice;
+    }
 
-   /**
-    * Processamento das mensagens através da execução da tarefa correspondente.
-    * Geração de uma mensagem de resposta.
-    *
-    * @param inMessage mensagem com o pedido
-    *
-    * @return mensagem de resposta
-    *
-    * @throws MessageException se a mensagem com o pedido for considerada inválida
-    */
+    /**
+     * Processamento das mensagens através da execução da tarefa correspondente.
+     * Geração de uma mensagem de resposta.
+     *
+     * @param inMessage mensagem com o pedido
+     *
+     * @return mensagem de resposta
+     *
+     * @throws MessageException se a mensagem com o pedido for considerada inválida
+     */
 
-   public Message processAndReply(Message inMessage) throws MessageException {
-      Message outMessage = null; // mensagem de resposta
+    public Message processAndReply(Message inMessage) throws MessageException {
+        Message outMessage = null; // mensagem de resposta
 
-      /* validação da mensagem recebida */
+        /* validação da mensagem recebida */
 
-      switch (inMessage.getType()) {
-         case Message.ADD_BAG:
-            if(inMessage.getPassengerId() < 0)
-               throw new MessageException("Id do passageiro inválido!", inMessage);
-            if(inMessage.getNumberOfBags() < 0)
-               throw new MessageException("O número de malas perdidas é inválido!", inMessage);
-            break;
-         case Message.SHUT: // shutdown do servidor
-            break;
-         default:
-            throw new MessageException("Tipo inválido!", inMessage);
-      }
+        switch (inMessage.getType()) {
+            case Message.ADD_BAG:
+                if (inMessage.getPassengerId() < 0)
+                    throw new MessageException("Id do passageiro inválido!", inMessage);
+                if (inMessage.getNumberOfBags() < 0)
+                    throw new MessageException("O número de malas perdidas é inválido!", inMessage);
+                break;
+            case Message.SHUT: // shutdown do servidor
+                break;
+            default:
+                throw new MessageException("Tipo inválido!", inMessage);
+        }
 
-      /* seu processamento */
+        /* seu processamento */
 
-      switch (inMessage.getType())
+        switch (inMessage.getType())
 
-      {
-         case Message.ADD_BAG:
-            SPassenger state = BaggageReclaimOffice.addBag(inMessage.getPassengerId(), inMessage.getNumberOfBags());
-            switch(state){
-               case EXITING_THE_ARRIVAL_TERMINAL:
-                  outMessage = new Message(Message.STATE_EAT);
-                  break;
-               default:
-                  break;
-            }
-            break;   
-         case Message.SHUT: // shutdown do servidor
-            mainBaggageReclaimOffice.waitConnection = false;
-            (((BaggageReclaimOfficeProxy) (Thread.currentThread())).getScon()).setTimeout(10);
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-      }
+        {
+            case Message.ADD_BAG:
+                SPassenger state = BaggageReclaimOffice.addBag(inMessage.getPassengerId(), inMessage.getNumberOfBags());
+                switch (state) {
+                    case EXITING_THE_ARRIVAL_TERMINAL:
+                        outMessage = new Message(Message.STATE_EAT);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case Message.SHUT: // shutdown do servidor
+                mainBaggageReclaimOffice.waitConnection = false;
+                (((BaggageReclaimOfficeProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+                outMessage = new Message(Message.ACK); // gerar confirmação
+                break;
+        }
 
-      return (outMessage);
-   }
+        return (outMessage);
+    }
 }

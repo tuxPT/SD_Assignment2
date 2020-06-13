@@ -2,6 +2,10 @@ package serverSide.GeneralRepository;
 
 import java.net.SocketTimeoutException;
 
+import serverSide.ServerCom;
+import serverSide.shared_regions.MGeneralRepository;
+import shared_regions_JavaInterfaces.IGeneralRepository;
+
 /**
  *   Este tipo de dados simula uma solução do lado do servidor do Problema dos Barbeiros Sonolentos que implementa o
  *   modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos threads barbeiro.
@@ -21,26 +25,27 @@ public class mainGeneralRepository
    *    @serialField portNumb
    */
 
-   private static final int portNumb = 22001;
+   private static int portNumb = 20080;
    public static boolean waitConnection;                              // sinalização de actividade
-
+   private static int PLANE_PASSENGERS = 6;
+   private static int BUS_CAPACITY = 3;
   /**
    *  Programa principal.
    */
 
    public static void main (String [] args)
    {
-      ArrivalLounge ArrivalLounge;                                    // barbearia (representa o serviço a ser prestado)
-      ArrivalLoungeInterface ArrivalLoungeInterface;                      // interface à barbearia
+      IGeneralRepository GeneralRepository;                                    // barbearia (representa o serviço a ser prestado)
+      GeneralRepositoryInterface GeneralRepositoryInterface;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
-      ClientProxy cliProxy;                                // thread agente prestador do serviço
+      GeneralRepositoryProxy GeneralRepositoryProxy;                                // thread agente prestador do serviço
 
      /* estabelecimento do servico */
 
       scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
       scon.start ();                                       // com o endereço público
-      bShop = new BarberShop ();                           // activação do serviço
-      bShopInter = new BarberShopInterface (bShop);        // activação do interface com o serviço
+      GeneralRepository = new MGeneralRepository(PLANE_PASSENGERS, BUS_CAPACITY);                           // activação do serviço
+      GeneralRepositoryInterface = new GeneralRepositoryInterface(GeneralRepository);      // activação do interface com o serviço
       System.out.println ("O serviço foi estabelecido!");
       System.out.println ("O servidor esta em escuta.");
 
@@ -50,8 +55,8 @@ public class mainGeneralRepository
       while (waitConnection)
         try
         { sconi = scon.accept ();                          // entrada em processo de escuta
-          cliProxy = new ClientProxy (sconi, bShopInter);  // lançamento do agente prestador do serviço
-          cliProxy.start ();
+          GeneralRepositoryProxy = new GeneralRepositoryProxy(sconi, GeneralRepositoryInterface);  // lançamento do agente prestador do serviço
+          GeneralRepositoryProxy.start ();
         }
         catch (SocketTimeoutException e)
         {

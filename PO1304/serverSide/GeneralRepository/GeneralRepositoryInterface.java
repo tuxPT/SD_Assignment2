@@ -1,9 +1,10 @@
 package serverSide.GeneralRepository;
 
-import comInf.ArrivalLounge.Message;
+import comInf.GeneralRepository.Message;
+import comInf.GeneralRepository.MessageException;
 import common_infrastructures.SPassenger;
-import serverSide.shared_regions.MArrivalLounge;
-import comInf.MessageException;
+import serverSide.shared_regions.MGeneralRepository;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
 /**
  * Este tipo de dados define o interface à barbearia numa solução do Problema
@@ -18,7 +19,7 @@ public class GeneralRepositoryInterface {
      * @serialField bShop
      */
 
-    private MArrivalLounge ArrivalLounge;
+    private IGeneralRepository GeneralRepository;
 
     /**
      * Instanciação do interface à barbearia.
@@ -26,106 +27,102 @@ public class GeneralRepositoryInterface {
      * @param bShop barbearia
      */
 
-    public GeneralRepositoryInterface(MArrivalLounge ArrivalLounge) {
-      this.ArrivalLounge = ArrivalLounge;
-   }
+    public GeneralRepositoryInterface(IGeneralRepository generalRepository2) {
+        this.GeneralRepository = generalRepository2;
+    }
 
-   /**
-    * Processamento das mensagens através da execução da tarefa correspondente.
-    * Geração de uma mensagem de resposta.
-    *
-    * @param inMessage mensagem com o pedido
-    *
-    * @return mensagem de resposta
-    *
-    * @throws MessageException se a mensagem com o pedido for considerada inválida
-    */
+    /**
+     * Processamento das mensagens através da execução da tarefa correspondente.
+     * Geração de uma mensagem de resposta.
+     *
+     * @param inMessage mensagem com o pedido
+     *
+     * @return mensagem de resposta
+     *
+     * @throws MessageException se a mensagem com o pedido for considerada inválida
+     */
 
-   public Message processAndReply(Message inMessage) throws MessageException {
-      Message outMessage = null; // mensagem de resposta
+    public Message processAndReply(Message inMessage) throws MessageException {
+        Message outMessage = null; // mensagem de resposta
 
-      /* validação da mensagem recebida */
+        /* validação da mensagem recebida */
 
-      switch (inMessage.getType()) {
-         case Message.SETNFIC:
-            if ((inMessage.getFName() == null) || (inMessage.getFName().equals("")))
-               throw new MessageException("Nome do ficheiro inexistente!", inMessage);
-            break;
-         case Message.REQCUTH:
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
-            break;
-         case Message.ENDOP:
-         case Message.GOTOSLP:
-         case Message.CALLCUST:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            break;
-         case Message.GETPAY:
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            if ((inMessage.getCustId() < 0) || (inMessage.getCustId() >= bShop.getNCust()))
-               throw new MessageException("Id do cliente inválido!", inMessage);
-            break;
-         case Message.SHUT: // shutdown do servidor
-            break;
-         default:
-            throw new MessageException("Tipo inválido!", inMessage);
-      }
+        switch (inMessage.getType()) {
+            case Message.UPDATE_BUSDRIVER:
+                /*if(inMessage.getSBusDriver() == null)
+                    throw new MessageException("O estado do BusDriver é inválido!", inMessage);
+                if(inMessage.getPrint() != true && inMessage.getPrint() != false)
+                    throw new MessageException("A indicação para imprimir o repositório é inválida!", inMessage);
+                */break;
+            case Message.UPDATE_PASSENGER:/*
+                if(inMessage.getsPassengerState() == null)
+                    throw new MessageException("O estado do Passenger é inválido!", inMessage);
+                if(inMessage.getsPassengerID() < 0)
+                    throw new MessageException("O ID do passageiro é inválido!", inMessage);
+                if(inMessage.getsAddWaitingQueue() == null)
+                    throw new MessageException("addWaitingQueue é inválido!", inMessage);
+                if(inMessage.getsAddBusSeats() == null)
+                    throw new MessageException("addBusSeats é inválido!", inMessage);
+                if(inMessage.getsStartBags() < 0)
+                    throw new MessageException("startBags é inválido!", inMessage);
+                if(inMessage.getsCollectBags() == null)
+                    throw new MessageException("collectBags é inválido!", inMessage);
+                if(inMessage.getsTransit() == null)
+                    throw new MessageException("Transit é inválido!", inMessage);
+                    */break;
+            case Message.UPDATE_PORTER:
+                break;
+            case Message.NEXT_FLIGHT:
+                break;
+            case Message.END_OF_LIFE_PLANE:
+                break;
+            case Message.PRINT:
+                break;
+            case Message.SHUT: // shutdown do servidor
+                break;
+            default:
+                throw new MessageException("Tipo inválido!", inMessage);
+        }
 
-      /* seu processamento */
+        /* seu processamento */
 
-      switch (inMessage.getType())
+        switch (inMessage.getType())
 
-      {
-         case Message.WSD: // inicializar ficheiro de logging
-            SPassenger state = ArrivalLounge.whatShouldIDo(inMessage.getPassengerID(), inMessage.getBags(),
-                  inMessage.getTransit());
-            switch (state) {
-               case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-                  outMessage = new Message(Message.STATE_ATT);
-                  break;
-               case AT_THE_LUGGAGE_COLLECTION_POINT:
-                  outMessage = new Message(Message.STATE_LCP);
-                  break;
-               case EXITING_THE_ARRIVAL_TERMINAL:
-                  outMessage = new Message(Message.STATE_EAT);
-                  break;
-               default: break;
-            }
-            break;
+        {
+            case Message.UPDATE_BUSDRIVER:
+                GeneralRepository.updateBusDriver(inMessage.getSBusDriver(), inMessage.getPrint());
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.UPDATE_PASSENGER:
+                GeneralRepository.updatePassenger(inMessage.getsPassengerState(), inMessage.getsPassengerID(),
+                inMessage.getsAddWaitingQueue(),inMessage.getsAddBusSeats(),
+                inMessage.getsStartBags(),inMessage.getsCollectBags(),inMessage.getsTransit());
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.UPDATE_PORTER:
+                GeneralRepository.updatePorter(inMessage.getsPorterState(), inMessage.getsBN(),
+                inMessage.getsBN(),inMessage.getsSR(),inMessage.getPrint());
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.NEXT_FLIGHT:
+                GeneralRepository.nextFlight();
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.END_OF_LIFE_PLANE:
+                GeneralRepository.endOfLifePlane();
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.PRINT:
+                GeneralRepository.printRepository();
+                outMessage = new Message(Message.ACK);
+                break;
+            case Message.SHUT: // shutdown do servidor
+                mainGeneralRepository.waitConnection = false;
+                (((GeneralRepositoryProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+                outMessage = new Message(Message.ACK); // gerar confirmação
+                break;
+        }
 
-         case Message.TAKE_REST:
-            if (bShop.goCutHair(inMessage.getCustId())) // o cliente quer cortar o cabelo
-               outMessage = new Message(Message.CUTHDONE); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.BSHOPF); // gerar resposta negativa
-            break;
-         case Message.TRY_COLLECT:
-            if (bShop.goToSleep(inMessage.getBarbId())) // o barbeiro vai dormir
-               outMessage = new Message(Message.END); // gerar resposta positiva
-            else
-               outMessage = new Message(Message.CONT); // gerar resposta negativa
-            break;
-         case Message.NO_MORE_BAGS:
-            int custID = bShop.callCustomer(inMessage.getBarbId()); // chamar cliente
-            outMessage = new Message(Message.CUSTID, custID); // enviar id do cliente
-            break;
-         case Message.CARRY_TO_APP_STORE: // receber pagamento
-            bShop.getPayment(inMessage.getBarbId(), inMessage.getCustId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-         case Message.ENDOP: // fim de operações do barbeiro
-            bShop.endOperation(inMessage.getBarbId());
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-         case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
-            outMessage = new Message(Message.ACK); // gerar confirmação
-            break;
-      }
-
-      return (outMessage);
-   }
+        return (outMessage);
+    }
 }

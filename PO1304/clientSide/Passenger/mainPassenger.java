@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Random;
 
 import clientSide.Stub.ArrivalLoungeStub;
+import clientSide.Stub.ArrivalTerminalExitStub;
+import clientSide.Stub.ArrivalTerminalTransferQuayStub;
+import clientSide.Stub.BaggageCollectionPointStub;
+import clientSide.Stub.BaggageReclaimOfficeStub;
+import clientSide.Stub.DepartureTerminalStub;
+import clientSide.Stub.DepartureTerminalTransferQuayStub;
+import clientSide.Stub.GeneralRepositoryStub;
 import common_infrastructures.Bag;
 import entities.TPassenger;
 import serverSide.shared_regions.MArrivalLounge;
@@ -29,10 +36,14 @@ import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
  */
 
 public class mainPassenger {
+    private static int PLANES_PER_DAY = 5;
+    private static int MAX_BAGS_NUMBER = 2;
+    private static Random random = new Random();
+    private static ArrayList<Bag>[] bags;
     /**
      * Programa principal.
      */
-
+    private static int PLANE_PASSENGERS = 6;
     public static void main(String[] args) {
         int nCustomer = 5; // número de clientes
         int nBarber = 2; // número máximo de barbeiros
@@ -43,26 +54,17 @@ public class mainPassenger {
         String serverHostName; // nome do sistema computacional onde está o servidor
         int serverPortNumb; // número do port de escuta do servidor
 
-        /* Obtenção dos parâmetros do problema */
-        System.out.println("\n" + "      Problema dos Barbeiros Sonolentos\n");
-        System.out.print("Numero de iterações? ");
-        nIter = Integer.parseInt(System.console().readLine());
-        System.out.print("Nome do ficheiro de logging? ");
-        fName = System.console().readLine();
-        System.out.print("Nome do sistema computacional onde está o servidor? ");
-        serverHostName = System.console().readLine();
-        System.out.print("Número do port de escuta do servidor? ");
-        serverPortNumb = Integer.parseInt(System.console().readLine());
-        ArrivalLoungeStub = new ArrivalLoungeStub(serverHostName, serverPortNumb);
-
-        // INSTANCIAR MONITORES
-
-        /* Comunicação ao servidor dos parâmetros do problema */
-
-        bShopStub.probPar(fName, nIter);
+        ArrivalLoungeStub mArrivalLoungeStub = new ArrivalLoungeStub("localhost", 20010);
+        ArrivalTerminalExitStub mArrivalTerminalExitStub = new ArrivalTerminalExitStub("localhost", 20020);
+        ArrivalTerminalTransferQuayStub mArrivalTerminalTransferQuayStub = new ArrivalTerminalTransferQuayStub("localhost", 20030);
+        BaggageCollectionPointStub mBaggageCollectionPointStub = new BaggageCollectionPointStub("localhost", 20040);
+        BaggageReclaimOfficeStub mBaggageReclaimOfficeStub = new BaggageReclaimOfficeStub("localhost", 20050);
+        DepartureTerminalStub mDepartureTerminalStub = new DepartureTerminalStub("localhost", 20060);
+        DepartureTerminalTransferQuayStub mDepartureTerminalTransferQuayStub = new DepartureTerminalTransferQuayStub("localhost", 20070);
+        GeneralRepositoryStub mGeneralRepositoryStub = new GeneralRepositoryStub("localhost", 20080);
 
         for (int p = 0; p < PLANES_PER_DAY; p++) {
-            MGeneralRepository.nextFlight();
+            mGeneralRepositoryStub.nextFlight();
             // total bags generator
             bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
             // lost bags generator
@@ -74,14 +76,14 @@ public class mainPassenger {
                     Integer probability = random.nextInt(100);
                     // 5% of lost bags
                     if (probability > 5) {
-                        MArrivalLounge.addBag(bags[i].get(j));
+                        mArrivalLoungeStub.addBag(bags[i].get(j));
                         count++;
                     }
                 }
             }
 
-            MGeneralRepository.setBags(count);
-            MBaggageCollectionPoint.newPlane();
+            mGeneralRepositoryStub.setBags(count);
+            mBaggageCollectionPointStub.newPlane();
 
             for (int i = 0; i < PLANE_PASSENGERS; i++) {
                 Random r = new Random();
@@ -97,12 +99,12 @@ public class mainPassenger {
                 }
                 // instancia
                 TPassenger[i] = new TPassenger(i, t_TRANSIT, temp, PLANE_PASSENGERS,
-                        (IArrivalLoungePassenger) MArrivalLounge, (IArrivalTerminalExitPassenger) MArrivalTerminalExit,
-                        (IArrivalTerminalTransferQuayPassenger) MArrivalTerminalTransferQuay,
-                        (IBaggageCollectionPointPassenger) MBaggageCollectionPoint,
-                        (IBaggageReclaimOfficePassenger) MBaggageReclaimOffice,
-                        (IDepartureTerminalTransferQuayPassenger) MDepartureTerminalTransferQuay,
-                        (IDepartureTerminalPassenger) MDepartureTerminal);
+                        (IArrivalLoungePassenger) mArrivalLoungeStub, (IArrivalTerminalExitPassenger) mArrivalTerminalTransferQuayStub,
+                        (IArrivalTerminalTransferQuayPassenger) mArrivalTerminalExitStub,
+                        (IBaggageCollectionPointPassenger) mBaggageCollectionPointStub,
+                        (IBaggageReclaimOfficePassenger) mBaggageReclaimOfficeStub,
+                        (IDepartureTerminalTransferQuayPassenger) mDepartureTerminalTransferQuayStub,
+                        (IDepartureTerminalPassenger) mDepartureTerminalStub);
                 // executa o run
                 TPassenger[i].start();
             }
@@ -114,13 +116,36 @@ public class mainPassenger {
                 } catch (InterruptedException e) {
                 }
             }
-            MArrivalLounge.waitForPorter();
-            MGeneralRepository.endOfLifePlane();
+            mArrivalLoungeStub.waitForPorter();
+            mGeneralRepositoryStub.endOfLifePlane();
         }
-        MArrivalLounge.endOfWork();
-        MArrivalTerminalTransferQuay.endOfWork();
+        mArrivalLoungeStub.endOfWork();
+        mArrivalTerminalTransferQuayStub.endOfWork();
 
+        boolean PORTER_ENDED = false; 
+        boolean BUSDRIVER_ENDED = false;
+        while(!(PORTER_ENDED && BUSDRIVER_ENDED)){
+            Thread.sleep(10);
+            if(!PORTER_ENDED){
+                PORTER_ENDED = ArrivalLoungeStub.porterEnded();
+            }
+            if(!BUSDRIVER_ENDED){
+                BUSDRIVER_ENDED = ArrivalTerminalTransferQuayStub.busdriverEnded();
+            }
+        }
+        mGeneralRepositoryStub.printRepository();
+        
         //shutdown dos monitores
+        mArrivalLoungeStub.shutdown();
+        mArrivalTerminalExitStub.shutdown();
+        mArrivalTerminalTransferQuayStub.shutdown();
+        mBaggageCollectionPointStub.shutdown();
+        mBaggageReclaimOfficeStub.shutdown();
+        mDepartureTerminalStub.shutdown();
+        mDepartureTerminalTransferQuayStub.shutdown();
+        mGeneralRepositoryStub.shutdown();
+
+
     }
 
     private static ArrayList<Bag>[] generateBags(int PLANE_PASSENGERS, int MAX_BAGS_NUMBER) {

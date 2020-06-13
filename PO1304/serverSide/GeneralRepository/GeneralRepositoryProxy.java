@@ -1,6 +1,7 @@
 package serverSide.GeneralRepository;
 
-import comInf.MessageException;
+import comInf.GeneralRepository.Message;
+import comInf.GeneralRepository.MessageException;
 import serverSide.ServerCom;
 
 /**
@@ -33,7 +34,7 @@ public class GeneralRepositoryProxy extends Thread {
      * @serialField bShopInter
      */
 
-    private BarberShopInterface bShopInter;
+    private GeneralRepositoryInterface GeneralRepositoryInter;
 
     /**
      * Instanciação do interface à barbearia.
@@ -42,11 +43,11 @@ public class GeneralRepositoryProxy extends Thread {
      * @param bShopInter interface à barbearia
      */
 
-    public GeneralRepositoryProxy(ServerCom sconi, BarberShopInterface bShopInter) {
+    public GeneralRepositoryProxy(ServerCom sconi, GeneralRepositoryInterface GeneralRepositoryInter) {
         super("Proxy_" + GeneralRepositoryProxy.getProxyId());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.GeneralRepositoryInter = GeneralRepositoryInter;
    }
 
   /**
@@ -61,7 +62,7 @@ public class GeneralRepositoryProxy extends Thread {
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = GeneralRepositoryInter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { System.out.println ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -85,10 +86,10 @@ public class GeneralRepositoryProxy extends Thread {
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = Class.forName ("serverSide.ClientProxy");
+      { cl = Class.forName ("serverSide.GeneralRepository.GeneralRepositoryProxy");
       }
       catch (ClassNotFoundException e)
-      { System.out.println ("O tipo de dados ClientProxy não foi encontrado!");
+      { System.out.println ("O tipo de dados GeneralRepositoryProxy não foi encontrado!");
         e.printStackTrace ();
         System.exit (1);
       }

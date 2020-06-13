@@ -1,7 +1,10 @@
 package serverSide.DepartureTerminalTransferQuay;
 
 import java.net.SocketTimeoutException;
+
+import clientSide.Stub.GeneralRepositoryStub;
 import serverSide.shared_regions.MDepartureTerminalTransferQuay;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 import serverSide.ServerCom;
 
 // start shared region instance
@@ -18,7 +21,7 @@ public class mainDepartureTerminalTransferQuay
    *    @serialField portNumb
    */
 
-   private static final int portNumb = 22001;
+   private static int portNumb = 20070;
    public static boolean waitConnection;                              // sinalização de actividade
 
   /**
@@ -37,6 +40,7 @@ public class mainDepartureTerminalTransferQuay
 
       scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
       scon.start ();                                       // com o endereço público
+      IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub("localhost", 20080);
       DepartureTerminalTransferQuay = new MDepartureTerminalTransferQuay(MGeneralRepository);         // activação do serviço
       DepartureTerminalTransferQuayInter = new DepartureTerminalTransferQuayInterface (DepartureTerminalTransferQuay);        // activação do interface com o serviço
       System.out.println ("O serviço foi estabelecido!");

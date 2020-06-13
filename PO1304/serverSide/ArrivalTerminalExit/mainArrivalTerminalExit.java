@@ -8,28 +8,28 @@ import shared_regions_JavaInterfaces.IGeneralRepository;
 import serverSide.ServerCom;
 
 /**
- *   Este tipo de dados simula uma solução do lado do servidor do Problema dos Barbeiros Sonolentos que implementa o
- *   modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
+ * Este tipo de dados simula uma solução do lado do servidor do Problema dos
+ * Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
+ * (replicação do servidor) com lançamento estático dos threads barbeiro. A
+ * comunicação baseia-se em passagem de mensagens sobre sockets usando o
+ * protocolo TCP.
  */
 // start shared region instance
-        // start serverInterface, where it maps messages to internal calls
-            // receive from clients
-            // set up initial values
-            // receive from clients
-            // execute internal calls
-public class mainArrivalTerminalExit
-{
-  /**
-   *  Número do port de escuta do serviço a ser prestado (4000, por defeito)
-   *
-   *    @serialField portNumb
-   */
+// start serverInterface, where it maps messages to internal calls
+// receive from clients
+// set up initial values
+// receive from clients
+// execute internal calls
+public class mainArrivalTerminalExit {
+    /**
+     * Número do port de escuta do serviço a ser prestado (4000, por defeito)
+     *
+     * @serialField portNumb
+     */
 
-   private static final int portNumb = 22001;
-   private static final int PLANE_PASSENGERS = 6;
-   public static boolean waitConnection;                              // sinalização de actividade
-   
+    private static int portNumb = 20020;
+    private static int PLANE_PASSENGERS = 6;
+    public static boolean waitConnection; // sinalização de actividade
 
   /**
    *  Programa principal.
@@ -42,7 +42,7 @@ public class mainArrivalTerminalExit
       ArrivalTerminalExitInterface ArrivalTerminalExitInterface;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
       ArrivalTerminalExitProxy cliProxy;                                // thread agente prestador do serviço
-      IGeneralRepository MGeneralRepository = new GeneralRepositoryStub("localhost", port);
+      IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub("localhost", 20080);
 
      /* estabelecimento do servico */
 

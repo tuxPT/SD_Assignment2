@@ -10,9 +10,11 @@ import common_infrastructures.SBusDriver;
 import common_infrastructures.SPassenger;
 import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayBusDriver;
 import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayPassenger;
+import shared_regions_JavaInterfaces.IGeneralRepository;
 
-public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQuayBusDriver, IArrivalTerminalTransferQuayPassenger {
-    private MGeneralRepository MGeneralRepository;
+public class MArrivalTerminalTransferQuay
+        implements IArrivalTerminalTransferQuayBusDriver, IArrivalTerminalTransferQuayPassenger {
+    private IGeneralRepository MGeneralRepository;
     Queue<Integer> WAITING_QUEUE;
     Queue<Integer> BUS_QUEUE;
     Integer BUS_CAPACITY;
@@ -23,17 +25,18 @@ public class MArrivalTerminalTransferQuay implements IArrivalTerminalTransferQua
     ReentrantLock lock = new ReentrantLock(true);
     Condition waitingQueue = lock.newCondition();
     Condition boarding = lock.newCondition();
-    Condition busFull = lock.newCondition();   
+    Condition busFull = lock.newCondition();
 
     /**
-     * @param BUS_CAPACITY max number of passengers the bus can transport in a single trip
-     * @param MGeneralRepository The General Repository used for logging   
+     * @param BUS_CAPACITY        max number of passengers the bus can transport in
+     *                            a single trip
+     * @param mGeneralRepository2 The General Repository used for logging
      */
-    public MArrivalTerminalTransferQuay(Integer BUS_CAPACITY, MGeneralRepository MGeneralRepository) {
+    public MArrivalTerminalTransferQuay(Integer BUS_CAPACITY, IGeneralRepository mGeneralRepository2) {
         WAITING_QUEUE = new LinkedList<Integer>();
         BUS_QUEUE = new LinkedList<Integer>();
         this.BUS_CAPACITY = BUS_CAPACITY;
-        this.MGeneralRepository = MGeneralRepository;
+        this.MGeneralRepository = mGeneralRepository2;
         this.noMoreWork = false;
         this.noStart = false;
     }
