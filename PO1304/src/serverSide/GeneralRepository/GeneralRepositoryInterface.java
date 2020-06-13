@@ -57,8 +57,8 @@ public class GeneralRepositoryInterface {
             case Message.UPDATE_PASSENGER:/*
                 if(inMessage.getsPassengerState() == null)
                     throw new MessageException("O estado do Passenger é inválido!", inMessage);*/
-                if(inMessage.getsPassengerID() < 0)
-                    throw new MessageException("O ID do passageiro é inválido!", inMessage);
+                /*if(inMessage.getsPassengerID() < 0)
+                    throw new MessageException("O ID do passageiro é inválido!", inMessage);*/
                     /*
                 if(inMessage.getsAddWaitingQueue() == null)
                     throw new MessageException("addWaitingQueue é inválido!", inMessage);
@@ -131,6 +131,7 @@ public class GeneralRepositoryInterface {
                 outMessage = new Message(Message.ACK); // gerar confirmação
                 break;
         }
+        log.info(inMessage);
 
         return (outMessage);
     }

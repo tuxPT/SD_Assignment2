@@ -100,7 +100,7 @@ public class Message implements Serializable {
     /**
      * ID do passageiro
      */
-    private Integer passengerID = -1;
+    private Integer passengerID = null;
 
     /**
      * addWaitingQueue
@@ -115,7 +115,7 @@ public class Message implements Serializable {
     /**
      * Número de malas inicial do passageiro
      */
-    private Integer startBags = -1;
+    private Integer startBags = null;
 
     /**
      * Número de malas inicial do passageiro
@@ -377,6 +377,6 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return ("Tipo = " + msgType);
+        return ("Tipo = " + msgType + "\n");
     }
 }
