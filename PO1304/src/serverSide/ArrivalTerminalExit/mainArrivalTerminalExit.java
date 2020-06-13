@@ -37,7 +37,7 @@ public class mainArrivalTerminalExit {
 
    public static void main (String [] args)
    {
-      portNumb = Integer.parseInt(args[0]);
+      //portNumb = Integer.parseInt(args[0]);
       MArrivalTerminalExit ArrivalTerminalExit;                                    // barbearia (representa o serviço a ser prestado)
       ArrivalTerminalExitInterface ArrivalTerminalExitInterface;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação

@@ -4,7 +4,6 @@ import clientSide.Stub.ArrivalLoungeStub;
 import clientSide.Stub.BaggageCollectionPointStub;
 import clientSide.Stub.TemporaryStorageAreaStub;
 import entities.TPorter;
-import serverSide.shared_regions.MTemporaryStorageArea;
 import shared_regions_JavaInterfaces.IArrivalLoungePorter;
 import shared_regions_JavaInterfaces.IBaggageCollectionPointPorter;
 import shared_regions_JavaInterfaces.ITemporaryStorageAreaPorter;

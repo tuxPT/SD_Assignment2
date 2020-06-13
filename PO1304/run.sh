@@ -1,0 +1,20 @@
+#!/bin/env sh
+
+# serverSide
+cd bin
+
+java serverSide.ArrivalLounge.mainArrivalLounge
+java serverSide.ArrivalTerminalExit.mainArrivalTerminalExit
+java serverSide.ArrivalTerminalTransferQuay.mainArrivalTransferQuay
+java serverSide.BaggageCollectionPoint.mainBaggageCollectionPoint
+java serverSide.BaggageReclaimOffice.mainBaggageReclaimOffice
+java serverSide.DepartureTerminal.mainDepartureTerminalTransferQuay
+java serverSide.DepartureTerminalTransferQuay.mainDepartureTerminalTransferQuay
+java serverSide.GeneralRepository.mainGeneralRepository
+java serverSide.TemporaryStorageArea.mainTemporaryStorageArea
+
+# clientSide
+
+java clientSide.BusDriver.mainBusDriver
+java clientSide.Porter.mainPorter 
+java clientSide.Passenger.mainPassenger

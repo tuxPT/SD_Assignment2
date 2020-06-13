@@ -37,7 +37,7 @@ public class mainArrivalLounge {
      */
 
     public static void main(String[] args) {
-        portNumb = Integer.parseInt(args[0]);
+        //portNumb = Integer.parseInt(args[0]);
         MArrivalLounge ArrivalLounge; // barbearia (representa o serviço a ser prestado)
         ArrivalLoungeInterface ArrivalLoungeInterface; // interface à barbearia
         ServerCom scon, sconi; // canais de comunicação

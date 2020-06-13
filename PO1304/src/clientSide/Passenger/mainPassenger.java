@@ -15,10 +15,6 @@ import clientSide.Stub.DepartureTerminalTransferQuayStub;
 import clientSide.Stub.GeneralRepositoryStub;
 import common_infrastructures.Bag;
 import entities.TPassenger;
-import serverSide.shared_regions.MArrivalLounge;
-import serverSide.shared_regions.MArrivalTerminalTransferQuay;
-import serverSide.shared_regions.MBaggageCollectionPoint;
-import serverSide.shared_regions.MGeneralRepository;
 import shared_regions_JavaInterfaces.IArrivalLoungePassenger;
 import shared_regions_JavaInterfaces.IArrivalTerminalExitPassenger;
 import shared_regions_JavaInterfaces.IArrivalTerminalTransferQuayPassenger;
@@ -44,23 +40,21 @@ public class mainPassenger {
      * Programa principal.
      */
     private static int PLANE_PASSENGERS = 6;
+
     public static void main(String[] args) {
-        int nCustomer = 5; // número de clientes
-        int nBarber = 2; // número máximo de barbeiros
         TPassenger[] TPassenger = new TPassenger[PLANE_PASSENGERS];
-        IArrivalLoungePassenger ArrivalLoungeStub; // stub à barbearia
-        int nIter; // número de iterações do ciclo de vida dos clientes
-        String fName; // nome do ficheiro de logging
         String serverHostName; // nome do sistema computacional onde está o servidor
         int serverPortNumb; // número do port de escuta do servidor
 
         ArrivalLoungeStub mArrivalLoungeStub = new ArrivalLoungeStub("localhost", 20010);
         ArrivalTerminalExitStub mArrivalTerminalExitStub = new ArrivalTerminalExitStub("localhost", 20020);
-        ArrivalTerminalTransferQuayStub mArrivalTerminalTransferQuayStub = new ArrivalTerminalTransferQuayStub("localhost", 20030);
+        ArrivalTerminalTransferQuayStub mArrivalTerminalTransferQuayStub = new ArrivalTerminalTransferQuayStub(
+                "localhost", 20030);
         BaggageCollectionPointStub mBaggageCollectionPointStub = new BaggageCollectionPointStub("localhost", 20040);
         BaggageReclaimOfficeStub mBaggageReclaimOfficeStub = new BaggageReclaimOfficeStub("localhost", 20050);
         DepartureTerminalStub mDepartureTerminalStub = new DepartureTerminalStub("localhost", 20060);
-        DepartureTerminalTransferQuayStub mDepartureTerminalTransferQuayStub = new DepartureTerminalTransferQuayStub("localhost", 20070);
+        DepartureTerminalTransferQuayStub mDepartureTerminalTransferQuayStub = new DepartureTerminalTransferQuayStub(
+                "localhost", 20070);
         GeneralRepositoryStub mGeneralRepositoryStub = new GeneralRepositoryStub("localhost", 20080);
 
         for (int p = 0; p < PLANES_PER_DAY; p++) {
@@ -69,9 +63,7 @@ public class mainPassenger {
             bags = generateBags(PLANE_PASSENGERS, MAX_BAGS_NUMBER);
             // lost bags generator
             int count = 0;
-            int total_bags = 0;
             for (int i = 0; i < bags.length; i++) {
-                total_bags += bags[i].size();
                 for (int j = 0; j < bags[i].size(); j++) {
                     Integer probability = random.nextInt(100);
                     // 5% of lost bags
@@ -99,7 +91,8 @@ public class mainPassenger {
                 }
                 // instancia
                 TPassenger[i] = new TPassenger(i, t_TRANSIT, temp, PLANE_PASSENGERS,
-                        (IArrivalLoungePassenger) mArrivalLoungeStub, (IArrivalTerminalExitPassenger) mArrivalTerminalTransferQuayStub,
+                        (IArrivalLoungePassenger) mArrivalLoungeStub,
+                        (IArrivalTerminalExitPassenger) mArrivalTerminalTransferQuayStub,
                         (IArrivalTerminalTransferQuayPassenger) mArrivalTerminalExitStub,
                         (IBaggageCollectionPointPassenger) mBaggageCollectionPointStub,
                         (IBaggageReclaimOfficePassenger) mBaggageReclaimOfficeStub,
@@ -122,15 +115,20 @@ public class mainPassenger {
         mArrivalLoungeStub.endOfWork();
         mArrivalTerminalTransferQuayStub.endOfWork();
 
-        boolean PORTER_ENDED = false; 
+        boolean PORTER_ENDED = false;
         boolean BUSDRIVER_ENDED = false;
-        while(!(PORTER_ENDED && BUSDRIVER_ENDED)){
-            Thread.sleep(10);
+        while (!(PORTER_ENDED && BUSDRIVER_ENDED)) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             if(!PORTER_ENDED){
-                PORTER_ENDED = ArrivalLoungeStub.hasPorter();
+                PORTER_ENDED = mArrivalLoungeStub.hasPorterEnded();
             }
             if(!BUSDRIVER_ENDED){
-                BUSDRIVER_ENDED = ArrivalTerminalTransferQuayStub.hasBusDriverEnded();
+                BUSDRIVER_ENDED = mArrivalTerminalTransferQuayStub.hasBusDriverEnded();
             }
         }
         mGeneralRepositoryStub.printRepository();

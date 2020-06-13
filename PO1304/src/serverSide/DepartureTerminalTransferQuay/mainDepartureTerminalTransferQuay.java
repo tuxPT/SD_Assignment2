@@ -30,7 +30,7 @@ public class mainDepartureTerminalTransferQuay
 
    public static void main (String [] args)
    {
-      portNumb = Integer.parseInt(args[0]);
+      //portNumb = Integer.parseInt(args[0]);
       MDepartureTerminalTransferQuay DepartureTerminalTransferQuay;                                    // barbearia (representa o serviço a ser prestado)
       DepartureTerminalTransferQuayInterface DepartureTerminalTransferQuayInter;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
