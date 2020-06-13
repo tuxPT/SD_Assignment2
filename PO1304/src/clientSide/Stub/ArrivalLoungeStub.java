@@ -206,7 +206,7 @@ public class ArrivalLoungeStub implements IArrivalLoungePassenger, IArrivalLoung
             } catch (InterruptedException e) {
             }
         }
-        outMessage = new Message(Message.ADD_BAG); // pede a realização do serviço
+        outMessage = new Message(Message.ADD_BAG, bag); // pede a realização do serviço
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         if ((inMessage.getType() != Message.ACK)) {

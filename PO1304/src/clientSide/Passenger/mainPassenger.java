@@ -92,8 +92,8 @@ public class mainPassenger {
                 // instancia
                 TPassenger[i] = new TPassenger(i, t_TRANSIT, temp, PLANE_PASSENGERS,
                         (IArrivalLoungePassenger) mArrivalLoungeStub,
-                        (IArrivalTerminalExitPassenger) mArrivalTerminalTransferQuayStub,
-                        (IArrivalTerminalTransferQuayPassenger) mArrivalTerminalExitStub,
+                        (IArrivalTerminalExitPassenger) mArrivalTerminalExitStub,
+                        (IArrivalTerminalTransferQuayPassenger) mArrivalTerminalTransferQuayStub,
                         (IBaggageCollectionPointPassenger) mBaggageCollectionPointStub,
                         (IBaggageReclaimOfficePassenger) mBaggageReclaimOfficeStub,
                         (IDepartureTerminalTransferQuayPassenger) mDepartureTerminalTransferQuayStub,

@@ -10,7 +10,7 @@ import shared_regions_JavaInterfaces.ITemporaryStorageAreaPorter;
 
 public class mainPorter {
     private static int MAX_PORTER = 1;
-    public void main(String[] args){
+    public static void main(String[] args){
         TPorter[] TPorter = new TPorter[MAX_PORTER]; // array de threads cliente
         ArrivalLoungeStub arrivalLoungeStub; // stub à barbearia
         BaggageCollectionPointStub baggageCollectionPointStub;
