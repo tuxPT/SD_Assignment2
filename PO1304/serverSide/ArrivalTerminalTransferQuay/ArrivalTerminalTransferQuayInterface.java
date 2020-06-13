@@ -5,12 +5,6 @@ import common_infrastructures.SPassenger;
 import serverSide.shared_regions.MArrivalTerminalTransferQuay;
 import comInf.ArrivalTerminalTransferQuay.MessageException;
 
-/**
- * Este tipo de dados define o interface à barbearia numa solução do Problema
- * dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2
- * (replicação do servidor) com lançamento estático dos threads barbeiro.
- */
-
 public class ArrivalTerminalTransferQuayInterface {
     /**
      * Barbearia (representa o serviço a ser prestado)
@@ -21,9 +15,9 @@ public class ArrivalTerminalTransferQuayInterface {
     private MArrivalTerminalTransferQuay ArrivalTerminalTransferQuay;
 
     /**
-     * Instanciação do interface à barbearia.
+     * Instanciação do interface ao ArrivalTerminalTransferQuay.
      *
-     * @param bShop barbearia
+     * @param ArrivalTerminalTransferQuay ArrivalTerminalTransferQuay
      */
 
     public ArrivalTerminalTransferQuayInterface(MArrivalTerminalTransferQuay ArrivalTerminalTransferQuay) {
@@ -95,8 +89,8 @@ public class ArrivalTerminalTransferQuayInterface {
             outMessage = new Message(Message.ACK);
             break;
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            mainArrivalTerminalTransferQuay.waitConnection = false;
+            (((ArrivalTerminalTransferQuayProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

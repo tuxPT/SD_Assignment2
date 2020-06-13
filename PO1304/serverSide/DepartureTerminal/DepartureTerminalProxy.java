@@ -1,52 +1,48 @@
 package serverSide.DepartureTerminal;
 
-import comInf.MessageException;
+import comInf.DepartureTerminal.Message;
+import comInf.DepartureTerminal.MessageException;
 import serverSide.ServerCom;
 
-/**
- *   Este tipo de dados define o thread agente prestador de serviço para uma solução do Problema dos Barbeiros
- *   Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos
- *   threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
+public class DepartureTerminalProxy extends Thread
+{
+  /**
+   *  Contador de threads lançados
+   *
+   *    @serialField nProxy
+   */
 
-public class DepartureTerminalProxy extends Thread {
-    /**
-     * Contador de threads lançados
-     *
-     * @serialField nProxy
-     */
+   private static int nProxy = 0;
 
-    private static int nProxy = 0;
+  /**
+   *  Canal de comunicação
+   *
+   *    @serialField sconi
+   */
 
-    /**
-     * Canal de comunicação
-     *
-     * @serialField sconi
-     */
+   private ServerCom sconi;
 
-    private ServerCom sconi;
+  /**
+   *  Interface ao DepartureTerminal
+   *
+   *    @serialField DepartureTerminalnterface
+   */
 
-    /**
-     * Interface à barbearia
-     *
-     * @serialField bShopInter
-     */
+   private DepartureTerminalInterface DepartureTerminalnter;
 
-    private BarberShopInterface bShopInter;
+  /**
+   *  Instanciação do interface ao DepartureTerminal.
+   *
+   *    @param sconi canal de comunicação
+   *    @param DepartureTerminalnterfaceInter_t interface ao DepartureTerminal
+   */
 
-    /**
-     * Instanciação do interface à barbearia.
-     *
-     * @param sconi      canal de comunicação
-     * @param bShopInter interface à barbearia
-     */
-
-    public DepartureTerminalProxy(ServerCom sconi, BarberShopInterface bShopInter) {
-        super("Proxy_" + DepartureTerminalProxy.getProxyId());
+   public DepartureTerminalProxy (ServerCom sconi, DepartureTerminalInterface DepartureTerminalnterfaceInter_t)
+   {
+      super ("Proxy_" + DepartureTerminalProxy.getProxyId ());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.DepartureTerminalnter = DepartureTerminalnterfaceInter_t;
    }
 
   /**
@@ -61,7 +57,7 @@ public class DepartureTerminalProxy extends Thread {
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = DepartureTerminalnter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { System.out.println ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -85,10 +81,10 @@ public class DepartureTerminalProxy extends Thread {
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = Class.forName ("serverSide.ClientProxy");
+      { cl = Class.forName ("serverSide.DepartureTerminal.DepartureTerminalProxy");
       }
       catch (ClassNotFoundException e)
-      { System.out.println ("O tipo de dados ClientProxy não foi encontrado!");
+      { System.out.println ("O tipo de dados DepartureTerminalProxy não foi encontrado!");
         e.printStackTrace ();
         System.exit (1);
       }

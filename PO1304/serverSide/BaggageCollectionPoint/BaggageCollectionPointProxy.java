@@ -1,16 +1,10 @@
 package serverSide.BaggageCollectionPoint;
 
-import comInf.MessageException;
+import comInf.BaggageCollectionPoint.Message;
+import comInf.BaggageCollectionPoint.MessageException;
 import serverSide.ServerCom;
 
-/**
- *   Este tipo de dados define o thread agente prestador de serviço para uma solução do Problema dos Barbeiros
- *   Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos
- *   threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
-
-public class ClientProxy extends Thread
+public class BaggageCollectionPointProxy extends Thread
 {
   /**
    *  Contador de threads lançados
@@ -29,26 +23,26 @@ public class ClientProxy extends Thread
    private ServerCom sconi;
 
   /**
-   *  Interface à barbearia
+   *  Interface ao BaggageCollectionPoint
    *
-   *    @serialField bShopInter
+   *    @serialField BaggageCollectionPointInterface
    */
 
-   private BarberShopInterface bShopInter;
+   private BaggageCollectionPointInterface BaggageCollectionPointInter;
 
   /**
-   *  Instanciação do interface à barbearia.
+   *  Instanciação do interface ao ArrivalTerminalTransferQuay.
    *
    *    @param sconi canal de comunicação
-   *    @param bShopInter interface à barbearia
+   *    @param BaggageCollectionPointInter_t interface ao BaggageCollectionPoint
    */
 
-   public ClientProxy (ServerCom sconi, BarberShopInterface bShopInter)
+   public BaggageCollectionPointProxy (ServerCom sconi, BaggageCollectionPointInterface BaggageCollectionPointInter_t)
    {
-      super ("Proxy_" + ClientProxy.getProxyId ());
+      super ("Proxy_" + BaggageCollectionPointProxy.getProxyId ());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.BaggageCollectionPointInter = BaggageCollectionPointInter_t;
    }
 
   /**
@@ -63,7 +57,7 @@ public class ClientProxy extends Thread
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = BaggageCollectionPointInter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { System.out.println ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -87,10 +81,10 @@ public class ClientProxy extends Thread
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = Class.forName ("serverSide.ClientProxy");
+      { cl = Class.forName ("serverSide.BaggageCollectionPoint.BaggageCollectionPointProxy");
       }
       catch (ClassNotFoundException e)
-      { System.out.println ("O tipo de dados ClientProxy não foi encontrado!");
+      { System.out.println ("O tipo de dados BaggageCollectionPointProxy não foi encontrado!");
         e.printStackTrace ();
         System.exit (1);
       }

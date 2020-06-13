@@ -1,10 +1,11 @@
 package serverSide.ArrivalTerminalExit;
 
-import serverSide.ClientProxy;
-import serverSide.ServerCom;
-import serverSide.shared_regions.MArrivalTerminalExit;
-
 import java.net.SocketTimeoutException;
+
+import clientSide.Stub.GeneralRepositoryStub;
+import serverSide.shared_regions.MArrivalTerminalExit;
+import shared_regions_JavaInterfaces.IGeneralRepository;
+import serverSide.ServerCom;
 
 /**
  *   Este tipo de dados simula uma solução do lado do servidor do Problema dos Barbeiros Sonolentos que implementa o
@@ -26,7 +27,9 @@ public class mainArrivalTerminalExit
    */
 
    private static final int portNumb = 22001;
+   private static final int PLANE_PASSENGERS = 6;
    public static boolean waitConnection;                              // sinalização de actividade
+   
 
   /**
    *  Programa principal.
@@ -34,19 +37,21 @@ public class mainArrivalTerminalExit
 
    public static void main (String [] args)
    {
+      portNumb = Integer.parseInt(args[0]);
       MArrivalTerminalExit ArrivalTerminalExit;                                    // barbearia (representa o serviço a ser prestado)
-      ArrivalLoungeInterface ArrivalLoungeInterface;                      // interface à barbearia
+      ArrivalTerminalExitInterface ArrivalTerminalExitInterface;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
-      ClientProxy cliProxy;                                // thread agente prestador do serviço
+      ArrivalTerminalExitProxy cliProxy;                                // thread agente prestador do serviço
+      IGeneralRepository MGeneralRepository = new GeneralRepositoryStub("localhost", port);
 
      /* estabelecimento do servico */
 
       scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
       scon.start ();                                       // com o endereço público
-      bShop = new BarberShop ();                           // activação do serviço
-      bShopInter = new BarberShopInterface (bShop);        // activação do interface com o serviço
+      ArrivalTerminalExit = new MArrivalTerminalExit(PLANE_PASSENGERS, MGeneralRepository);                           // activação do serviço
+      ArrivalTerminalExitInterface = new ArrivalTerminalExitInterface (ArrivalTerminalExit);        // activação do interface com o serviço
       System.out.println ("O serviço foi estabelecido!");
-      System.out.println ("O servidor esta em escuta.");
+      System.out.println ("O servidor está em escuta.");
 
      /* processamento de pedidos */
 
@@ -54,7 +59,7 @@ public class mainArrivalTerminalExit
       while (waitConnection)
         try
         { sconi = scon.accept ();                          // entrada em processo de escuta
-          cliProxy = new ClientProxy (sconi, bShopInter);  // lançamento do agente prestador do serviço
+          cliProxy = new ArrivalTerminalExitProxy (sconi, ArrivalTerminalExitInterface);  // lançamento do agente prestador do serviço
           cliProxy.start ();
         }
         catch (SocketTimeoutException e)

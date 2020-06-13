@@ -1,6 +1,5 @@
 package serverSide.ArrivalTerminalExit;
 
-import common_infrastructures.SPassenger;
 import serverSide.shared_regions.MArrivalTerminalExit;
 import comInf.ArrivalTerminalExit.Message;
 import comInf.ArrivalTerminalExit.MessageException;
@@ -94,8 +93,8 @@ public class ArrivalTerminalExitInterface {
             outMessage = new Message(Message.ACK);
             break;
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            mainArrivalTerminalExit.waitConnection = false;
+            (((ArrivalTerminalExitProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

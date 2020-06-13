@@ -64,6 +64,11 @@ public class Message implements Serializable
     */
     public static final int STATE_EDT            = 9;
 
+    /**
+     * SHUTDOWN
+     */
+    public static final int SHUT                 = 10;
+
     /* Campos das mensagens */
 
     /**

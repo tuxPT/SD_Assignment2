@@ -70,8 +70,8 @@ public class TemporaryStorageAreaInterface {
             }
             break;
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            mainTemporaryStorageArea.waitConnection = false;
+            (((TemporaryStorageAreaProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

@@ -1,7 +1,5 @@
 package serverSide.BaggageCollectionPoint;
 
-import common_infrastructures.Bag;
-import common_infrastructures.SPassenger;
 import common_infrastructures.SPorter;
 import serverSide.shared_regions.MBaggageCollectionPoint;
 import comInf.BaggageCollectionPoint.MessageException;
@@ -97,8 +95,8 @@ public class BaggageCollectionPointInterface {
             outMessage = new Message(Message.ACK);
             break;
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+         mainBaggageCollectionPoint.waitConnection = false;
+            (((BaggageCollectionPointProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

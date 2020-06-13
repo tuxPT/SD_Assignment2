@@ -34,6 +34,16 @@ public class Message implements Serializable {
      */ 
     public static final int STATE_EAT    = 3;
 
+    /**
+     * ACKNOWLEDGE
+     */
+    public static final int ACK          = 4;
+
+    /**
+     * SHUTDOWN
+     */
+    public static final int SHUT         = 5;
+
     /* Campos das mensagens */
 
     /**

@@ -1,16 +1,10 @@
 package serverSide.ArrivalTerminalExit;
 
-import comInf.MessageException;
+import comInf.ArrivalTerminalExit.Message;
+import comInf.ArrivalTerminalExit.MessageException;
 import serverSide.ServerCom;
 
-/**
- *   Este tipo de dados define o thread agente prestador de serviço para uma solução do Problema dos Barbeiros
- *   Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos
- *   threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
-
-public class ClientProxy extends Thread
+public class ArrivalTerminalExitProxy extends Thread
 {
   /**
    *  Contador de threads lançados
@@ -29,26 +23,26 @@ public class ClientProxy extends Thread
    private ServerCom sconi;
 
   /**
-   *  Interface à barbearia
+   *  Interface ao ArrivalTerminalExit
    *
-   *    @serialField bShopInter
+   *    @serialField ArrivalTerminalExitInterface
    */
 
-   private BarberShopInterface bShopInter;
+   private ArrivalTerminalExitInterface ArrivalTerminalExitInter;
 
   /**
    *  Instanciação do interface à barbearia.
    *
    *    @param sconi canal de comunicação
-   *    @param bShopInter interface à barbearia
+   *    @param rrivalTerminalExitInter_t interface ao ArrivalTerminalExit
    */
 
-   public ClientProxy (ServerCom sconi, BarberShopInterface bShopInter)
+   public ArrivalTerminalExitProxy (ServerCom sconi, ArrivalTerminalExitInterface rrivalTerminalExitInter_t)
    {
-      super ("Proxy_" + ClientProxy.getProxyId ());
+      super ("Proxy_" + ArrivalTerminalExitProxy.getProxyId ());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.ArrivalTerminalExitInter = rrivalTerminalExitInter_t;
    }
 
   /**
@@ -63,7 +57,7 @@ public class ClientProxy extends Thread
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = ArrivalTerminalExitInter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { System.out.println ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -87,10 +81,10 @@ public class ClientProxy extends Thread
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = Class.forName ("serverSide.ClientProxy");
+      { cl = Class.forName ("serverSide.ArrivalTerminalExit.ArrivalTerminalExitProxy");
       }
       catch (ClassNotFoundException e)
-      { System.out.println ("O tipo de dados ClientProxy não foi encontrado!");
+      { System.out.println ("O tipo de dados ArrivalTerminalExitProxy não foi encontrado!");
         e.printStackTrace ();
         System.exit (1);
       }

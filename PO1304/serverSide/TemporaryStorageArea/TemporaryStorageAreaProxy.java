@@ -1,52 +1,48 @@
 package serverSide.TemporaryStorageArea;
 
-import comInf.MessageException;
+import comInf.TemporaryStorageArea.Message;
+import comInf.TemporaryStorageArea.MessageException;
 import serverSide.ServerCom;
 
-/**
- *   Este tipo de dados define o thread agente prestador de serviço para uma solução do Problema dos Barbeiros
- *   Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos
- *   threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
+public class TemporaryStorageAreaProxy extends Thread
+{
+  /**
+   *  Contador de threads lançados
+   *
+   *    @serialField nProxy
+   */
 
-public class TemporaryStorageAreaProxy extends Thread {
-    /**
-     * Contador de threads lançados
-     *
-     * @serialField nProxy
-     */
+   private static int nProxy = 0;
 
-    private static int nProxy = 0;
+  /**
+   *  Canal de comunicação
+   *
+   *    @serialField sconi
+   */
 
-    /**
-     * Canal de comunicação
-     *
-     * @serialField sconi
-     */
+   private ServerCom sconi;
 
-    private ServerCom sconi;
+  /**
+   *  Interface ao TemporaryStorageArea
+   *
+   *    @serialField TemporaryStorageAreaInterface
+   */
 
-    /**
-     * Interface à barbearia
-     *
-     * @serialField bShopInter
-     */
+   private TemporaryStorageAreaInterface TemporaryStorageAreaInter;
 
-    private BarberShopInterface bShopInter;
+  /**
+   *  Instanciação do interface ao TemporaryStorageArea.
+   *
+   *    @param sconi canal de comunicação
+   *    @param TemporaryStorageAreaInter_t interface ao TemporaryStorageArea
+   */
 
-    /**
-     * Instanciação do interface à barbearia.
-     *
-     * @param sconi      canal de comunicação
-     * @param bShopInter interface à barbearia
-     */
-
-    public TemporaryStorageAreaProxy(ServerCom sconi, BarberShopInterface bShopInter) {
-        super("Proxy_" + TemporaryStorageAreaProxy.getProxyId());
+   public TemporaryStorageAreaProxy (ServerCom sconi, TemporaryStorageAreaInterface TemporaryStorageAreaInter_t)
+   {
+      super ("Proxy_" + TemporaryStorageAreaProxy.getProxyId ());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.TemporaryStorageAreaInter = TemporaryStorageAreaInter_t;
    }
 
   /**
@@ -61,7 +57,7 @@ public class TemporaryStorageAreaProxy extends Thread {
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = TemporaryStorageAreaInter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { System.out.println ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -85,10 +81,10 @@ public class TemporaryStorageAreaProxy extends Thread {
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = Class.forName ("serverSide.ClientProxy");
+      { cl = Class.forName ("serverSide.TemporaryStorageArea.TemporaryStorageAreaProxy");
       }
       catch (ClassNotFoundException e)
-      { System.out.println ("O tipo de dados ClientProxy não foi encontrado!");
+      { System.out.println ("O tipo de dados TemporaryStorageAreaProxy não foi encontrado!");
         e.printStackTrace ();
         System.exit (1);
       }

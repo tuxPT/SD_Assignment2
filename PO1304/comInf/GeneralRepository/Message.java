@@ -2,6 +2,8 @@ package comInf.GeneralRepository;
 
 import java.io.*;
 
+import common_infrastructures.SBusDriver;
+
 /**
  *   Este tipo de dados define as mensagens que são trocadas entre os clientes e o servidor numa solução do Problema
  *   dos Barbeiros Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento
@@ -18,90 +20,24 @@ public class Message implements Serializable
    private static final long serialVersionUID = 1001L;
 
   /* Tipos das mensagens */
+   /**
+    * updateBusDriver(SBusDriver Stat, boolean print);
+    */
+   public static final int UPDATE_BUSDRIVER   = 1;
+  
 
-  /**
-   *  Inicialização do ficheiro de logging (operação pedida pelo cliente)
-   */
-
-   public static final int SETNFIC  =  1;
-
-  /**
-   *  Ficheiro de logging foi inicializado (resposta enviada pelo servidor)
-   */
-
-   public static final int NFICDONE =  2;
-
-  /**
-   *  Corte de cabelo (operação pedida pelo cliente)
-   */
-
-   public static final int REQCUTH  =  3;
-
-  /**
-   *  Cabelo cortado (resposta enviada pelo servidor)
-   */
-
-   public static final int CUTHDONE =  4;
-
-  /**
-   *  Barbearia cheia (resposta enviada pelo servidor)
-   */
-
-   public static final int BSHOPF   =  5;
-
-  /**
-   *  Alertar o thread barbeiro do fim de operações (operação pedida pelo cliente)
-   */
-
-   public static final int ENDOP    =  6;
-
-  /**
-   *  Operação realizada com sucesso (resposta enviada pelo servidor)
-   */
-
-   public static final int ACK      =  7;
-
-  /**
-   *  Mandar o barbeiro dormir (operação pedida pelo cliente)
-   */
-
-   public static final int GOTOSLP  =  8;
-
-  /**
-   *  Continuação do ciclo de vida do barbeiro (resposta enviada pelo servidor)
-   */
-
-   public static final int CONT     =  9;
-
-  /**
-   *  Terminação do ciclo de vida do barbeiro (resposta enviada pelo servidor)
-   */
-
-   public static final int END      = 10;
-
-  /**
-   *  Chamar um cliente pelo barbeiro (operação pedida pelo cliente)
-   */
-
-   public static final int CALLCUST = 11;
-
-  /**
-   *  Enviar a identificação do cliente (resposta enviada pelo servidor)
-   */
-
-   public static final int CUSTID   = 12;
-
-  /**
-   *  Receber pagamento pelo barbeiro (operação pedida pelo cliente)
-   */
-
-   public static final int GETPAY   = 13;
-
+  
   /**
    *  Shutdown do servidor (operação pedida pelo cliente)
    */
 
-   public static final int SHUT   = 14;
+   public static final int SHUT                = 14;
+
+   /**
+   *  ACKNOWLEDGE
+   */
+
+   public static final int ACK                  = 15;
 
 
   /* Campos das mensagens */
@@ -112,30 +48,17 @@ public class Message implements Serializable
 
    private int msgType = -1;
 
-  /**
-   *  Identificação do cliente
+   /** BUSDRIVER */
+   /**
+   *  Identificação do estado do BusDriver
    */
+   private SBusDriver sBusDriverState = null;
 
-   private int custId = -1;
-
-  /**
-   *  Identificação do barbeiro
+   /**
+   *  Indicação a dizer se é para imprimir o Repositório
    */
-
-   private int barbId = -1;
-
-  /**
-   *  Nome do ficheiro de logging
-   */
-
-   private String fName = null;
-
-  /**
-   *  Número de iterações do ciclo de vida dos clientes
-   */
-
-   private int nIter = -1;
-
+   private boolean print;
+  
   /**
    *  Instanciação de uma mensagem (forma 1).
    *

@@ -117,6 +117,11 @@ public class Message implements Serializable {
      */
     public static final int ACK                  = 19;
 
+    /**
+     * SHUTDOWN
+     */
+    public static final int SHUT                 = 20;
+
     /* Campos das mensagens */
 
     /**

@@ -53,9 +53,6 @@ public class BaggageReclaimOfficeInterface {
             if(inMessage.getNumberOfBags() < 0)
                throw new MessageException("O número de malas perdidas é inválido!", inMessage);
             break;
-            if ((inMessage.getBarbId() < 0) || (inMessage.getBarbId() >= bShop.getNBarb()))
-               throw new MessageException("Id do barbeiro inválido!", inMessage);
-            break;
          case Message.SHUT: // shutdown do servidor
             break;
          default:
@@ -78,8 +75,8 @@ public class BaggageReclaimOfficeInterface {
             }
             break;   
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            mainBaggageReclaimOffice.waitConnection = false;
+            (((BaggageReclaimOfficeProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

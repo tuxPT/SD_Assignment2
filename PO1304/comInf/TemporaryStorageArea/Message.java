@@ -27,8 +27,17 @@ public class Message implements Serializable
     /**
     * SPorter State AT_THE_PLANES_HOLD
     */
-
     public static final int STATE_ATPH           = 2;
+
+   /**
+    * ACKNOWLEDGE
+   */
+   public static final int ACK                   = 3;
+
+   /**
+    * SHUTDOWN
+   */
+   public static final int SHUT                  = 4;
 
     /* Campos das mensagens */
 

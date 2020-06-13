@@ -1,5 +1,7 @@
 package clientSide.Stub;
 
+import clientSide.ClientCom;
+import comInf.GeneralRepository.Message;
 import common_infrastructures.SBusDriver;
 import common_infrastructures.SPassenger;
 import common_infrastructures.SPorter;
@@ -37,8 +39,25 @@ public class GeneralRepositoryStub implements IGeneralRepository {
 
     @Override
     public void updateBusDriver(SBusDriver Stat, boolean print) {
-        // TODO Auto-generated method stub
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
 
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.UPDATE_BUSDRIVER, Stat, print); // pede a realização do serviço
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.ACK) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
     }
 
     @Override
@@ -70,5 +89,28 @@ public class GeneralRepositoryStub implements IGeneralRepository {
 	public void printRepository() {
 		// TODO Auto-generated method stub
 		
+    }
+
+    // termina o processo
+    public void shutdown() {
+        ClientCom con = new ClientCom(serverHostName, serverPortNumb);
+        Message inMessage, outMessage;
+
+        while (!con.open()) // aguarda ligação
+        {
+            try {
+                Thread.currentThread().sleep((long) (10));
+            } catch (InterruptedException e) {
+            }
+        }
+        outMessage = new Message(Message.SHUT);
+        con.writeObject(outMessage);
+        inMessage = (Message) con.readObject();
+        if (inMessage.getType() != Message.ACK) {
+            System.out.println("Thread " + Thread.currentThread().getName() + ": Tipo inválido!");
+            System.out.println(inMessage.toString());
+            System.exit(1);
+        }
+        con.close();
     }
 }

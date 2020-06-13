@@ -1,12 +1,9 @@
 package serverSide.ArrivalTerminalTransferQuay;
 
 import java.net.SocketTimeoutException;
+import serverSide.shared_regions.MArrivalTerminalTransferQuay;
+import serverSide.ServerCom;
 
-/**
- *   Este tipo de dados simula uma solução do lado do servidor do Problema dos Barbeiros Sonolentos que implementa o
- *   modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
 // start shared region instance
         // start serverInterface, where it maps messages to internal calls
             // receive from clients
@@ -30,19 +27,20 @@ public class mainArrivalTerminalTransferQuay
 
    public static void main (String [] args)
    {
-      ArrivalLounge ArrivalLounge;                                    // barbearia (representa o serviço a ser prestado)
-      ArrivalLoungeInterface ArrivalLoungeInterface;                      // interface à barbearia
+      portNumb = Integer.parseInt(args[0]);
+      MArrivalTerminalTransferQuay ArrivalTerminalTransferQuay;                                    // barbearia (representa o serviço a ser prestado)
+      ArrivalTerminalTransferQuayInterface ArrivalTerminalTransferQuayInter;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
-      ClientProxy cliProxy;                                // thread agente prestador do serviço
+      ArrivalTerminalTransferQuayProxy cliProxy;                                // thread agente prestador do serviço
 
      /* estabelecimento do servico */
 
       scon = new ServerCom (portNumb);                     // criação do canal de escuta e sua associação
       scon.start ();                                       // com o endereço público
-      bShop = new BarberShop ();                           // activação do serviço
-      bShopInter = new BarberShopInterface (bShop);        // activação do interface com o serviço
+      ArrivalTerminalTransferQuay = new MArrivalTerminalTransferQuay(BUS_CAPACITY, MGeneralRepository);                           // activação do serviço
+      ArrivalTerminalTransferQuayInter = new ArrivalTerminalTransferQuayInterface (ArrivalTerminalTransferQuay);        // activação do interface com o serviço
       System.out.println ("O serviço foi estabelecido!");
-      System.out.println ("O servidor esta em escuta.");
+      System.out.println ("O servidor está em escuta.");
 
      /* processamento de pedidos */
 
@@ -50,7 +48,7 @@ public class mainArrivalTerminalTransferQuay
       while (waitConnection)
         try
         { sconi = scon.accept ();                          // entrada em processo de escuta
-          cliProxy = new ClientProxy (sconi, bShopInter);  // lançamento do agente prestador do serviço
+          cliProxy = new ArrivalTerminalTransferQuayProxy (sconi, ArrivalTerminalTransferQuayInter);  // lançamento do agente prestador do serviço
           cliProxy.start ();
         }
         catch (SocketTimeoutException e)

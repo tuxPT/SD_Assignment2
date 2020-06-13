@@ -15,15 +15,15 @@ public class DepartureTerminalInterface {
     /**
      * Barbearia (representa o serviço a ser prestado)
      *
-     * @serialField bShop
+     * @serialField DepartureTerminal
      */
 
     private MDepartureTerminal DepartureTerminal;
 
     /**
-     * Instanciação do interface à barbearia.
+     * Instanciação do interface ao DepartureTerminal.
      *
-     * @param bShop barbearia
+     * @param DepartureTerminal DepartureTerminal
      */
 
     public DepartureTerminalInterface(MDepartureTerminal DepartureTerminal) {
@@ -59,7 +59,6 @@ public class DepartureTerminalInterface {
             break;
          case Message.LP:
             break;
-        
          case Message.SHUT: // shutdown do servidor
             break;
          default:
@@ -100,10 +99,9 @@ public class DepartureTerminalInterface {
             DepartureTerminal.lastPassenger();
             outMessage = new Message(Message.ACK);
             break;
-
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            mainDepartureTerminal.waitConnection = false;
+            (((DepartureTerminalProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

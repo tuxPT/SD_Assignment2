@@ -1,6 +1,12 @@
 package common_infrastructures;
 
-public class Bag{
+import java.io.Serializable;
+
+public class Bag implements Serializable{
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1494835338276539334L;
     private Integer ID;
     private Boolean TRANSIT;
 

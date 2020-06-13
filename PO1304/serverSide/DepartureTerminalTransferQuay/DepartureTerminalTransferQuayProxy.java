@@ -1,52 +1,48 @@
 package serverSide.DepartureTerminalTransferQuay;
 
-import comInf.MessageException;
+import comInf.DepartureTerminalTransferQuay.Message;
+import comInf.DepartureTerminalTransferQuay.MessageException;
 import serverSide.ServerCom;
 
-/**
- *   Este tipo de dados define o thread agente prestador de serviço para uma solução do Problema dos Barbeiros
- *   Sonolentos que implementa o modelo cliente-servidor de tipo 2 (replicação do servidor) com lançamento estático dos
- *   threads barbeiro.
- *   A comunicação baseia-se em passagem de mensagens sobre sockets usando o protocolo TCP.
- */
+public class DepartureTerminalTransferQuayProxy extends Thread
+{
+  /**
+   *  Contador de threads lançados
+   *
+   *    @serialField nProxy
+   */
 
-public class DepartureTerminalTransferQuayProxy extends Thread {
-    /**
-     * Contador de threads lançados
-     *
-     * @serialField nProxy
-     */
+   private static int nProxy = 0;
 
-    private static int nProxy = 0;
+  /**
+   *  Canal de comunicação
+   *
+   *    @serialField sconi
+   */
 
-    /**
-     * Canal de comunicação
-     *
-     * @serialField sconi
-     */
+   private ServerCom sconi;
 
-    private ServerCom sconi;
+  /**
+   *  Interface ao DepartureTerminalTransferQuay
+   *
+   *    @serialField DepartureTerminalTransferQuayInterface
+   */
 
-    /**
-     * Interface à barbearia
-     *
-     * @serialField bShopInter
-     */
+   private DepartureTerminalTransferQuayInterface DepartureTerminalTransferQuayInter;
 
-    private BarberShopInterface bShopInter;
+  /**
+   *  Instanciação do interface ao DepartureTerminalTransferQuay.
+   *
+   *    @param sconi canal de comunicação
+   *    @param DepartureTerminalTransferQuayInter_t interface ao DepartureTerminalTransferQuay
+   */
 
-    /**
-     * Instanciação do interface à barbearia.
-     *
-     * @param sconi      canal de comunicação
-     * @param bShopInter interface à barbearia
-     */
-
-    public DepartureTerminalTransferQuayProxy(ServerCom sconi, BarberShopInterface bShopInter) {
-        super("Proxy_" + DepartureTerminalTransferQuayProxy.getProxyId());
+   public DepartureTerminalTransferQuayProxy (ServerCom sconi, DepartureTerminalTransferQuayInterface DepartureTerminalTransferQuayInter_t)
+   {
+      super ("Proxy_" + DepartureTerminalTransferQuayProxy.getProxyId ());
 
       this.sconi = sconi;
-      this.bShopInter = bShopInter;
+      this.DepartureTerminalTransferQuayInter = DepartureTerminalTransferQuayInter_t;
    }
 
   /**
@@ -61,7 +57,7 @@ public class DepartureTerminalTransferQuayProxy extends Thread {
 
       inMessage = (Message) sconi.readObject ();                     // ler pedido do cliente
       try
-      { outMessage = bShopInter.processAndReply (inMessage);         // processá-lo
+      { outMessage = DepartureTerminalTransferQuayInter.processAndReply (inMessage);         // processá-lo
       }
       catch (MessageException e)
       { System.out.println ("Thread " + getName () + ": " + e.getMessage () + "!");
@@ -85,10 +81,10 @@ public class DepartureTerminalTransferQuayProxy extends Thread {
       int proxyId;                                         // identificador da instanciação
 
       try
-      { cl = Class.forName ("serverSide.ClientProxy");
+      { cl = Class.forName ("serverSide.DepartureTerminalTransferQuay.DepartureTerminalTransferQuayProxy");
       }
       catch (ClassNotFoundException e)
-      { System.out.println ("O tipo de dados ClientProxy não foi encontrado!");
+      { System.out.println ("O tipo de dados DepartureTerminalTransferQuayProxy não foi encontrado!");
         e.printStackTrace ();
         System.exit (1);
       }

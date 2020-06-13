@@ -157,8 +157,8 @@ public class ArrivalLoungeInterface {
             outMessage = new Message(Message.ACK);
             break;
          case Message.SHUT: // shutdown do servidor
-            ServerSleepingBarbers.waitConnection = false;
-            (((ClientProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            mainArrivalLounge.waitConnection = false;
+            (((ArrivalLoungeProxy) (Thread.currentThread())).getScon()).setTimeout(10);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }
