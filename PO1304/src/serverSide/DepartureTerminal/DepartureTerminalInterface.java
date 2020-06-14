@@ -102,7 +102,7 @@ public class DepartureTerminalInterface {
                 break;
             case Message.SHUT: // shutdown do servidor
                 mainDepartureTerminal.waitConnection = false;
-                (((DepartureTerminalProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+                (((DepartureTerminalProxy) (Thread.currentThread())).getScon()).setTimeout(1);
                 outMessage = new Message(Message.ACK); // gerar confirmação
                 break;
         }

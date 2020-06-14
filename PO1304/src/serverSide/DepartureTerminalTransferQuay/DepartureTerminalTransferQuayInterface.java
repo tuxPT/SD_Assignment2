@@ -100,7 +100,7 @@ public class DepartureTerminalTransferQuayInterface {
             break;
          case Message.SHUT: // shutdown do servidor
             mainDepartureTerminalTransferQuay.waitConnection = false;
-            (((DepartureTerminalTransferQuayProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            (((DepartureTerminalTransferQuayProxy) (Thread.currentThread())).getScon()).setTimeout(1);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

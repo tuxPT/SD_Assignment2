@@ -30,10 +30,15 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
 
     @Override
     public SBusDriver parkTheBusAndLetPassOff(Integer NUMBER_OF_PASSENGERS) {
+        System.out.println("LOCK = ");
+
         lock.lock();
         MGeneralRepository.updateBusDriver(SBusDriver.PARKING_AT_THE_DEPARTURE_TERMINAL, true);
         try{
             this.NUMBER_OF_PASSENGERS = NUMBER_OF_PASSENGERS;
+            while(DISEMBARKED_PASSENGERS <= 0){
+                parkTheBus.await(10, TimeUnit.MILLISECONDS);
+            }
             parkTheBus.signalAll();
             lastPassenger.await();
         }
@@ -70,8 +75,9 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
         lock.lock();
         MGeneralRepository.updatePassenger(SPassenger.TERMINAL_TRANSFER, id, null, null, null, false, null);
         try {
-            parkTheBus.await();
             DISEMBARKED_PASSENGERS++;
+            parkTheBus.await();
+
             if(DISEMBARKED_PASSENGERS == NUMBER_OF_PASSENGERS){
                 lastPassenger.signalAll();
             }

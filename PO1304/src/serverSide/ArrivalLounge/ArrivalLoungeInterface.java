@@ -171,7 +171,7 @@ public class ArrivalLoungeInterface {
             break;
          case Message.SHUT: // shutdown do servidor
             mainArrivalLounge.waitConnection = false;
-            (((ArrivalLoungeProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            (((ArrivalLoungeProxy) (Thread.currentThread())).getScon()).setTimeout(1);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

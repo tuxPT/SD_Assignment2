@@ -96,7 +96,7 @@ public class BaggageCollectionPointInterface {
             break;
          case Message.SHUT: // shutdown do servidor
          mainBaggageCollectionPoint.waitConnection = false;
-            (((BaggageCollectionPointProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            (((BaggageCollectionPointProxy) (Thread.currentThread())).getScon()).setTimeout(1);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

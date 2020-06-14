@@ -76,7 +76,7 @@ public class BaggageReclaimOfficeInterface {
                 break;
             case Message.SHUT: // shutdown do servidor
                 mainBaggageReclaimOffice.waitConnection = false;
-                (((BaggageReclaimOfficeProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+                (((BaggageReclaimOfficeProxy) (Thread.currentThread())).getScon()).setTimeout(1);
                 outMessage = new Message(Message.ACK); // gerar confirmação
                 break;
         }

@@ -94,7 +94,7 @@ public class ArrivalTerminalExitInterface {
             break;
          case Message.SHUT: // shutdown do servidor
             mainArrivalTerminalExit.waitConnection = false;
-            (((ArrivalTerminalExitProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+            (((ArrivalTerminalExitProxy) (Thread.currentThread())).getScon()).setTimeout(1);
             outMessage = new Message(Message.ACK); // gerar confirmação
             break;
       }

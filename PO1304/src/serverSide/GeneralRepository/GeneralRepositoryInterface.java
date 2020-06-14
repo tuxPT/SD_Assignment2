@@ -126,7 +126,7 @@ public class GeneralRepositoryInterface {
                 break;
             case Message.SHUT: // shutdown do servidor
                 mainGeneralRepository.waitConnection = false;
-                (((GeneralRepositoryProxy) (Thread.currentThread())).getScon()).setTimeout(10);
+                (((GeneralRepositoryProxy) (Thread.currentThread())).getScon()).setTimeout(1);
                 outMessage = new Message(Message.ACK); // gerar confirmação
                 break;
         }

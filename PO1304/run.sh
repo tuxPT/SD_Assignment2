@@ -26,6 +26,7 @@ java serverSide.DepartureTerminal.mainDepartureTerminal &
 java serverSide.DepartureTerminalTransferQuay.mainDepartureTerminalTransferQuay &
 java serverSide.TemporaryStorageArea.mainTemporaryStorageArea &
 
+
 sleep 1
 
 # clientSide
@@ -34,4 +35,11 @@ java clientSide.BusDriver.mainBusDriver &
 java clientSide.Porter.mainPorter &
 java clientSide.Passenger.mainPassenger &
 
-echo "\n"
+sleep 1
+
+for job in `jobs -p`
+do
+    wait $job
+done
+
+exit 0
