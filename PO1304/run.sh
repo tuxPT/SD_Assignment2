@@ -1,24 +1,24 @@
-#!/bin/env sh
+#!/usr/bin/env sh
 
 # serverSide
 cd bin
 
-java serverSide.GeneralRepository.mainGeneralRepository > GeneralRepository &
-sleep 10
+java serverSide.GeneralRepository.mainGeneralRepository &
+sleep 1
 
-java serverSide.ArrivalLounge.mainArrivalLounge > ArrivalLounge &
-java serverSide.ArrivalTerminalExit.mainArrivalTerminalExit > ArrivalTerminalExit &
-java serverSide.ArrivalTerminalTransferQuay.mainArrivalTerminalTransferQuay > ArrivalTerminalTransferQuay &
-java serverSide.BaggageCollectionPoint.mainBaggageCollectionPoint > BaggageCollectionPoint &
-java serverSide.BaggageReclaimOffice.mainBaggageReclaimOffice > BaggageReclaimOffice &
-java serverSide.DepartureTerminal.mainDepartureTerminal > DepartureTerminal &
-java serverSide.DepartureTerminalTransferQuay.mainDepartureTerminalTransferQuay > DepartureTerminalTransferQuay &
-java serverSide.TemporaryStorageArea.mainTemporaryStorageArea > TemporaryStorageArea &
+java serverSide.ArrivalLounge.mainArrivalLounge &
+java serverSide.ArrivalTerminalExit.mainArrivalTerminalExit &
+java serverSide.ArrivalTerminalTransferQuay.mainArrivalTerminalTransferQuay &
+java serverSide.BaggageCollectionPoint.mainBaggageCollectionPoint &
+java serverSide.BaggageReclaimOffice.mainBaggageReclaimOffice &
+java serverSide.DepartureTerminal.mainDepartureTerminal &
+java serverSide.DepartureTerminalTransferQuay.mainDepartureTerminalTransferQuay &
+java serverSide.TemporaryStorageArea.mainTemporaryStorageArea &
 
-sleep 10
+sleep 1
 
 # clientSide
 
-java clientSide.BusDriver.mainBusDriver > BusDriver &
-java clientSide.Porter.mainPorter > Porter &
-java clientSide.Passenger.mainPassenger > Passenger &
+java clientSide.BusDriver.mainBusDriver &
+java clientSide.Porter.mainPorter &
+java clientSide.Passenger.mainPassenger &

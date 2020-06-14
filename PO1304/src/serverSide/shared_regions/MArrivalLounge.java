@@ -46,9 +46,7 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
         try {
             if (plane_hold.size() != 0)
             {
-                System.out.println("PLANE_HOLD_SIZE = " + plane_hold.size());
                 tmp = plane_hold.remove(0);
-                System.out.println("PLANE_HOLD_SIZE2 = " + plane_hold.size());
                 MGeneralRepository.updatePorter(SPorter.AT_THE_PLANES_HOLD, plane_hold.size(), null, null, true);
             }
             else{
@@ -75,7 +73,6 @@ public class MArrivalLounge implements IArrivalLoungePassenger, IArrivalLoungePo
                     return true;
                 }
                 lastPassenger.await(5, TimeUnit.MILLISECONDS);
-                System.out.println("NUMBER_OF_PASSENGERS = " + NUMBER_OF_PASSENGERS);
             }while(NUMBER_OF_PASSENGERS < PLANE_PASSENGERS);
 
         } catch (Exception e) {

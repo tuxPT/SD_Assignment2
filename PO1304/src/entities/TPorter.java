@@ -36,13 +36,11 @@ public class TPorter extends Thread {
                     }
                     else{
                         curState = SPorter.AT_THE_PLANES_HOLD;
-                        System.out.println("ATPLH");
                     }
                     break;
                 case AT_THE_PLANES_HOLD:
                     // TRY TO GET BAG
                     bag = MArrivalLounge.tryToCollectABag();
-                    System.out.println("TRY_COLLECT");
                     if (bag == null) {
                         MBaggageCollectionPoint.warnPassengers();
                         curState = MArrivalLounge.noMoreBagsToCollect();

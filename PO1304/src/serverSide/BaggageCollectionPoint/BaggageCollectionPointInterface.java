@@ -72,11 +72,8 @@ public class BaggageCollectionPointInterface {
       switch (inMessage.getType())
 
       {
-         case Message.GO_COLLECT_BAG:
-            System.out.println("BAGS_SIZE = " + inMessage.getBagsList().size());
+         case Message.GO_COLLECT_BAG:            
             Integer numberOfBagsRetrieved = BaggageCollectionPoint.goCollectABag(inMessage.getPassengerID(), inMessage.getBagsList());
-            System.out.println("NUMBER_BAGS_RETRIEVED = " + numberOfBagsRetrieved);
-
             outMessage = new Message(Message.COLLECT_BAG_DONE, numberOfBagsRetrieved);
             break;
          case Message.ADD_BAG:
