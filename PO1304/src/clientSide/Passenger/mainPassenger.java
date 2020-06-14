@@ -143,8 +143,6 @@ public class mainPassenger {
         mDepartureTerminalStub.shutdown();
         mDepartureTerminalTransferQuayStub.shutdown();
         mGeneralRepositoryStub.shutdown();
-
-
     }
 
     private static ArrayList<Bag>[] generateBags(int PLANE_PASSENGERS, int MAX_BAGS_NUMBER) {

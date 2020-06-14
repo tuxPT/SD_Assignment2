@@ -22,7 +22,7 @@ public class mainBusDriver {
      * Programa principal.
      */
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {     
         TBusDriver[] TBusDriver = new TBusDriver[MAX_BUSDRIVER]; // array de threads cliente
         ArrivalTerminalTransferQuayStub arrivalTerminalTransferQuayStub; // stub à barbearia
         DepartureTerminalTransferQuayStub departureTerminalTransferQuayStub;

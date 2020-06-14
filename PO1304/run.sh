@@ -1,5 +1,16 @@
 #!/usr/bin/env sh
 
+# Ports Assignment
+ArrivalLounge=""
+ArrivalTerminalExit=""
+ArrivalTerminalTransferQuay=""
+BaggageCollectionPoint=""
+BaggageReclaimOffice=""
+DepartureTerminal=""
+DepartureTerminalTransferQuay=""
+TemporaryStorageArea=""
+GeneralRepository=""
+
 # serverSide
 cd bin
 
@@ -22,3 +33,5 @@ sleep 1
 java clientSide.BusDriver.mainBusDriver &
 java clientSide.Porter.mainPorter &
 java clientSide.Passenger.mainPassenger &
+
+echo "\n"
