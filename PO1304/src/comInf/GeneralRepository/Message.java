@@ -1,6 +1,7 @@
 package comInf.GeneralRepository;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 import common_infrastructures.SBusDriver;
 import common_infrastructures.SPassenger;
@@ -377,6 +378,35 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return ("Tipo = " + msgType + "\n");
+        if (msgType == UPDATE_BUSDRIVER){
+            return ("Tipo = " + msgType
+                    + "\nBusDriver's state = " + sBusDriverState
+                    + "\nTo print? = " + print);
+        }
+        else if(msgType == UPDATE_PASSENGER){
+            return ("Tipo = " + msgType
+                    + "\nPassenger's state = " + sPassengerState
+                    + "\nPassenger's ID = " + passengerID
+                    + "\naddWaitingQueue = " + addWaitingQueue
+                    + "\naddBusSeats = " + addBusSeats
+                    + "\nstartBags = " + startBags
+                    + "\ncollectBags = " + collectBags
+                    + "\ntransit = " + transit);
+        }
+        else if(msgType == UPDATE_PORTER){
+            return ("Tipo = " + msgType
+                    + "\nPorter's state = " + sPorterState
+                    + "\nBN = " + BN
+                    + "\nCB = " + CB
+                    + "\nSR = " + SR
+                    + "\nTo print? = " + print);
+        }
+        else if(msgType == SET_BAGS){
+            return ("Tipo = " + msgType
+                    + "\nNúmero de malas = " + numberOfBags);
+        }
+        else{
+            return ("TIpo = " + msgType);
+        }
     }
 }
