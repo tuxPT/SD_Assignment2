@@ -98,7 +98,7 @@ public class ArrivalLoungeInterface {
                outMessage = new Message(Message.NO_BAG);
             }
             else{
-               outMessage = new Message(Message.COLLECT_DONE);
+               outMessage = new Message(Message.COLLECT_DONE, bag);
             }
             break;
          case Message.TAKE_REST:

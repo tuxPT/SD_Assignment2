@@ -44,10 +44,13 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
                 for (Bag bag: ListOfBags){
                     for (Integer i: total_bags){
                         if (i == bag.getID()){
+                            System.out.println("ENTROU NO IF");
                             removeList.add(bag);
                             NUMBER_OF_BAGS_RETRIEVED++;
                             MGeneralRepository.updatePorter(null, null, ListOfBags.size(), null, false);
+                            System.out.println("UPDATE_PORTER");
                             MGeneralRepository.updatePassenger(null, id, null, null, null, true, null);
+                            System.out.println("UPDATE_PASSENGER");
                         }
                     }
                 }

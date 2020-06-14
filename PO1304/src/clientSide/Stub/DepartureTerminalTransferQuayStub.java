@@ -100,7 +100,7 @@ public class DepartureTerminalTransferQuayStub
             } catch (InterruptedException e) {
             }
         }
-        outMessage = new Message(Message.LTB); // pede a realização do serviço
+        outMessage = new Message(Message.LTB, id); // pede a realização do serviço
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();
         if (inMessage.getType() != Message.STATE_DTT) {

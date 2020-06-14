@@ -34,14 +34,15 @@ import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
 public class mainPassenger {
     private static int PLANES_PER_DAY = 5;
     private static int MAX_BAGS_NUMBER = 2;
-    private static Random random = new Random();
-    private static ArrayList<Bag>[] bags;
+    
     /**
      * Programa principal.
      */
     private static int PLANE_PASSENGERS = 6;
 
     public static void main(String[] args) {
+        Random random = new Random();
+        ArrayList<Bag>[] bags;
         TPassenger[] TPassenger = new TPassenger[PLANE_PASSENGERS];
         String serverHostName; // nome do sistema computacional onde está o servidor
         int serverPortNumb; // número do port de escuta do servidor

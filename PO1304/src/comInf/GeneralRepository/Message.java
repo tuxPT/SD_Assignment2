@@ -213,6 +213,7 @@ public class Message implements Serializable {
 
     public Message(int type, SPorter state, Integer BN, Integer CB, Integer SR, boolean print) {
         msgType = type;
+        this.sPorterState = state;
         this.BN = BN;
         this.CB = CB;
         this.SR = SR;

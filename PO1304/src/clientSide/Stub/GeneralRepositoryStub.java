@@ -97,7 +97,7 @@ public class GeneralRepositoryStub implements IGeneralRepository {
             } catch (InterruptedException e) {
             }
         }
-        outMessage = new Message(Message.UPDATE_PASSENGER, Stat, BN, CB, SR, print);
+        outMessage = new Message(Message.UPDATE_PORTER, Stat, BN, CB, SR, print);
         // pede a realização do serviço
         con.writeObject(outMessage);
         inMessage = (Message) con.readObject();

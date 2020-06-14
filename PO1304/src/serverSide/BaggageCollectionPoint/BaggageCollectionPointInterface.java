@@ -50,7 +50,7 @@ public class BaggageCollectionPointInterface {
          case Message.GO_COLLECT_BAG:
             if(inMessage.getPassengerID() < 0)
                throw new MessageException("Id do passageiro inválido!", inMessage);
-            if(inMessage.getBagsList() == null)
+            if(inMessage.getBagsList() == null || inMessage.getBagsList().size() == 0)
                throw new MessageException("O passageiro não tem malas para recolher!", inMessage);
             break;
          case Message.ADD_BAG:
@@ -73,7 +73,10 @@ public class BaggageCollectionPointInterface {
 
       {
          case Message.GO_COLLECT_BAG:
+            System.out.println("BAGS_SIZE = " + inMessage.getBagsList().size());
             Integer numberOfBagsRetrieved = BaggageCollectionPoint.goCollectABag(inMessage.getPassengerID(), inMessage.getBagsList());
+            System.out.println("NUMBER_BAGS_RETRIEVED = " + numberOfBagsRetrieved);
+
             outMessage = new Message(Message.COLLECT_BAG_DONE, numberOfBagsRetrieved);
             break;
          case Message.ADD_BAG:

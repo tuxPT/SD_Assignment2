@@ -111,7 +111,7 @@ public class GeneralRepositoryInterface {
                 break;
             case Message.UPDATE_PORTER:
                 GeneralRepository.updatePorter(inMessage.getsPorterState(), inMessage.getsBN(),
-                inMessage.getsBN(),inMessage.getsSR(),inMessage.getPrint());
+                inMessage.getsCB(),inMessage.getsSR(),inMessage.getPrint());
                 outMessage = new Message(Message.ACK);
                 break;
             case Message.NEXT_FLIGHT:

@@ -130,7 +130,7 @@ public class ArrivalLoungeStub implements IArrivalLoungePassenger, IArrivalLoung
         {
             case Message.STATE_ASTR:
                 return SPorter.AT_THE_STOREROOM;
-            case Message.STATE_LCP:
+            case Message.STATE_ALCB:
                 return SPorter.AT_THE_LUGGAGE_BELT_CONVEYOR;
         }
         return null;

@@ -105,7 +105,7 @@ public class ArrivalTerminalExitStub implements IArrivalTerminalExitPassenger
         } catch (InterruptedException e) {
         }
     }
-    outMessage = new Message(Message.WAITING_FOR_LAST_PASS); // pede a realização do serviço
+    outMessage = new Message(Message.NUMBER_PASS); // pede a realização do serviço
     con.writeObject(outMessage);
     inMessage = (Message) con.readObject();
     if (inMessage.getType() != Message.ACK){
