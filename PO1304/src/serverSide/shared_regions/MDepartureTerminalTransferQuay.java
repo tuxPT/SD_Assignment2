@@ -76,6 +76,7 @@ public class MDepartureTerminalTransferQuay implements IDepartureTerminalTransfe
                 lastPassenger.signalAll();
             }
             MGeneralRepository.updatePassenger(SPassenger.AT_THE_DEPARTURE_TRANSFER_TERMINAL, id, null, false, null,  false, null);
+
         }catch (Exception e){
             e.printStackTrace();
         }

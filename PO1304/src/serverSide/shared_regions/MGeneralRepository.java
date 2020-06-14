@@ -143,7 +143,7 @@ public class MGeneralRepository implements IGeneralRepository {
                 }
                 else{
                     for(int i=0; i<busSeats.length; i++){
-                        if(busSeats[i] != null && busSeats[i] == id){
+                        if(busSeats[i] != null && Integer.compare(busSeats[i],id) == 0){
                             busSeats[i] = null;
                             busSeatSize--;
                         }

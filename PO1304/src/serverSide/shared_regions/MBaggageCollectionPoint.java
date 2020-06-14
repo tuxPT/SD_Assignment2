@@ -42,8 +42,10 @@ public class MBaggageCollectionPoint implements IBaggageCollectionPointPorter, I
                 porterArrival.await();
                 List<Bag> removeList = new LinkedList<>();
                 for (Bag bag: ListOfBags){
+                    System.out.println("MALA QUE ESTÁ NO CB = " + bag.getID().getClass().getSimpleName());
                     for (Integer i: total_bags){
-                        if (i == bag.getID()){
+                        System.out.println("MALA QUE PERTENCE AO PASSAGEIRO = " + i.getClass().getSimpleName());
+                        if (Integer.compare(i, bag.getID()) == 0){
                             System.out.println("ENTROU NO IF");
                             removeList.add(bag);
                             NUMBER_OF_BAGS_RETRIEVED++;

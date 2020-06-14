@@ -1,11 +1,7 @@
 package serverSide.GeneralRepository;
 
-import java.util.logging.Logger;
-
 import comInf.GeneralRepository.Message;
 import comInf.GeneralRepository.MessageException;
-import common_infrastructures.SPassenger;
-import serverSide.shared_regions.MGeneralRepository;
 import shared_regions_JavaInterfaces.IGeneralRepository;
 
 /**
@@ -15,8 +11,6 @@ import shared_regions_JavaInterfaces.IGeneralRepository;
  */
 
 public class GeneralRepositoryInterface {
-
-    private static final Logger LOGGER = Logger.getLogger( GeneralRepositoryInterface.class.getName() );
 
     /**
      * Barbearia (representa o serviço a ser prestado)
@@ -136,8 +130,6 @@ public class GeneralRepositoryInterface {
                 outMessage = new Message(Message.ACK); // gerar confirmação
                 break;
         }
-        LOGGER.info(inMessage.toString());
-
         return (outMessage);
     }
 }
