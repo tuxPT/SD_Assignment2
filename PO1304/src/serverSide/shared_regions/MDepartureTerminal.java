@@ -31,8 +31,8 @@ public class MDepartureTerminal implements IDepartureTerminalPassenger {
         lock.lock();
         boolean tmp = false;
         try {
-            CURRENT_NUMBER_OF_PASSENGERS++;
-            MGeneralRepository.updatePassenger(SPassenger.ENTERING_THE_DEPARTURE_TERMINAL, id, null, null, null, false, null);
+            CURRENT_NUMBER_OF_PASSENGERS++;            
+            MGeneralRepository.updatePassenger(SPassenger.ENTERING_THE_DEPARTURE_TERMINAL, id, null, null, null, false, null);         
             if(current_arrival + CURRENT_NUMBER_OF_PASSENGERS == PLANE_PASSENGERS){
                 tmp = true;
             }

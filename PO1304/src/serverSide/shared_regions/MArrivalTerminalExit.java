@@ -31,8 +31,8 @@ public class MArrivalTerminalExit implements IArrivalTerminalExitPassenger {
         lock.lock();
         boolean tmp = false;
         try {
-            CURRENT_NUMBER_OF_PASSENGERS++;
-            MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);
+            CURRENT_NUMBER_OF_PASSENGERS++;            
+            MGeneralRepository.updatePassenger(SPassenger.EXITING_THE_ARRIVAL_TERMINAL, id, null, null, null, false, null);                       
             if(current_Departure + CURRENT_NUMBER_OF_PASSENGERS == PLANE_PASSENGERS){
                 tmp = true;
             }

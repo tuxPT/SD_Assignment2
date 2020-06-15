@@ -37,9 +37,11 @@ java clientSide.Passenger.mainPassenger &
 
 sleep 1
 
-for job in `jobs -p`
-do
-    wait $job
-done
+#for job in `jobs -p`
+#do
+#    wait $job
+#done
+
+sleep 15
 
 exit 0
