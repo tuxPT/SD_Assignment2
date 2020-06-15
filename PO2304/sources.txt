@@ -68,7 +68,6 @@
 ./src/entities/TPorter.java
 ./src/entities/TPassenger.java
 ./src/entities/TBusDriver.java
-./src/main/AirportRapsody.java
 ./src/comInf/TemporaryStorageArea/Message.java
 ./src/comInf/TemporaryStorageArea/MessageException.java
 ./src/comInf/GeneralRepository/Message.java
