@@ -35,6 +35,7 @@ public class mainGeneralRepository
 
    public static void main (String [] args)
    {
+      portNumb = Integer.parseInt(args[0]);
       IGeneralRepository GeneralRepository;                                    // barbearia (representa o serviço a ser prestado)
       GeneralRepositoryInterface GeneralRepositoryInterface;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação

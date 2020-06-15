@@ -30,6 +30,8 @@ public class mainArrivalTerminalExit {
     private static int portNumb = 20020;
     private static int PLANE_PASSENGERS = 6;
     public static boolean waitConnection; // sinalização de actividade
+    private static String GR_HOST;
+    private static int GR_PORT;
 
   /**
    *  Programa principal.
@@ -37,12 +39,14 @@ public class mainArrivalTerminalExit {
 
    public static void main (String [] args)
    {
-      //portNumb = Integer.parseInt(args[0]);
+      portNumb = Integer.parseInt(args[0]);
+      GR_HOST = args[1];
+      GR_PORT = Integer.parseInt(args[2]);
       MArrivalTerminalExit ArrivalTerminalExit;                                    // barbearia (representa o serviço a ser prestado)
       ArrivalTerminalExitInterface ArrivalTerminalExitInterface;                      // interface à barbearia
       ServerCom scon, sconi;                               // canais de comunicação
       ArrivalTerminalExitProxy cliProxy;                                // thread agente prestador do serviço
-      IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub("localhost", 20080);
+      IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub(GR_HOST, GR_PORT);
 
      /* estabelecimento do servico */
 

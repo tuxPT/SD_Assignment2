@@ -22,13 +22,17 @@ public class mainTemporaryStorageArea {
 
     private static int portNumb = 20090;
     public static boolean waitConnection; // sinalização de actividade
+    private static String GR_HOST;
+    private static int GR_PORT;
 
     /**
      * Programa principal.
      */
 
     public static void main(String[] args) {
-        //portNumb = Integer.parseInt(args[0]);
+        portNumb = Integer.parseInt(args[0]);
+        GR_HOST = args[1];
+        GR_PORT = Integer.parseInt(args[2]);
         MTemporaryStorageArea TemporaryStorageArea; // barbearia (representa o serviço a ser prestado)
         TemporaryStorageAreaInterface TemporaryStorageAreaInter; // interface à barbearia
         ServerCom scon, sconi; // canais de comunicação
@@ -38,7 +42,7 @@ public class mainTemporaryStorageArea {
 
         scon = new ServerCom(portNumb); // criação do canal de escuta e sua associação
         scon.start(); // com o endereço público
-        IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub("localhost", 20080);
+        IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub(GR_HOST, GR_PORT);
 
         TemporaryStorageArea = new MTemporaryStorageArea(MGeneralRepository); // activação do serviço
         TemporaryStorageAreaInter = new TemporaryStorageAreaInterface(TemporaryStorageArea); // activação do interface

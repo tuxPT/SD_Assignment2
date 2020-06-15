@@ -34,29 +34,46 @@ import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayPassenger;
 public class mainPassenger {
     private static int PLANES_PER_DAY = 5;
     private static int MAX_BAGS_NUMBER = 2;
-    
+    private static String AL_HOST, ATE_HOST, ATTQ_HOST, BCP_HOST, BRO_HOST, DT_HOST, DTTQ_HOST, GR_HOST;
+    private static int AL_PORT, ATE_PORT, ATTQ_PORT, BCP_PORT, BRO_PORT, DT_PORT, DTTQ_PORT, GR_PORT;
+
     /**
      * Programa principal.
      */
     private static int PLANE_PASSENGERS = 6;
 
     public static void main(String[] args) {
+        AL_HOST = args[0];
+        AL_PORT = Integer.parseInt(args[1]);
+        ATE_HOST = args[2];
+        ATE_PORT = Integer.parseInt(args[3]);
+        BCP_HOST = args[4];
+        BCP_PORT = Integer.parseInt(args[5]);
+        BRO_HOST = args[6];
+        BRO_PORT = Integer.parseInt(args[7]);
+        DT_HOST = args[8];
+        DT_PORT = Integer.parseInt(args[9]);
+        DTTQ_HOST = args[10];
+        DTTQ_PORT = Integer.parseInt(args[11]);
+        GR_HOST = args[12];
+        GR_PORT = Integer.parseInt(args[13]);
+
         Random random = new Random();
         ArrayList<Bag>[] bags;
         TPassenger[] TPassenger = new TPassenger[PLANE_PASSENGERS];
         String serverHostName; // nome do sistema computacional onde está o servidor
         int serverPortNumb; // número do port de escuta do servidor
 
-        ArrivalLoungeStub mArrivalLoungeStub = new ArrivalLoungeStub("localhost", 20010);
-        ArrivalTerminalExitStub mArrivalTerminalExitStub = new ArrivalTerminalExitStub("localhost", 20020);
+        ArrivalLoungeStub mArrivalLoungeStub = new ArrivalLoungeStub(AL_HOST, AL_PORT);
+        ArrivalTerminalExitStub mArrivalTerminalExitStub = new ArrivalTerminalExitStub(ATE_HOST, ATE_PORT);
         ArrivalTerminalTransferQuayStub mArrivalTerminalTransferQuayStub = new ArrivalTerminalTransferQuayStub(
-                "localhost", 20030);
-        BaggageCollectionPointStub mBaggageCollectionPointStub = new BaggageCollectionPointStub("localhost", 20040);
-        BaggageReclaimOfficeStub mBaggageReclaimOfficeStub = new BaggageReclaimOfficeStub("localhost", 20050);
-        DepartureTerminalStub mDepartureTerminalStub = new DepartureTerminalStub("localhost", 20060);
+                ATTQ_HOST, ATTQ_PORT);
+        BaggageCollectionPointStub mBaggageCollectionPointStub = new BaggageCollectionPointStub(BCP_HOST, BCP_PORT);
+        BaggageReclaimOfficeStub mBaggageReclaimOfficeStub = new BaggageReclaimOfficeStub(BRO_HOST, BRO_PORT);
+        DepartureTerminalStub mDepartureTerminalStub = new DepartureTerminalStub(DT_HOST, DT_PORT);
         DepartureTerminalTransferQuayStub mDepartureTerminalTransferQuayStub = new DepartureTerminalTransferQuayStub(
-                "localhost", 20070);
-        GeneralRepositoryStub mGeneralRepositoryStub = new GeneralRepositoryStub("localhost", 20080);
+                DTTQ_HOST, DTTQ_PORT);
+        GeneralRepositoryStub mGeneralRepositoryStub = new GeneralRepositoryStub(GR_HOST, GR_PORT);
 
         for (int p = 0; p < PLANES_PER_DAY; p++) {
             mGeneralRepositoryStub.nextFlight();

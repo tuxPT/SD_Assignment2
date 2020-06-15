@@ -17,20 +17,29 @@ import shared_regions_JavaInterfaces.IDepartureTerminalTransferQuayBusDriver;
 public class mainBusDriver {
 
     private static int MAX_BUSDRIVER = 1;
+    private static String ATTQ_HOST;
+    private static int ATTQ_PORT;
+    private static String DTTQ_HOST;
+    private static int DTTQ_PORT;
+    
 
     /**
      * Programa principal.
      */
 
-    public static void main(String[] args) {     
+    public static void main(String[] args) { 
+        ATTQ_HOST = args[0];
+        ATTQ_PORT = Integer.parseInt(args[1]);
+        DTTQ_HOST = args[2];
+        DTTQ_PORT = Integer.parseInt(args[3]);   
         TBusDriver[] TBusDriver = new TBusDriver[MAX_BUSDRIVER]; // array de threads cliente
         ArrivalTerminalTransferQuayStub arrivalTerminalTransferQuayStub; // stub à barbearia
         DepartureTerminalTransferQuayStub departureTerminalTransferQuayStub;
         String serverHostName; // nome do sistema computacional onde está o servidor
         int serverPortNumb; // número do port de escuta do servidor
 
-        arrivalTerminalTransferQuayStub = new ArrivalTerminalTransferQuayStub("localhost", 20030);
-        departureTerminalTransferQuayStub = new DepartureTerminalTransferQuayStub("localhost", 20070);
+        arrivalTerminalTransferQuayStub = new ArrivalTerminalTransferQuayStub(ATTQ_HOST, ATTQ_PORT);
+        departureTerminalTransferQuayStub = new DepartureTerminalTransferQuayStub(DTTQ_HOST, DTTQ_PORT);
         /* Criação dos threads barbeiro e cliente */
 
         for (int i = 0; i < MAX_BUSDRIVER; i++) {

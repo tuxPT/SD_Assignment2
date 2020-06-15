@@ -29,6 +29,8 @@ public class mainArrivalLounge {
 
     private static int portNumb = 20010;
     private static int PLANE_PASSENGERS = 6;
+    private static String GR_HOST;
+    private static int GR_PORT;
 
     public static boolean waitConnection; // sinalização de actividade
 
@@ -37,12 +39,14 @@ public class mainArrivalLounge {
      */
 
     public static void main(String[] args) {
-        //portNumb = Integer.parseInt(args[0]);
+        portNumb = Integer.parseInt(args[0]);
+        GR_HOST = args[1];
+        GR_PORT = Integer.parseInt(args[2]);
         MArrivalLounge ArrivalLounge; // barbearia (representa o serviço a ser prestado)
         ArrivalLoungeInterface ArrivalLoungeInterface; // interface à barbearia
         ServerCom scon, sconi; // canais de comunicação
         ArrivalLoungeProxy ArrivalLoungeProxy; // thread agente prestador do serviço
-        IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub("localhost", 20080);
+        IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub(GR_HOST, GR_PORT);
 
         /* estabelecimento do servico */
 

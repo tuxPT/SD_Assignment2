@@ -23,18 +23,22 @@ public class mainArrivalTerminalTransferQuay {
     private static int portNumb = 20030;
     public static boolean waitConnection; // sinalização de actividade
     private static int BUS_CAPACITY = 3;
+    private static String GR_HOST;
+    private static int GR_PORT;
 
     /**
      * Programa principal.
      */
 
     public static void main(String[] args) {
-        //portNumb = Integer.parseInt(args[0]);
+        portNumb = Integer.parseInt(args[0]);
+        GR_HOST = args[1];
+        GR_PORT = Integer.parseInt(args[2]);
         MArrivalTerminalTransferQuay ArrivalTerminalTransferQuay; // barbearia (representa o serviço a ser prestado)
         ArrivalTerminalTransferQuayInterface ArrivalTerminalTransferQuayInter; // interface à barbearia
         ServerCom scon, sconi; // canais de comunicação
         ArrivalTerminalTransferQuayProxy ArrivalTerminalTransferQuayProxy; // thread agente prestador do serviço
-        IGeneralRepository MGeneralRepository = new GeneralRepositoryStub("localhost", 20080);
+        IGeneralRepository MGeneralRepository = new GeneralRepositoryStub(GR_HOST, GR_PORT);
 
         /* estabelecimento do servico */
 

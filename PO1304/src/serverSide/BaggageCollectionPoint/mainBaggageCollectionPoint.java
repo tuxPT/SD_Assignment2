@@ -22,13 +22,17 @@ public class mainBaggageCollectionPoint {
 
     private static int portNumb = 20040;
     public static boolean waitConnection; // sinalização de actividade
+    private static String GR_HOST;
+    private static int GR_PORT;
 
     /**
      * Programa principal.
      */
 
     public static void main(String[] args) {
-        //portNumb = Integer.parseInt(args[0]);
+        portNumb = Integer.parseInt(args[0]);
+        GR_HOST = args[1];
+        GR_PORT = Integer.parseInt(args[2]);
         MBaggageCollectionPoint BaggageCollectionPoint; // barbearia (representa o serviço a ser prestado)
         BaggageCollectionPointInterface BaggageCollectionPointInter; // interface à barbearia
         ServerCom scon, sconi; // canais de comunicação
@@ -38,7 +42,7 @@ public class mainBaggageCollectionPoint {
 
         scon = new ServerCom(portNumb); // criação do canal de escuta e sua associação
         scon.start(); // com o endereço público
-        IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub("localhost", 20080);
+        IGeneralRepository MGeneralRepository = (IGeneralRepository) new GeneralRepositoryStub(GR_HOST, GR_PORT);
         BaggageCollectionPoint = new MBaggageCollectionPoint(MGeneralRepository); // activação do serviço
         BaggageCollectionPointInter = new BaggageCollectionPointInterface(BaggageCollectionPoint); // activação do
                                                                                                    // interface com o
