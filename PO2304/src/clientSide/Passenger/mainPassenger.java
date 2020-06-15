@@ -47,16 +47,18 @@ public class mainPassenger {
         AL_PORT = Integer.parseInt(args[1]);
         ATE_HOST = args[2];
         ATE_PORT = Integer.parseInt(args[3]);
-        BCP_HOST = args[4];
-        BCP_PORT = Integer.parseInt(args[5]);
-        BRO_HOST = args[6];
-        BRO_PORT = Integer.parseInt(args[7]);
-        DT_HOST = args[8];
-        DT_PORT = Integer.parseInt(args[9]);
-        DTTQ_HOST = args[10];
-        DTTQ_PORT = Integer.parseInt(args[11]);
-        GR_HOST = args[12];
-        GR_PORT = Integer.parseInt(args[13]);
+        ATTQ_HOST = args[4];
+        ATTQ_PORT = Integer.parseInt(args[5]);
+        BCP_HOST = args[6];
+        BCP_PORT = Integer.parseInt(args[7]);
+        BRO_HOST = args[8];
+        BRO_PORT = Integer.parseInt(args[9]);
+        DT_HOST = args[10];
+        DT_PORT = Integer.parseInt(args[11]);
+        DTTQ_HOST = args[12];
+        DTTQ_PORT = Integer.parseInt(args[13]);
+        GR_HOST = args[14];
+        GR_PORT = Integer.parseInt(args[15]);
 
         Random random = new Random();
         ArrayList<Bag>[] bags;

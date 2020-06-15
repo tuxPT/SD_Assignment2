@@ -42,14 +42,14 @@ sleep 1
 
 java clientSide.BusDriver.mainBusDriver $ATTQ_HOST $ATTQ_PORT $DTTQ_HOST $DTTQ_PORT &
 java clientSide.Porter.mainPorter $AL_HOST $AL_PORT $BCP_HOST $BCP_PORT $TSA_HOST $TSA_PORT &
-java clientSide.Passenger.mainPassenger $AL_HOST $AL_PORT $ATE_HOST $ATE_PORT $ATTQ_HOST $ATTQ_PORT $BCP_HOST $BCP_PORT $BRO_HOST $BRO_PORT $DT_HOST $DT_PORT $DTTQ_HOST_DTTQ_PORT $GR_HOST $GR_PORT &
+java clientSide.Passenger.mainPassenger $AL_HOST $AL_PORT $ATE_HOST $ATE_PORT $ATTQ_HOST $ATTQ_PORT $BCP_HOST $BCP_PORT $BRO_HOST $BRO_PORT $DT_HOST $DT_PORT $DTTQ_HOST $DTTQ_PORT $GR_HOST $GR_PORT &
 
 sleep 1
 
-#for job in `jobs -p`
-#do
-#    wait $job
-#done
+for job in `jobs -p`
+do
+    wait $job
+done
 
 sleep 15
 
